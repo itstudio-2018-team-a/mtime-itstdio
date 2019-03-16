@@ -1,0 +1,66 @@
+$search_width: 648px;
+$search_height: 46px;
+$search_border_radius: 22px;
+$search_border_color: #ffffff;
+$search_border_background_color: #lc2e39;
+
+$select_mode_top: 35px;
+$select_mode_left: 15px;
+
+$submit_top: 40px;
+$submit_right: -96px;
+
+#header{
+  .navi{
+    .container{
+      .search{
+        position: relative;
+        .search_movie{
+          position: relative;
+          margin: 0 auto;
+          width: $search_width;
+          input{
+            width: 100%;
+            height: $search_height;
+            background: transparent;
+            border: solid 1px $search_border_color;
+            border-radius: $search_border_radius;
+            outline: none;
+            margin: 25px 0;
+            font:{
+              size: 18px;
+              weight: normal;
+            }
+            color: #e7e2e2;
+            opacity: 0.75;
+            padding-left: 117px;
+
+          }
+          .select_mode{
+            position: absolute;
+            top: $select_mode_top;
+            left: $select_mode_left;
+            cursor: pointer;
+            a{
+              text-decoration: none;
+              span{
+                font-size: 20px;
+              }
+              span,img{
+                padding: 0 5px;
+              }
+            }
+
+          }
+          #submit{
+            position: absolute;
+            top: $submit_top;
+            right: $submit_right;
+            cursor: pointer;
+          }
+        }
+
+      }
+    }
+  }
+}

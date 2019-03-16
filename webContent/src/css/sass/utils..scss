@@ -1,0 +1,27 @@
+$vertical_cutLine_left_left: 103px;
+$vertical_cutLine_left_top: 40px;
+
+$vertical_cutLine_right_top: 40px;
+$vertical_cutLine_right_right: -50px;
+
+.cutLine{
+  width: 100%;
+  border-top: 1px solid;
+  opacity: 0.9;
+  position: absolute;
+}
+.vertical_cutLine{
+  width: 1px;
+  height: 20px;
+  background: #ffffff;
+  opacity: 0.5;
+  position: absolute;
+}
+.vertical_cutLine_left{
+  left: $vertical_cutLine_left_left;
+  top: $vertical_cutLine_left_top;
+}
+.vertical_cutLine_right{
+  right: $vertical_cutLine_right_right;
+  top: $vertical_cutLine_right_top;
+}
