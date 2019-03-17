@@ -9,3 +9,16 @@ class MyUser(AbstractUser):
     class Meta:
         indexes = [models.Index(['email', 'email']), models.Index(['username', 'username'])]
         unique_together = ('email',)
+        verbose_name = u'用户'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.username
+
+
+
+
+
+
+
+

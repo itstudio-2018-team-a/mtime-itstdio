@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from . import models
+
+
+@admin.register(models.MyUser)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'email', 'nickname')
+    list_per_page = 20
+
