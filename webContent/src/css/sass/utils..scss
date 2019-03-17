@@ -6,8 +6,9 @@ $vertical_cutLine_right_right: -50px;
 
 .cutLine{
   width: 100%;
-  border-top: 1px solid;
-  opacity: 0.9;
+  height: 1px;
+  background: #ffffff;
+  opacity: 0.2;
   position: absolute;
 }
 .vertical_cutLine{

@@ -1,7 +1,8 @@
-@import "./navi.scss";
+@import "index/header/navi.scss";
 @import "./init..scss";
 @import "./clearfix.scss";
 @import "./container..scss";
-@import "./font..scss";
+@import "font..scss";
 @import "./utils..scss";
-@import "./search..scss";
+@import "index/header/search..scss";
+@import "index/body/body..scss";

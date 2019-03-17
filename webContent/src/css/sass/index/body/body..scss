@@ -1,0 +1,95 @@
+$banner_height: 873px;
+$banner_margin_top: -13px;
+
+$container_padding_top: 90px;
+
+$banner_title_font_size: 48px;
+$banner_title_font_color: #e7e2e2;
+$banner_content_line_height: 45px;
+$banner_content_space_weight: 15px;
+
+$hot_video_top_margin_top: 65px;
+$hot_video_top_margin_bottom: 21px;
+
+$arrow_box_margin: 10px;
+$arrow_margin_top: 7px;
+$arrow_margin_left: 10px;
+
+$cutLine_margin_bottom: 51px;
+
+$hot_videos_margin_top: 86px;
+#body{
+  position: relative;
+  .banner{
+    width: 100%;
+    height: $banner_height;
+    margin-top: $banner_margin_top;
+    position: absolute;
+    z-index: -1;
+    float: left;
+    img{
+      width: 100%;
+    }
+  }
+  .container{
+    position: relative;
+    z-index: 10;
+    padding: {
+      top: $container_padding_top;
+    };
+    .banner_title {
+      text-align: center;
+      margin-bottom: 100px;
+      span {
+        font-family: "Microsoft YaHei UI";
+        font-size: $banner_title_font_size;
+        letter-spacing: 0;
+        color: $banner_title_font_color;
+      }
+    }
+    .banner_content{
+      text-align: center;
+      div{
+        span {
+          letter-spacing: $banner_content_space_weight;
+          line-height: $banner_content_line_height;
+        }
+      }
+    }
+    .hot_video_top{
+      margin-top: $hot_video_top_margin_top;
+      margin-bottom: $hot_video_top_margin_bottom;
+      vertical-align: middle;
+      .hot_video_title{
+        float: left;
+        a{
+          span,img{
+            vertical-align: middle;
+          }
+          span{
+            font-size: 30px;
+            color: #e7e2e2;
+          }
+        }
+      }
+      .arrow_box{
+        width: 28px;
+        height: 28px;
+        background: #c7cacb;
+        float: right;
+        opacity: 0.8;
+        margin: 0 $arrow_box_margin;
+        cursor: pointer;
+        .arrow{
+          margin: $arrow_margin_top $arrow_margin_left;
+        }
+      }
+    }
+
+    .hot_videos{
+      background: aqua;
+      height: 100px;
+      margin: $hot_videos_margin_top 0;
+    }
+  }
+}
