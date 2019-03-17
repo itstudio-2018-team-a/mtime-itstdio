@@ -39,6 +39,7 @@ class OnMovie(models.Model):
         film_public_time = Film.objects.filter(id=self.film_id)[0].public_time
         return film_public_time
     get_film_public_time.short_description = u'上映时间'
+    get_film_public_time.admin_order_field = 'get_film_public_time'
 
 
 class ComingMovie(models.Model):
@@ -61,6 +62,7 @@ class ComingMovie(models.Model):
         film_public_time = Film.objects.filter(id=self.film_id)[0].public_time
         return film_public_time
     get_film_public_time.short_description = u'上映时间'
+    get_film_public_time.admin_order_field = 'get_film_public_time'
 
 
 class FilmComment(models.Model):
