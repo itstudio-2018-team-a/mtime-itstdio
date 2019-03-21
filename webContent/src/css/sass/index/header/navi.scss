@@ -3,7 +3,7 @@ $navi_width: 100%;
 $top_background-color-beginning:  #192835;
 $top_background-color-ending: #1a2b37;
 
-$selections_margin: 3%;
+$selections_margin: 5%;
 
 $head_portrait_left: 8px;
 $head_portrait_top: 7px;
@@ -16,6 +16,7 @@ $selection_padding: 20px;
 
 $logo_padding: 10px;
 #header{
+  z-index: 100;
   position: relative;
   .navi {
     width: $navi_width;
@@ -64,6 +65,8 @@ $logo_padding: 10px;
       }
       .selections {
         text-align: center;
+        display: flex;
+        justify-content: center;
          .selection {
            padding: $selection_padding 0;
            vertical-align: middle;

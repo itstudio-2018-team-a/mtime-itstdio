@@ -26,3 +26,10 @@ $vertical_cutLine_right_right: -50px;
   right: $vertical_cutLine_right_right;
   top: $vertical_cutLine_right_top;
 }
+
+.vertical_cutLine_long{
+  width: 1px;
+  height: 328px;
+  background: #c0bfbf;
+  float: left;
+}

@@ -1,4 +1,5 @@
 #header {
+  z-index: 100;
   position: relative; }
   #header .navi {
     width: 100%;
@@ -33,17 +34,22 @@
           color: #eae9e9;
           opacity: 0.2; }
     #header .navi .container .selections {
-      text-align: center; }
+      text-align: center;
+      display: flex;
+      justify-content: center; }
       #header .navi .container .selections .selection {
         padding: 20px 0;
         vertical-align: middle;
         display: inline-block;
-        margin: 0 3%; }
+        margin: 0 5%; }
 
 * {
   margin: 0;
   padding: 0;
   font-family: "Microsoft YaHei UI"; }
+
+ul li {
+  list-style: none; }
 
 .clearfix {
   zoom: 1; }
@@ -68,6 +74,21 @@
   line-height: 28px;
   color: #e7e2e2; }
 
+.movie_title_font {
+  font-family: "Microsoft YaHei UI";
+  color: #e7e2e2;
+  font-size: 29px; }
+
+.movie_lang_time_font {
+  font-family: "Microsoft YaHei UI";
+  color: #e7e2e2;
+  font-size: 17px; }
+
+.movie_description_content_font {
+  font-family: "Microsoft YaHei UI";
+  font-size: 13px;
+  color: #e7e2e2; }
+
 .cutLine {
   width: 100%;
   height: 1px;
@@ -89,6 +110,12 @@
 .vertical_cutLine_right {
   right: -50px;
   top: 40px; }
+
+.vertical_cutLine_long {
+  width: 1px;
+  height: 328px;
+  background: #c0bfbf;
+  float: left; }
 
 #header .navi .container .search {
   position: relative; }
@@ -127,13 +154,14 @@
       cursor: pointer; }
 
 #body {
-  position: relative; }
+  position: relative;
+  background: #eae8e8; }
   #body .banner {
     width: 100%;
     height: 873px;
     margin-top: -13px;
     position: absolute;
-    z-index: -1;
+    z-index: 1;
     float: left; }
     #body .banner img {
       width: 100%; }
@@ -159,7 +187,8 @@
       margin-bottom: 21px;
       vertical-align: middle; }
       #body .container .hot_video_top .hot_video_title {
-        float: left; }
+        float: left;
+        cursor: pointer; }
         #body .container .hot_video_top .hot_video_title a span, #body .container .hot_video_top .hot_video_title a img {
           vertical-align: middle; }
         #body .container .hot_video_top .hot_video_title a span {
@@ -176,8 +205,177 @@
         #body .container .hot_video_top .arrow_box .arrow {
           margin: 7px 10px; }
     #body .container .hot_videos {
-      background: aqua;
-      height: 100px;
-      margin: 86px 0; }
+      margin: 50px 0 60px 0;
+      display: flex;
+      justify-content: center; }
+      #body .container .hot_videos .movie_container {
+        display: flex;
+        justify-content: space-between; }
+        #body .container .hot_videos .movie_container .movie {
+          position: relative;
+          margin: 0 10px; }
+          #body .container .hot_videos .movie_container .movie .info {
+            visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #17232a;
+            opacity: 0.75;
+            top: 0;
+            left: 0; }
+            #body .container .hot_videos .movie_container .movie .info ul {
+              margin: 25px 21px; }
+              #body .container .hot_videos .movie_container .movie .info ul li {
+                padding: 5px 0; }
+              #body .container .hot_videos .movie_container .movie .info ul .movie_title {
+                padding-bottom: 35px; }
+            #body .container .hot_videos .movie_container .movie .info .purchase_button_container .purchase_button {
+              width: 260px;
+              height: 40px;
+              text-align: center;
+              background: #ff0000;
+              margin: 0 auto;
+              cursor: pointer; }
+              #body .container .hot_videos .movie_container .movie .info .purchase_button_container .purchase_button span {
+                font-size: 19px;
+                color: #e7e2e2;
+                line-height: 40px; }
+          #body .container .hot_videos .movie_container .movie:hover .info {
+            visibility: visible; }
+    #body .container .cutLine {
+      background: #c0bfbf;
+      opacity: 1; }
+    #body .container .display_movie_by_date {
+      margin: 100px 0 0 0;
+      padding-bottom: 30px;
+      width: 100%;
+      position: relative; }
+      #body .container .display_movie_by_date .select_cinema_part {
+        float: left;
+        margin: 0 46px; }
+        #body .container .display_movie_by_date .select_cinema_part .arrow_down {
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 12px;
+          border-color: black transparent transparent; }
+        #body .container .display_movie_by_date .select_cinema_part .cinema_location {
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          position: relative;
+          margin: 0 0 30px 0; }
+          #body .container .display_movie_by_date .select_cinema_part .cinema_location img, #body .container .display_movie_by_date .select_cinema_part .cinema_location .location_name, #body .container .display_movie_by_date .select_cinema_part .cinema_location .arrow_down {
+            vertical-align: middle;
+            line-height: 23px;
+            position: relative;
+            margin: 0 10px; }
+          #body .container .display_movie_by_date .select_cinema_part .cinema_location .location_name {
+            font-size: 24px;
+            font-family: "Microsoft YaHei UI";
+            color: #090909; }
+          #body .container .display_movie_by_date .select_cinema_part .cinema_location .arrow_down {
+            margin-top: 5px; }
+        #body .container .display_movie_by_date .select_cinema_part .select_board {
+          position: relative; }
+          #body .container .display_movie_by_date .select_cinema_part .select_board input {
+            width: 238px;
+            height: 48px;
+            border-radius: 10px;
+            background: #ffffff;
+            margin: 18px 0;
+            outline: none;
+            font-size: 20px;
+            color: #090909;
+            padding-left: 17px;
+            border: 0; }
+          #body .container .display_movie_by_date .select_cinema_part .select_board .arrow_down {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            cursor: pointer; }
+          #body .container .display_movie_by_date .select_cinema_part .select_board .select_cinema, #body .container .display_movie_by_date .select_cinema_part .select_board .select_movie {
+            position: relative; }
+          #body .container .display_movie_by_date .select_cinema_part .select_board .select_board_submit {
+            width: 172px;
+            height: 47px;
+            background: #ff0000;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 22px;
+            color: #e7e2e2;
+            margin: 50px auto;
+            line-height: 44px;
+            cursor: pointer; }
+      #body .container .display_movie_by_date .display_movies {
+        float: left;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 18px; }
+        #body .container .display_movie_by_date .display_movies .movie {
+          text-align: center;
+          position: relative;
+          margin-right: 60px; }
+          #body .container .display_movie_by_date .display_movies .movie .time {
+            font-size: 20px;
+            font-family: "Microsoft YaHei UI";
+            color: #050505;
+            margin-bottom: 48px; }
+          #body .container .display_movie_by_date .display_movies .movie .vertical_cutLine {
+            background: #c0bfbf;
+            height: 52px;
+            width: 2px;
+            position: absolute;
+            margin: 0 auto;
+            top: 33px;
+            left: 60px;
+            z-index: -1; }
+          #body .container .display_movie_by_date .display_movies .movie .movie_cover {
+            position: relative; }
+            #body .container .display_movie_by_date .display_movies .movie .movie_cover:hover .info {
+              visibility: visible; }
+            #body .container .display_movie_by_date .display_movies .movie .movie_cover .info {
+              visibility: hidden;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              background: #17232a;
+              opacity: 0.75;
+              top: 0;
+              left: 0; }
+              #body .container .display_movie_by_date .display_movies .movie .movie_cover .info ul {
+                margin: 3px 10px;
+                text-align: left;
+                color: #efebeb; }
+                #body .container .display_movie_by_date .display_movies .movie .movie_cover .info ul li {
+                  padding: 4px 0; }
+                #body .container .display_movie_by_date .display_movies .movie .movie_cover .info ul .movie_title_font {
+                  font-size: 18px; }
+                #body .container .display_movie_by_date .display_movies .movie .movie_cover .info ul .movie_info_content_font {
+                  font-size: 12px; }
+                #body .container .display_movie_by_date .display_movies .movie .movie_cover .info ul .movie_description_content_font {
+                  font-size: 10px; }
+              #body .container .display_movie_by_date .display_movies .movie .movie_cover .info .purchase_button_early_container .purchase_early_button {
+                width: 100px;
+                height: 20px;
+                text-align: center;
+                background: #ff0000;
+                margin: 0 auto;
+                cursor: pointer; }
+                #body .container .display_movie_by_date .display_movies .movie .movie_cover .info .purchase_button_early_container .purchase_early_button span {
+                  font-size: 12px;
+                  color: #e7e2e2; }
+        #body .container .display_movie_by_date .display_movies .cutLine {
+          position: absolute;
+          margin: 34px 0; }
+      #body .container .display_movie_by_date .display_movie_mark {
+        margin: 11px 15px;
+        float: left; }
+        #body .container .display_movie_by_date .display_movie_mark .title {
+          text-align: center; }
+        #body .container .display_movie_by_date .display_movie_mark .mark_board div {
+          display: flex;
+          justify-content: space-between; }
 
 /*# sourceMappingURL=Index-css.css.map */

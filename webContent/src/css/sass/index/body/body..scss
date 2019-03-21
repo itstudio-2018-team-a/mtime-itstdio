@@ -17,15 +17,44 @@ $arrow_margin_left: 10px;
 
 $cutLine_margin_bottom: 51px;
 
-$hot_videos_margin_top: 86px;
+$hot_videos_margin_top: 50px;
+$hot_videos_margin_bottom: 60px;
+
+$movie_info_color: #17232a;
+
+$movie_info_li_padding_bottom: 5px;
+
+$purchase_button_width: 260px;
+$purchase_button_height: 40px;
+
+$purchase_button_width_1: 100px;
+$purchase_button_height_1: 20px;
+
+$display_movie_by_date_top: 100px;
+
+$cinema_location_margin_top: 5px;
+
+$select_board_top:40px;
+$select_board_right: 20px;
+
+$select_board_submit_margin_top: 50px;
+
+$display_movies_margin_left: 18px;
+$display_movie_time_margin_bottom: 48px;
+$display_movie_margin_right: 60px;
+$display_movie_cut_line_top: 34px;
+$display_movie_vertical_cutLine_top: 33px;
+$display_movie_vertical_cutLine_left: 60px;
+
 #body{
   position: relative;
+  background: #eae8e8;
   .banner{
     width: 100%;
     height: $banner_height;
     margin-top: $banner_margin_top;
     position: absolute;
-    z-index: -1;
+    z-index: 1;
     float: left;
     img{
       width: 100%;
@@ -62,6 +91,7 @@ $hot_videos_margin_top: 86px;
       vertical-align: middle;
       .hot_video_title{
         float: left;
+        cursor: pointer;
         a{
           span,img{
             vertical-align: middle;
@@ -86,10 +116,228 @@ $hot_videos_margin_top: 86px;
       }
     }
 
-    .hot_videos{
-      background: aqua;
-      height: 100px;
-      margin: $hot_videos_margin_top 0;
+    .hot_videos {
+      margin: $hot_videos_margin_top 0 $hot_videos_margin_bottom 0;
+      display: flex;
+      justify-content: center;
+      .movie_container{
+        display: flex;
+        justify-content: space-between;
+        .movie{
+          position: relative;
+          margin: 0 10px;
+          .info{
+            visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: $movie_info_color;
+            opacity: 0.75;
+            top: 0;
+            left: 0;
+            ul{
+              margin: 25px 21px;
+              li{
+                padding: $movie_info_li_padding_bottom 0;
+              }
+              .movie_title{
+                padding-bottom: 35px;
+              }
+            }
+            .purchase_button_container{
+              .purchase_button{
+                width: $purchase_button_width;
+                height: $purchase_button_height;
+                text-align: center;
+                background: #ff0000;
+                margin: 0 auto;
+                cursor: pointer;
+                span{
+                  font-size: 19px;
+                  color: #e7e2e2;
+                  line-height: 40px;
+                }
+              }
+            }
+          }
+          &:hover{
+            .info{
+              visibility: visible;
+            }
+          }
+        }
+      }
+    }
+    .cutLine{
+      background: #c0bfbf;
+      opacity: 1;
+    }
+    .display_movie_by_date{
+      margin: $display_movie_by_date_top 0 0 0;
+      padding-bottom: 30px;
+      width: 100%;
+      position: relative;
+      .select_cinema_part{
+        float: left;
+        margin: 0 46px;
+        .arrow_down{
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 12px;
+          border-color: black transparent transparent;
+        }
+        .cinema_location{
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          position: relative;
+          margin: 0 0 30px 0;
+          img,.location_name,.arrow_down{
+            vertical-align: middle;
+            line-height: 23px;
+            position: relative;
+            margin: 0 10px;
+          }
+          .location_name{
+            font-size: 24px;
+            font-family: "Microsoft YaHei UI";
+            color: #090909;
+          }
+          .arrow_down{
+            margin-top: $cinema_location_margin_top;
+          }
+        }
+        .select_board{
+          position: relative;
+          input{
+            width: 238px;
+            height: 48px;
+            border-radius: 10px;
+            background: #ffffff;
+            margin: 18px 0;
+            outline: none;
+            font-size: 20px;
+            color: #090909;
+            padding-left: 17px;
+            border: 0;
+          }
+          .arrow_down{
+            position: absolute;
+            top: $select_board_top;
+            right: $select_board_right;
+            cursor: pointer;
+          }
+          .select_cinema,.select_movie{
+            position: relative;
+          }
+          .select_board_submit{
+            width: 172px;
+            height: 47px;
+            background: #ff0000;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 22px;
+            color: #e7e2e2;
+            margin: $select_board_submit_margin_top auto;
+            line-height: 44px;
+            cursor: pointer;
+          }
+        }
+      }
+      .display_movies{
+        float: left;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 $display_movies_margin_left;
+        .movie{
+          text-align: center;
+          position: relative;
+          margin-right: $display_movie_margin_right;
+          .time{
+            font-size: 20px;
+            font-family: "Microsoft YaHei UI";
+            color: #050505;
+            margin-bottom: $display_movie_time_margin_bottom;
+          }
+          .vertical_cutLine{
+            background: #c0bfbf;
+            height: 52px;
+            width: 2px;
+            position: absolute;
+            margin: 0 auto;
+            top: $display_movie_vertical_cutLine_top;
+            left: $display_movie_vertical_cutLine_left;
+            z-index: -1;
+          }
+          .movie_cover{
+            position: relative;
+            &:hover .info{
+              visibility: visible;
+            }
+            .info{
+              visibility: hidden;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              background: $movie_info_color;
+              opacity: 0.75;
+              top: 0;
+              left: 0;
+              ul{
+                margin: 3px 10px;
+
+                text-align: left;
+                color: #efebeb;
+                li{
+                  padding: 4px 0;
+                }
+                .movie_title_font{
+                  font-size: 18px;
+                }
+                .movie_info_content_font{
+                  font-size: 12px;
+                }
+                .movie_description_content_font{
+                  font-size: 10px;
+                }
+              }
+              .purchase_button_early_container{
+                .purchase_early_button{
+                  width: $purchase_button_width_1;
+                  height: $purchase_button_height_1;
+                  text-align: center;
+                  background: #ff0000;
+                  margin: 0 auto;
+                  cursor: pointer;
+                  span{
+                    font-size: 12px;
+                    color: #e7e2e2;
+                  }
+                }
+              }
+            }
+          }
+        }
+        .cutLine{
+          position: absolute;
+          margin: $display_movie_cut_line_top 0;
+        }
+      }
+      .display_movie_mark{
+        margin: 11px 15px;
+        float: left;
+        .title{
+          text-align: center;
+        }
+        .mark_board{
+          div {
+            display: flex;
+            justify-content: space-between;
+          }
+        }
+      }
     }
   }
 }
