@@ -4,6 +4,7 @@ from . import models
 
 @admin.register(models.News)
 class NewsAdmin(admin.ModelAdmin):
+<<<<<<< HEAD
     list_display = ('title', 'public_time', 'hotpoint',)
     list_per_page = 20
     search_fields = ('title',)
@@ -19,3 +20,11 @@ class NewsCommentsAdmin(admin.ModelAdmin):
     actions_on_top = True
 
 
+=======
+    pass
+
+
+@admin.register(models.NewsComment)
+class NewsCommentAdmin(admin.ModelAdmin):
+    pass
+>>>>>>> fix
