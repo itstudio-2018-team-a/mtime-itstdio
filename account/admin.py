@@ -7,13 +7,16 @@ from . import forms
 
 @admin.register(models.User)
 class UserAdmin(admin.ModelAdmin):
+
     form = forms.RegisterForm
+
     list_display = ('image_data', 'username', 'email', 'nickname', 'active',)
     readonly_fields = ('image_data',)
     list_display_links = ('image_data', 'username',)
     list_per_page = 20
     search_fields = ('username', 'email', 'nickname')
     list_filter = ('active',)
+
     field = ('username', 'password', 'nickname', 'head_image', 'email', 'active',)
 
     def save_model(self, request, obj, form, change):
@@ -61,6 +64,19 @@ class BlackListAdmin(admin.ModelAdmin):
     list_display = ('user', 'reason', 'banned_time', 'lasting_time')
     list_per_page = 20
     search_fields = ('user__username',)
+
+
+@admin.register(models.VerificationCode)
+class VerificationCodeAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.BlackList)
+class BlackListAdmin(admin.ModelAdmin):
+    pass
+
+
+
 
 
 

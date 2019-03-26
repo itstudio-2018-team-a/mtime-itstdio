@@ -125,6 +125,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# verify_img的存储格式
+#     "verify_id": code
+verify_img = {}
+
 MEDIA_URL = '/media/'
 
 # AUTH_USER_MODEL = 'account.MyUser'
@@ -134,4 +138,12 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CKEDITOR_UPLOAD_PATH = 'upload/'
+
+
+# verify_email的存储格式
+#     'verify_id':{
+#         'email':'email',
+#         'code':'code'
+#     }
+verify_email = {}
 

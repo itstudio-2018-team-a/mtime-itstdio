@@ -1,6 +1,5 @@
 from django.db import models
 from account import models as account_model
-
 from ckeditor_uploader.fields import RichTextUploadingField
 
 

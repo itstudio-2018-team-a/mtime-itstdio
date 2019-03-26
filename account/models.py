@@ -1,4 +1,3 @@
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -9,6 +8,7 @@ class User(models.Model):
     nickname = models.CharField(max_length=20, verbose_name=u'昵称')
     head_image = models.ImageField(verbose_name=u'头像', upload_to='upload/%Y/%m')
     email = models.EmailField(verbose_name=u'邮箱')
+
     active = models.BooleanField(verbose_name=u'状态', default=False)
 
     class Meta:
@@ -50,5 +50,6 @@ class BlackList(models.Model):
 
     def __str__(self):
         return self.user.username
+
 
 

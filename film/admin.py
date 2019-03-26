@@ -57,6 +57,11 @@ class ScoreFilter(admin.SimpleListFilter):
             return queryset.filter(score__lte=4)
 
 
+@admin.register(models.Tags)
+class TagsAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(models.Film)
 class FilmAdmin(admin.ModelAdmin):
 
@@ -102,7 +107,6 @@ class ComingMovieAdmin(admin.ModelAdmin):
 
 @admin.register(models.FilmComment)
 class FilmCommentAdmin(admin.ModelAdmin):
-
     list_display = ('film', 'create_time', 'update_time')
     actions = [active_true, active_false]
 
@@ -113,9 +117,13 @@ class FilmReviewAdmin(admin.ModelAdmin):
     actions = [active_true, active_false]
 
 
+@admin.register(models.FilmReview)
+class FilmReviewAdmin(admin .ModelAdmin):
+    pass
+
+
 @admin.register(models.FilmReviewComment)
 class FilmReviewCommentAdmin(admin.ModelAdmin):
 
     actions = [active_true, active_false]
-
 

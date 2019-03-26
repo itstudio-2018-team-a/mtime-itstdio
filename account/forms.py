@@ -2,6 +2,7 @@ from django import forms
 
 from . import models
 
+
 import re
 
 
@@ -9,6 +10,7 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = models.User
+
         fields = {'username', 'password', 'nickname', 'head_image', 'email', 'active'}
 
     def clean_username(self):
@@ -72,6 +74,7 @@ class VerificationCodeForm(forms.ModelForm):
         # ......
 
         return code
+
 
 
 
