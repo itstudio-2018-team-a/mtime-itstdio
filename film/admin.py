@@ -1,8 +1,4 @@
 from django.contrib import admin
-<<<<<<< HEAD
-
-from . import models
-=======
 from django.utils.html import format_html
 
 from . import models
@@ -59,21 +55,11 @@ class ScoreFilter(admin.SimpleListFilter):
             return queryset.filter(score__lte=6, score__gte=4)
         if self.value() == '0~4':
             return queryset.filter(score__lte=4)
->>>>>>> fix
 
 
 @admin.register(models.Film)
 class FilmAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
-    list_display = ('title', 'public_time', 'score',)
-    list_per_page = 20
-    search_fields = ('title',)
-    readonly_fields = ('score', 'marking_members', 'commenting_members')
-    actions_on_top = True
-    ordering = ('-id',)
-    list_filter = ('public_time',)
-    date_hierarchy = 'public_time'
-=======
+
     # inlines = [FilmCommentInline, FilmReviewInline]
     list_per_page = 20
     list_display = ('image_data', 'name', 'score')
@@ -99,77 +85,37 @@ class MarkAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.score = obj.score
 
-        return super().save_model(request, obj, form, change)
->>>>>>> fix
-
 
 @admin.register(models.OnMovie)
 class OnMovieAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
-    list_display = ('get_film_title', 'get_film_public_time')
-    list_per_page = 20
-    search_fields = ('get_film_title',)
-    actions_on_top = True
-=======
+
     search_fields = ('film__name',)
     list_per_page = 20
->>>>>>> fix
 
 
 @admin.register(models.ComingMovie)
 class ComingMovieAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
-    list_display = ('get_film_title', 'get_film_public_time',)
-    list_per_page = 20
-    search_fields = ('get_film_title',)
-    actions_on_top = True
-=======
+
     search_fields = ('film__name',)
     list_per_page = 20
->>>>>>> fix
 
 
 @admin.register(models.FilmComment)
 class FilmCommentAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
-    list_display = ('get_film_title', 'get_author_name',)
-    list_per_page = 20
-    search_fields = ('get_film_title', 'get_author_name',)
-    actions_on_top = True
-=======
-    list_display = ('film', 'create_time', 'update_time')
 
+    list_display = ('film', 'create_time', 'update_time')
     actions = [active_true, active_false]
->>>>>>> fix
 
 
 @admin.register(models.FilmReview)
 class FilmReviewAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
-    list_display = ('get_film_title', 'get_author_name',)
-    list_per_page = 20
-    search_fields = ('get_film_title', 'get_author_name',)
-    actions_on_top = True
-=======
 
     actions = [active_true, active_false]
->>>>>>> fix
 
 
 @admin.register(models.FilmReviewComment)
 class FilmReviewCommentAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
-    list_display = ('get_film_review_title', 'get_film_title', 'get_author_name',)
-    list_per_page = 20
-    search_fields = ('get_film_review_title', 'get_film_title', 'get_author_name',)
-    actions_on_top = True
-
-
-
-
-
-=======
 
     actions = [active_true, active_false]
->>>>>>> fix
+
 
