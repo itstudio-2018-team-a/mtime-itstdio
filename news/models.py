@@ -13,6 +13,7 @@ class News(models.Model):
     active = models.BooleanField(default=True, verbose_name=u'情况')
 
     commented_members = models.IntegerField(default=0, verbose_name=u'评论人数')
+    picture = models.ImageField(verbose_name=u'图片', upload_to='upload')
 
     class Meta:
         verbose_name = u'新闻'

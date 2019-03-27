@@ -26,7 +26,8 @@ def i_register(request):
             post_body_json = {}
 
         # post判断post_body是否存在所需内容
-        if post_body_json and "user_id" in post_body_json and \
+        if post_body_json and \
+                "user_id" in post_body_json and \
                 'email' in post_body_json and\
                 'user_name' in post_body_json and\
                 'password' in post_body_json and\
