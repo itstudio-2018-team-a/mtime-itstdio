@@ -4,10 +4,9 @@ from . import models
 
 @admin.register(models.News)
 class NewsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('title',)
 
 
 @admin.register(models.NewsComment)
 class NewsCommentAdmin(admin.ModelAdmin):
-    pass
-
+    list_display = ('news',)

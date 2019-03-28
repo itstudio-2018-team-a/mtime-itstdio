@@ -19,6 +19,8 @@ class News(models.Model):
         verbose_name = u'新闻'
         verbose_name_plural = verbose_name
 
+        ordering = ['-create_time']
+
     def __str__(self):
         return self.title
 
@@ -34,6 +36,8 @@ class NewsComment(models.Model):
     class Meta:
         verbose_name = u'新闻评论'
         verbose_name_plural = verbose_name
+
+        ordering = ['create_time']
 
     def __str__(self):
         return u'%s %s' % (self.news.title, self.author.username)

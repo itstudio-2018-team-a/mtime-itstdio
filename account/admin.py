@@ -66,18 +66,5 @@ class BlackListAdmin(admin.ModelAdmin):
     search_fields = ('user__username',)
 
 
-@admin.register(models.VerificationCode)
-class VerificationCodeAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(models.BlackList)
-class BlackListAdmin(admin.ModelAdmin):
-    pass
-
-
-
-
-
 
 

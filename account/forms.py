@@ -41,7 +41,7 @@ class RegisterForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        if re.search(r'^[0-9a-zA-Z_]{0,19}@[0-9a-zA-Z]{1,13}\.[com,cn,net]{1,3}$', email):
+        if not re.search(r'^[0-9a-zA-Z_]{0,19}@[0-9a-zA-Z]{1,13}\.[com,cn,net]{1,3}$', email):
             raise forms.ValidationError('邮箱格式错误')
         if models.User.objects.filter(email=email):
             raise forms.ValidationError('邮箱已被注册')
