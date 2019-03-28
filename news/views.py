@@ -2,23 +2,49 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 import json
+import datetime
+from django.utils import timezone
 # Create your views here.
 from . import models
 from account import models as account_models
 
 
-# 获取热点新闻
+# 1
+# 获取热点新闻  今日热点
 def get_hotpot_list(request):
     if request.method == 'GET':
-        hot_news = models.News.objects.all().order_by('-hits', '-create_time')[:10]
+        # 获取现在的时间 今日
+        now = timezone.now()
 
-        json_data = json.dumps(hot_news)
+        # 状态 active == True
+        hot_news = models.News.objects.filter(active=True,
+                                              create_time__year=now.year,
+                                              create_time__month=now.month,
+                                              create_time__day=now.day).order_by('-hits', '-create_time')[:10]
 
-        HttpResponse(json_data)
+        content = {'num': hot_news.count(), 'list': [], 'status': 'ok'}
+        for one in hot_news:
+            content['list'].append({
+                'title': one.title,
+                'content': one.content,
+                # create_time
+                'pub_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'update_time': str(one.update_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'picture': one.picture.url,
+            })
+
+        content = json.dumps(content)
+
+        return HttpResponse(content,
+                            content_type='application/json;charset = utf-8',
+                            status='200',
+                            reason='success',
+                            charset='utf-8')
     else:
-        HttpResponse(status=404)
+        return HttpResponse(status=404)
 
 
+# 0
 # 获取全部新闻列表
 def get_all_news(request):
     if request.method == 'GET':
@@ -32,15 +58,15 @@ def get_all_news(request):
         except ValueError:
             page_num = 1
 
-        max_page_num = paginator.count()
+        max_page_num = paginator.count
         if page_num > max_page_num:
             page_num = max_page_num
         if page_num < 1:
             page_num = 1
 
         page_of_list = paginator.page(page_num)
-        content = {}
-        content['list'] = page_of_list.object_list
+        content = {'list': [], }
+        content['list'].append(page_of_list.object_list)
 
         content['max_page'] = max_page_num
 
@@ -51,35 +77,40 @@ def get_all_news(request):
         HttpResponse(status=404)
 
 
+# 0
 # 获取特定新闻 参数id
-def get_news(request, news_id):
+def get_news(request):
     if request.method == 'GET':
-        the_news = models.News.objects.filter(id=news_id, active=True)[0]
+        news_id = request.GET.get('news_id')
+        the_news = models.News.objects.filter(id=news_id, active=True)
 
         if the_news:
+            the_news = the_news[0]
+
             result = {}
             result['title'] = the_news.title
             result['author'] = the_news.author.username
             result['author_id'] = the_news.author_id
             result['content'] = the_news.content
-            result['create_time'] = the_news.create_time
-            result['update_time'] = the_news.update_time
+            result['create_time'] = str(the_news.create_time)
+            result['update_time'] = str(the_news.update_time)
             result['hits'] = the_news.hits
             result['commented_member'] = the_news.commented_members
-            result['picture'] = the_news.picture
+            result['picture'] = the_news.picture.url
 
             json_data = json.dumps(result)
 
-            HttpResponse(json_data)
+            return HttpResponse(json_data)
 
         else:
             # 返回错误信息
             #########
-            HttpResponse(status=404)
+            return HttpResponse(status=404)
     else:
         HttpResponse(status=404)
 
 
+# 0
 # 进行评论
 def commit_news(request):
     if request.method == 'POST':
@@ -135,6 +166,7 @@ def commit_news(request):
         HttpResponse(status=404)
 
 
+# 0
 # 获取评论列表 特定新闻
 def get_commit_list(request):
     if request.method == 'GET':
@@ -164,6 +196,7 @@ def get_commit_list(request):
         HttpResponse(status=404)
 
 
+# 0
 def delete_comment(request):
     if request.method == 'POST':
         try:
