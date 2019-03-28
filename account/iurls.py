@@ -14,16 +14,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 
-from django.conf.urls import url, include
-from django.contrib import admin
-from django.conf import settings
-from django.conf.urls.static import static
+from django.conf.urls import url
+from account import views
+
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
-    url(r'^account/', include('account.urls', namespace='Account')),
-    url(r'^news/', include('news.urls', namespace='news'))
+    # GET
+    # url(r'^user/info/(.+)'),                    # 获取用户信息1
+    # url(r'^user/film_review_list/(.+)'),        # 用户影评列表
+    # url(r'^user/comments/(.+)'),               # 用户评论列表
+    # url(r'^user/comments_news/(.+)'),           # 用户新闻评论列表
+    # url(r'^user/comments_filmreview/(.+)'),
+
+    # POST
+    url(r'^register/', views.i_register),
+    url(r'^login/', views.i_login),
+    url(r'^app_login/', views.i_login),
+    url(r'^changepasswd/(.+)', views.i_change_password),
+    url(r'^foget_passwd/', views.i_forgot_password),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

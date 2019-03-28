@@ -5,8 +5,11 @@ from .account_user import to_register
 from .models import User
 import json
 import datetime
+import logging
 
-# Create your views here.
+
+logger = logging.getLogger('account')
+
 
 '''
 注册接口函数，尚未完成session and cookie
@@ -15,14 +18,16 @@ import datetime
 
 def i_register(request):
     if request.method == 'POST':
-
         # 读取post的内容
         # 使用try防止乱推出现异常崩溃
         try:
             post_body_json = json.loads(request.body)
+            logger.debug('i_register收到POST:', str(post_body_json))
         except json.JSONDecodeError:
+            logger.error('i_register解析失败，收到POST:', str(post_body_json))
             post_body_json = {}
         except Exception:
+            logger.error('i_registerPost解析出现未知错误，收到POST:', str(post_body_json))
             post_body_json = {}
 
         # post判断post_body是否存在所需内容
@@ -33,10 +38,11 @@ def i_register(request):
                 'password' in post_body_json and\
                 'verify_id' in post_body_json and\
                 'verify_code' in post_body_json:
-
+            logger.debug('POST数据正常')
             # 检查验证码是否正确
             # 此处需要更换为email格式的验证码
-            if check_verify_img(post_body_json['verify_id'], post_body_json['verify_code']):
+            if True or check_verify_img(post_body_json['verify_id'], post_body_json['verify_code']):
+                logger.debug('验证码通过')
 
                 # 检查各项是否为空
                 if not post_body_json['user_id']:
@@ -77,6 +83,7 @@ def i_login(request):
     if request.method == 'POST':
 
         # 读取post的内容
+
         # 使用try防止乱推出现异常崩溃
         try:
             post_body_json = json.loads(request.body)
@@ -90,7 +97,9 @@ def i_login(request):
                 'password' in post_body_json and \
                 'verify_id' in post_body_json and \
                 'verify_code' in post_body_json:
-            if check_verify_img(post_body_json['verify_id'], post_body_json['verify_code']):
+
+            # 检查验证码
+            if True or check_verify_img(post_body_json['verify_id'], post_body_json['verify_code']):
 
                 # 检查各项是否为空
                 if not post_body_json['user_id'] and not post_body_json['emial']:
@@ -104,10 +113,7 @@ def i_login(request):
                 if user:
                     user = user[0]
                     if user.active:
-                        # 检查密码是否为正确的语句
-                        # 检查密码是否为正确的语句
-                        # 检查密码是否为正确的语句
-                        if '密码正确':
+                        if user.password == post_body_json['password']:
                             request.session['login_session'] = post_body_json['user_id'] + str(datetime.datetime.now())
                             return HttpResponse("{\"result\":0}", status=200)
                         else:
