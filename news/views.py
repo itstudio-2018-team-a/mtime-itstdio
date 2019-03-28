@@ -10,8 +10,11 @@ from account import models as account_models
 # 获取热点新闻
 def get_hotpot_list(request):
     if request.method == 'GET':
-        hot_news = models.News.objects.filter().order_by('-hits', '-create_time')
+        hot_news = models.News.objects.all().order_by('-hits', '-create_time')[:10]
 
+        json_data = json.dumps(hot_news)
+
+        HttpResponse(json_data)
     else:
         HttpResponse(status=404)
 
@@ -160,6 +163,44 @@ def get_commit_list(request):
     else:
         HttpResponse(status=404)
 
+
+def delete_comment(request):
+    if request.method == 'POST':
+        try:
+            json_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            json_data = {}
+        except Exception:
+            json_data = {}
+        if json_data:
+            cookie = request.COOKIES
+            user = account_models.User.objects.filter(id=json_data['author_id'])
+            # cookie 验证 用户
+            ##########################################
+
+            if user:
+                user = user[0]
+                comment = models.NewsComment.objects.filter(id=json_data['news_comment_id'],
+                                                            author=user, active=True)
+                if comment:
+                    comment = comment[0]
+                    comment.active = False
+
+                    # 删除 是将 active = False
+                    HttpResponse(status=200)
+                else:
+                    # 不存在此评论 或 用户不对等
+                    HttpResponse(status=404)
+            else:
+                # 用户错误
+                HttpResponse(status=404)
+        else:
+            # json 无数据
+            HttpResponse(status=404)
+
+    else:
+        # method 错误
+        HttpResponse(status=404)
 
 
 
