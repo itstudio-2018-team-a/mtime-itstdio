@@ -104,10 +104,7 @@ def i_login(request):
                 if user:
                     user = user[0]
                     if user.active:
-                        # 检查密码是否为正确的语句
-                        # 检查密码是否为正确的语句
-                        # 检查密码是否为正确的语句
-                        if '密码正确':
+                        if user.password == post_body_json['password']:
                             request.session['login_session'] = post_body_json['user_id'] + str(datetime.datetime.now())
                             return HttpResponse("{\"result\":0}", status=200)
                         else:
