@@ -37,7 +37,7 @@ def get_hotpot_list(request):
                                               create_time__month=now.month,
                                               create_time__day=now.day).order_by('-hits', '-create_time')[:10]
 
-        content = {'num': hot_news.count(), 'list': [], 'status': 'ok'}
+        content = {'num': hot_news.count, 'list': [], 'status': 'ok'}
         for one in hot_news:
             content['list'].append({
                 'news_id': one.id,
