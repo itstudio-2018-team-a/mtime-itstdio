@@ -257,7 +257,7 @@ def get_commit_list(request):
                                 charset='utf-8')
 
     else:
-        HttpResponse(status=404)
+        return HttpResponse(status=404)
 
 
 # 00000000000000000

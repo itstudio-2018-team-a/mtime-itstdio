@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 from . import models
 import json
+from django.utils import timezone
 # Create your views here.
 
 
@@ -62,7 +63,7 @@ def get_film_list(request):
                             charset='utf-8')
 
     else:
-        HttpResponse(status=404)
+        return HttpResponse(status=404)
 
 
 # {
@@ -122,6 +123,184 @@ def get_film(request):
                                 charset='utf-8')
 
     else:
-        HttpResponse(status=404)
+        return HttpResponse(status=404)
 
 
+def get_on_movie(request):
+    if request.method == 'GET':
+        on_movies = models.OnMovie.objects.all()
+
+        num = len(on_movies)
+        content = {'num': num, 'list': [], 'status': 'ok'}
+        for one in on_movies:
+            content['list'].append({
+                'title': one.film.name,
+                'film_id': one.film.id,
+                'image': one.film.head_image.url,
+                'info': one.film.info,
+                'release_date': str(one.film.on_time.strftime('%H:%M:%S')),
+                'mark': one.film.score,
+                'marked_members': one.film.marked_members,
+                'commented_members': one.film.commented_member,
+            })
+
+        content = json.dumps(content)
+
+        return HttpResponse(content,
+                            content_type='application/json;charset = utf-8',
+                            status='200',
+                            reason='success',
+                            charset='utf-8')
+    else:
+        return HttpResponse(status=404)
+
+
+def get_coming_movie(request):
+    if request.method == 'GET':
+        on_movies = models.ComingMovie.objects.all()
+
+        num = len(on_movies)
+        content = {'num': num, 'list': [], 'status': 'ok'}
+        for one in on_movies:
+            content['list'].append({
+                'title': one.film.name,
+                'film_id': one.film.id,
+                'image': one.film.head_image.url,
+                'info': one.film.info,
+                'release_date': str(one.film.on_time.strftime('%H:%M:%S')),
+                'mark': one.film.score,
+                'marked_members': one.film.marked_members,
+                'commented_members': one.film.commented_member,
+            })
+
+        content = json.dumps(content)
+
+        return HttpResponse(content,
+                            content_type='application/json;charset = utf-8',
+                            status='200',
+                            reason='success',
+                            charset='utf-8')
+    else:
+        return HttpResponse(status=404)
+
+
+def get_film_review_list(request):
+    if request.method == 'GET':
+        all_review_list = models.FilmReview.objects.filter(active=True).order_by('-create_time')
+
+        num = int(request.GET.get('num', default=10))
+        paginator = Paginator(all_review_list, num)
+
+        page_num = int(request.GET.get('page', default='1'))
+
+        max_page_num = paginator.count
+        if page_num > max_page_num:
+            page_num = max_page_num
+        if page_num < 1:
+            page_num = 1
+
+        page_of_list = paginator.page(page_num)
+        total_num = len(all_review_list)
+        content = {'list': [], 'total_num': total_num, 'num': num, 'status': 'ok'}
+
+        for one in page_of_list.object_list:
+            content['list'].append({
+                'film_id': one.film.id,
+                'author_name': one.author.username,
+                'author_id': one.author.id,
+                'author_head': one.author.head_image.url,
+                'title': one.title,
+                'subtitle': one.subtitle,
+                'content': one.content,
+                'comment_members': one.comment_members,
+                'thumbnail': one.thumbnail.url,
+                'pub_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+
+            })
+
+            content = json.dumps(content)
+
+            return HttpResponse(content,
+                                content_type='application/json;charset = utf-8',
+                                status='200',
+                                reason='success',
+                                charset='utf-8')
+    else:
+        return HttpResponse(status=404)
+
+
+def get_hot_review(request):
+    if request.method == 'GET':
+
+        hot_review = models.FilmReview.objects.filter(active=True).order_by('-hits', '-create_time')[:10]
+
+        content = {'num': hot_review.count(), 'list': [], 'status': 'ok'}
+        for one in hot_review:
+            content['list'].append({
+                'comment_id': one.id,
+                'title': one.title,
+                'subtitle': one.subtitle,
+                'author_id': one.author.id,
+                'author_name': one.author.username,
+                'author_head': one.author.head_image.url,
+                'comment_num': one.commented_members,
+                'create_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'update_time': str(one.update_time.strftime('%Y-%m-%d %H:%M:%S')),
+
+            })
+
+        content = json.dumps(content)
+
+        return HttpResponse(content,
+                            content_type='application/json;charset = utf-8',
+                            status='200',
+                            reason='success',
+                            charset='utf-8')
+
+    else:
+        return HttpResponse(status=404)
+
+
+def get_review(request):
+    if request.method == 'GET':
+        review_id = request.GET.get('review_id') # 000
+        the_review = models.FilmReview.objects.filter(id=review_id, active=True)
+
+        if the_review:
+            the_review = the_review[0]
+
+            content = {
+                'title': the_review.title,
+                'subtitle': the_review.subtitle,
+                'author_id': the_review.author.id,
+                'author_name': the_review.author.username,
+                'author_head': the_review.author.head_image.url,
+                'comment_num': the_review.commented_members,
+                'create_time': str(the_review.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'update_time': str(the_review.update_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'body': the_review.content,
+
+                'status': 'ok',
+                }
+
+            content = json.dumps(content)
+
+            return HttpResponse(content,
+                                content_type='application/json;charset = utf-8',
+                                status='200',
+                                reason='success',
+                                charset='utf-8')
+
+        else:
+
+            content = {'status': 'unknow'}
+
+            content = json.dumps(content)
+
+            return HttpResponse(content,
+                                content_type='application/json;charset = utf-8',
+                                status='404',
+                                reason='Not_Found',
+                                charset='utf-8')
+    else:
+        return HttpResponse(status=404)

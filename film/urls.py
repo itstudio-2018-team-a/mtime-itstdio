@@ -30,6 +30,28 @@ urlpatterns = [
     # required: film_id=?
     # selected: null
     url(r'^i/film/', views.get_film),
+
+    # 正在上映的电影
+    # required: null
+    # selected: null
+    url(r'^i/ticketing_film/', views.get_on_movie),
+
+
+    # 即将上映的电影 GET
+    # required: null
+    # selected: null
+    url(r'^i/coming_film/', views.get_coming_movie),
+
+    # 影评列表 GET
+    # required: null
+    # selected: page=?(default=1) num=?(default=10)
+    url(r'^i/film_review_list', views.get_film_review_list),
+
+    # 影评内容 GET
+    # required: review_id=?
+    # selected: null
+    url(r'^i/film_review/$', views.get_review),
+
 ]
 
 
