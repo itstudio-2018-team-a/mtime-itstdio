@@ -23,7 +23,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^account/', include('account.urls', namespace='Account')),
-    url(r'^news/', include('news.urls', namespace='news'))
+    url(r'^news/', include('news.urls', namespace='news')),
+    url(r'^film/', include('film.urls', namespace='film')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

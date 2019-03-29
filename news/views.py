@@ -64,10 +64,11 @@ def get_hotpot_list(request):
 # 获取全部新闻列表
 def get_all_news(request):
     if request.method == 'GET':
-        all_news_list = models.News.objects.all().order_by('-create_time')
+        all_news_list = models.News.objects.filter(active=True).order_by('-create_time')
 
-        # 分页器 每页 10 个新闻
-        paginator = Paginator(all_news_list, 10)
+        # 分页器 每页 10 个新闻(default=10)
+        num = int(request.GET.get('num', default='10'))
+        paginator = Paginator(all_news_list, num)
 
         page_num = int(request.GET.get('page', default='1'))
 
@@ -78,8 +79,8 @@ def get_all_news(request):
             page_num = 1
 
         page_of_list = paginator.page(page_num)
-        total_num = len(page_of_list.object_list)
-        content = {'list': [], 'total_num': total_num, 'status': 'ok'}
+        total_num = len(all_news_list)
+        content = {'list': [], 'total_num': total_num, 'num': num, 'status': 'ok'}
 
         for one in page_of_list.object_list:
             content['list'].append({
@@ -121,7 +122,7 @@ def get_all_news(request):
 # 获取特定新闻 参数id
 def get_news(request):
     if request.method == 'GET':
-        news_id = request.GET.get('news_id')
+        news_id = request.GET.get('news_id') # 000
         the_news = models.News.objects.filter(id=news_id, active=True)
 
         if the_news:
