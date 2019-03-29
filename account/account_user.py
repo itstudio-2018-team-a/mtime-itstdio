@@ -3,6 +3,9 @@ from account.models import User
 import hashlib
 import json
 import datetime
+import logging
+
+logger = logging.getLogger('account.user')
 
 
 '''
@@ -15,11 +18,11 @@ import datetime
 
 def to_register(user_id, user_name, password, email):
     if User.objects.filter(username=user_id):
-        return 1
+        return 1, None
     if User.objects.filter(email=email):
-        return 2
-    User(username=user_id, password=password, email=email, nickname=user_name).save()
-    return 0
+        return 2, None
+    user = User(username=user_id, password=password, email=email, nickname=user_name).save()
+    return 0, user
 
 
 # '''用于对密码进行MD5加密的函数'''
@@ -58,5 +61,9 @@ def check_dirt_args_valid(json_dirt, args_list):
 
 # 用于登录的函数
 def to_login(request, user):
-    request.session['user_id'] = user.id
-    request.session['login_key'] = sign_password_md5(str(datetime.datetime.now()))
+    try:
+        request.session['user_id'] = user.id
+        request.session['login_key'] = sign_password_md5(str(datetime.datetime.now()))
+        logger.info('登陆成功')
+    except Exception:
+        logger.error('登陆失败')

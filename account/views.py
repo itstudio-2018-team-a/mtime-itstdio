@@ -54,14 +54,13 @@ def i_register(request):
 
                 # 写入数据库
                 logger.info('将注册信息写入数据库')
-                result = to_register(post_body_json['user_id'], post_body_json['user_name'], sign_password_md5(post_body_json['password']), post_body_json['email'])
+                result, user = to_register(post_body_json['user_id'], post_body_json['user_name'], sign_password_md5(post_body_json['password']), post_body_json['email'])
                 # 返回结果
                 if not result:
                     # 注册成功
                     logger.info('注册成功')
-                    logger.info('开始写入session')
-                    request.session['login_session'] = post_body_json['user_id'] + str(datetime.datetime.now())
-                    logger.info('session写入成功')
+                    # 注册后自动登陆
+                    to_login(request, user)
                     return HttpResponse("{\"result\":0}", status=200)
                 else:
                     # 注册失败返回状态码
