@@ -2,10 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from mtime_itstudio.general import check_verify_img
 from .account_user import to_register, sign_password_md5, get_json, check_dirt_args_valid, to_login
+from news.models import NewsComment
 from .models import User
 import json
 import datetime
 import logging
+import pickle
 
 logger = logging.getLogger('account.view')
 
@@ -188,7 +190,7 @@ def i_change_password(request, user_id):
     if request.method == 'POST':
         logger.info('收到post请求')
         logger.debug('user_id='+user_id)
-        user = User.objects.filter(user_id=user_id)
+        user = User.objects.filter(username=user_id)
         if not user or not ('user_id' in request.session and request.session['user_id'] == user_id):
             logger.info('位置用户或未登录')
             return HttpResponse("{\"result\": 3}") # 返回未登录
@@ -216,4 +218,73 @@ def i_change_password(request, user_id):
             elif check_problem == 'verify_id' or check_problem == 'verify_code':
                 return HttpResponse("{\"result\": 2}")
 
-# GET
+
+'''GET'''
+
+
+# 获取用户信息
+def i_get_user_info(request, user_id):
+    if request.method == 'GET':
+        logger.info('收到GET请求')
+        user = User.objects.filter(username=user_id)        # 从数据库中检索用户
+        if user:        # 检查用户是否存在
+            user = user[0]
+            data = {"user_id": user.username,
+                    "username": user.nickname,
+                    'head':"",
+                    "email": user.username,
+                    'status':'ok'}
+            return HttpResponse(json.dumps(data))
+        else:
+            return HttpResponse("{\"status\": \"unknow_user\"}")
+
+
+# 用户新闻评论列表
+def i_get_user_comments_news_list(request, user_id):
+    try:
+        if request.method == 'GET':
+            logger.info('接到get请求')
+            user = User.objects.filter(username=user_id)
+            if user:    # 检查用户是否存在
+                logger.info('已检索到用户：'+user_id)
+                user = user[0]
+
+                # 获取切片信息
+                page = request.GET.get('pages', '1')
+                num = request.GET.get('num', '10')
+                try:
+                    num = int(num)
+                except TypeError:
+                    logger.error('num类型转换异常')
+                    num = 10
+                try:
+                    page = int(page)
+                except TypeError:
+                    logger.error('page类型转换异常')
+                    page = 1
+                logger.info('拉取第'+page+'页，每页'+num+'个数据')
+
+                # 搜索数据库
+                comments = NewsComment.objects.select_related('news').filter(author_id=user.id).exclude(active=False).\
+                    values('news_id', 'news__title', 'content', 'create_time')
+                comments.reverse()      # 列表反向
+                total_num = comments.count()    # 计算总评论数，以便计算页数
+                comments = comments[(page-1)*num:page*num]
+                comments_date_list = []
+                for comment in comments:
+                    comments_date_list.append({"content": comment['content'],
+                                               "titel": comment['news__title'],
+                                               "id": comment['news_id'],
+                                               'image': "",
+                                               'public_time': comment['create_time']})
+                logger.info('返回'+num+'条数据')
+                return HttpResponse([json.dumps({"num": len(comments_date_list),
+                                                 'page': page,
+                                                 "list": comments_date_list,
+                                                 'total': total_num,
+                                                 'status': 'ok'})])
+            else:
+                logger.error('未知用户：'+user_id)
+                return HttpResponse('unknown_user')
+    except Exception:
+        return HttpResponse('error')
