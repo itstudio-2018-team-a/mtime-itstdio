@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from mtime_itstudio.general import check_verify_img
-from .account_user import to_register, sign_password_md5
+from .account_user import to_register, sign_password_md5, get_json, check_dirt_args_valid, to_login
 from .models import User
 import json
 import datetime
@@ -13,6 +13,7 @@ logger = logging.getLogger('account.view')
 # 注册接口函数，尚未完成session and cookie
 def i_register(request):
     if request.method == 'POST':
+        logger.info('收到post请求')
         # 读取post的内容
         # 使用try防止乱推出现异常崩溃
         try:
@@ -77,9 +78,8 @@ def i_register(request):
 # 登陆接口函数
 def i_login(request):
     if request.method == 'POST':
-
+        logger.info('收到post请求')
         # 读取post的内容
-
         # 使用try防止乱推出现异常崩溃
         try:
             post_body_json = json.loads(request.body)
@@ -129,7 +129,7 @@ def i_login(request):
 
 def i_app_login(request):
     if request.method == 'POST':
-
+        logger.info("收到POST请求")
         # 读取post的内容
 
         # 使用try防止乱推出现异常崩溃
@@ -180,12 +180,40 @@ def i_logout(request):
     pass
 
 
-def i_forgot_password(request):
+def i_forgot_password(request, user_id):
     pass
 
 
-def i_change_password(request):
-    pass
-
+def i_change_password(request, user_id):
+    if request.method == 'POST':
+        logger.info('收到post请求')
+        logger.debug('user_id='+user_id)
+        user = User.objects.filter(user_id=user_id)
+        if not user or not ('user_id' in request.session and request.session['user_id'] == user_id):
+            logger.info('位置用户或未登录')
+            return HttpResponse("{\"result\": 3}") # 返回未登录
+        else:
+            user = user[0]
+            logger.info('已找到用户')
+        args_list = ["old_password", "new_password", "verify_id", "verify_code"]
+        # 安全解析json
+        post_body = get_json(request.body, args_list)
+        logger.debug('json已解析')
+        # 检查元素合法
+        check_problem = check_dirt_args_valid(post_body, args_list)
+        if not check_problem:
+            logger.info('json验证通过')
+            if sign_password_md5(post_body['old_password']) == user.password:
+                user.password = sign_password_md5(post_body['new_password'])
+                user.save()
+                logger.info('密码修改成功')
+                return HttpResponse("{\"result\": 0}")
+        else:
+            if check_problem == 'old_password':
+                return HttpResponse("{\"result\": 1}")
+            elif check_problem == 'new_password':
+                return HttpResponse("{\"result\": 4}")  # 新密码不存在的状态等待定义
+            elif check_problem == 'verify_id' or check_problem == 'verify_code':
+                return HttpResponse("{\"result\": 2}")
 
 # GET

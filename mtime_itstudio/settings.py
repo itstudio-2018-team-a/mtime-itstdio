@@ -183,3 +183,5 @@ LOGGING = {
         },
     }
 }
+
+SESSION_COOKIE_AGE = 86400
