@@ -59,7 +59,12 @@ urlpatterns = [
     # 短评 GET
     # required: film_id=?
     # selected: page=?(default=1) num=?(default=10)
-    url(r'^i/short_comment_list/', views.get_short_comment)
+    url(r'^i/short_comment_list/', views.get_short_comment),
+
+    #  影评评论 GET
+    # required: review_id=?
+    # selected: page=?(default=1) num=?(default=10)
+    url(r'^i/film_review_comment', views.get_review_comment)
 
 
 ]

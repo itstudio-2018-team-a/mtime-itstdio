@@ -112,4 +112,6 @@ class FilmReviewAdmin(admin.ModelAdmin):
     actions = [active_true, active_false]
 
 
-
+@admin.register(models.FilmReviewComment)
+class FilmReviewCommentAdmin(admin.ModelAdmin):
+    pass
