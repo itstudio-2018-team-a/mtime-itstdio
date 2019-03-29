@@ -25,5 +25,5 @@ def to_register(user_id, user_name, password, email):
 
 def sign_password_md5(passwd, salt='kHa4sDk3dhQf'):
     hashpwd_builder = hashlib.md5()         # 构建md5加密器
-    hashpwd_builder.update(passwd+salt)
+    hashpwd_builder.update((passwd+salt).encode())
     return hashpwd_builder.hexdigest()      # 返回加密结果

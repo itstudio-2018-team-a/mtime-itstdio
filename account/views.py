@@ -8,27 +8,21 @@ import datetime
 import logging
 
 
-logger = logging.getLogger('account')
-
-
-'''
-注册接口函数，尚未完成session and cookie
-'''
-
-
+# 注册接口函数，尚未完成session and cookie
 def i_register(request):
+    logger = logging.getLogger('account.view.i_register')
     if request.method == 'POST':
         # 读取post的内容
         # 使用try防止乱推出现异常崩溃
         try:
             post_body_json = json.loads(request.body)
-            logger.debug('i_register收到POST:', str(post_body_json))
+            logger.info('i_register收到POST:', str(post_body_json))
         except json.JSONDecodeError:
+            post_body_json = {}
             logger.error('i_register解析失败，收到POST:', str(post_body_json))
-            post_body_json = {}
         except Exception:
-            logger.error('i_registerPost解析出现未知错误，收到POST:', str(post_body_json))
             post_body_json = {}
+            logger.error('i_registerPost解析出现未知错误，收到POST:', str(post_body_json))
 
         # post判断post_body是否存在所需内容
         if post_body_json and \
@@ -38,11 +32,11 @@ def i_register(request):
                 'password' in post_body_json and\
                 'verify_id' in post_body_json and\
                 'verify_code' in post_body_json:
-            logger.debug('POST数据正常')
+            logger.info('POST数据正常')
             # 检查验证码是否正确
             # 此处需要更换为email格式的验证码
             if True or check_verify_img(post_body_json['verify_id'], post_body_json['verify_code']):
-                logger.debug('验证码通过')
+                logger.info('验证码通过')
 
                 # 检查各项是否为空
                 if not post_body_json['user_id']:
@@ -55,16 +49,16 @@ def i_register(request):
                     return HttpResponse("{\"result\":4}")
 
                 # 写入数据库
-                logger.debug('将注册信息写入数据库')
+                logger.info('将注册信息写入数据库')
                 result = to_register(post_body_json['user_id'], post_body_json['user_name'], sign_password_md5(post_body_json['password']), post_body_json['email'])
 
                 # 返回结果
                 if not result:
                     # 注册成功
-                    logger.debug('注册成功')
-                    logger.debug('开始写入session')
+                    logger.info('注册成功')
+                    logger.info('开始写入session')
                     request.session['login_session'] = post_body_json['user_id'] + str(datetime.datetime.now())
-                    logger.debug('session写入成功')
+                    logger.info('session写入成功')
                     return HttpResponse("{\"result\":0}", status=200)
                 else:
                     # 注册失败返回状态码
@@ -80,9 +74,7 @@ def i_register(request):
     return HttpResponse(status=404)
 
 
-'''登陆接口函数'''
-
-
+# 登陆接口函数
 def i_login(request):
     if request.method == 'POST':
 
@@ -194,3 +186,6 @@ def i_forgot_password(request):
 
 def i_change_password(request):
     pass
+
+
+# GET
