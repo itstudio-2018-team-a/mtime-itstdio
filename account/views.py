@@ -7,22 +7,23 @@ import json
 import datetime
 import logging
 
+logger = logging.getLogger('account.view')
+
 
 # 注册接口函数，尚未完成session and cookie
 def i_register(request):
-    logger = logging.getLogger('account.view.i_register')
     if request.method == 'POST':
         # 读取post的内容
         # 使用try防止乱推出现异常崩溃
         try:
             post_body_json = json.loads(request.body)
-            logger.info('i_register收到POST:', str(post_body_json))
+            logger.debug('i_register收到POST:'+str(post_body_json))
         except json.JSONDecodeError:
             post_body_json = {}
-            logger.error('i_register解析失败，收到POST:', str(post_body_json))
+            logger.error('i_register解析失败，收到POST:'+str(post_body_json))
         except Exception:
             post_body_json = {}
-            logger.error('i_registerPost解析出现未知错误，收到POST:', str(post_body_json))
+            logger.error('i_registerPost解析出现未知错误，收到POST:'+ str(post_body_json))
 
         # post判断post_body是否存在所需内容
         if post_body_json and \
@@ -51,7 +52,6 @@ def i_register(request):
                 # 写入数据库
                 logger.info('将注册信息写入数据库')
                 result = to_register(post_body_json['user_id'], post_body_json['user_name'], sign_password_md5(post_body_json['password']), post_body_json['email'])
-
                 # 返回结果
                 if not result:
                     # 注册成功
@@ -62,7 +62,7 @@ def i_register(request):
                     return HttpResponse("{\"result\":0}", status=200)
                 else:
                     # 注册失败返回状态码
-                    return HttpResponse("{\"result\":{0}}".format(result), status=200)
+                    return HttpResponse("{\"result\":" + str(result) + "}}", status=200)
 
             else:
                 # 验证码错误，返回状态码
