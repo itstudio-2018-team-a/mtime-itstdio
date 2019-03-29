@@ -48,7 +48,7 @@ def get_film_list(request):
         for one in page_of_list.object_list:
             content['list'].append({
                 'title': one.name,
-                'image': one.head_image,
+                'image': one.head_image.url,
                 'info': one.info,
                 'film_id': one.id,
                 'time': str(one.on_time.strftime('%Y-%m-%d %H:%M:%S'))
@@ -302,5 +302,13 @@ def get_review(request):
                                 status='404',
                                 reason='Not_Found',
                                 charset='utf-8')
+    else:
+        return HttpResponse(status=404)
+
+
+def get_short_comment(request):
+    if request.method == 'POST':
+        film_id = request.GET.get('film_id')
+
     else:
         return HttpResponse(status=404)
