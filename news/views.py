@@ -36,8 +36,8 @@ def get_hotpot_list(request):
                                               create_time__year=now.year,
                                               create_time__month=now.month,
                                               create_time__day=now.day).order_by('-hits', '-create_time')[:10]
-
-        content = {'num': hot_news.count, 'list': [], 'status': 'ok'}
+        num = len(hot_news)
+        content = {'num': num, 'list': [], 'status': 'ok'}
         for one in hot_news:
             content['list'].append({
                 'news_id': one.id,
@@ -48,6 +48,7 @@ def get_hotpot_list(request):
                 'update_time': str(one.update_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'picture': one.picture.url,
             })
+        print(content)
 
         content = json.dumps(content)
 
