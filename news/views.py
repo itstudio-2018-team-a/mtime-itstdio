@@ -25,6 +25,7 @@ def get_hotpot_list(request):
         content = {'num': hot_news.count(), 'list': [], 'status': 'ok'}
         for one in hot_news:
             content['list'].append({
+                'news_id': one.id,
                 'title': one.title,
                 'content': one.content,
                 # create_time
@@ -44,7 +45,7 @@ def get_hotpot_list(request):
         return HttpResponse(status=404)
 
 
-# 0
+# 00
 # 获取全部新闻列表
 def get_all_news(request):
     if request.method == 'GET':
@@ -87,27 +88,32 @@ def get_news(request):
         if the_news:
             the_news = the_news[0]
 
-            result = {}
-            result['title'] = the_news.title
-            result['author'] = the_news.author.username
-            result['author_id'] = the_news.author_id
-            result['content'] = the_news.content
-            result['create_time'] = str(the_news.create_time)
-            result['update_time'] = str(the_news.update_time)
-            result['hits'] = the_news.hits
-            result['commented_member'] = the_news.commented_members
-            result['picture'] = the_news.picture.url
+            content = {'title': the_news.title,
+                       'body': the_news.content,
 
-            json_data = json.dumps(result)
+                       # create_time
+                       'pub_time': str(the_news.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+                       'update_time': str(the_news.update_time.strftime('%Y-%m-%d %H:%M:%S')),
+                       'comment_num': the_news.commented_members,
+                       'picture': the_news.picture.url,
 
-            return HttpResponse(json_data)
+                       'status': 'ok',
+                       }
+
+            content = json.dumps(content)
+
+            return HttpResponse(content,
+                                content_type='application/json;charset = utf-8',
+                                status='200',
+                                reason='success',
+                                charset='utf-8')
 
         else:
             # 返回错误信息
             #########
-            return HttpResponse(status=404)
+            return HttpResponse('')
     else:
-        HttpResponse(status=404)
+        return HttpResponse(status=404)
 
 
 # 0

@@ -11,6 +11,8 @@ class User(models.Model):
 
     active = models.BooleanField(verbose_name=u'状态', default=False)
 
+    register_time = models.DateTimeField(verbose_name=u'注册时间', auto_now_add=True)
+
     class Meta:
 
         verbose_name = u'用户'
