@@ -1,0 +1,110 @@
+#body{
+  .container{
+    width: 70%;
+    margin: 68px auto;
+    border-radius: 5px;
+    box-shadow: 0px -1px 15px 3px;
+    background: -moz-linear-gradient(left, #e0e0e0, #ffffff);
+    /* Safari 5.1+, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #e0e0e0, #ffffff);
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #e0e0e0, #ffffff);
+    .head{
+      margin: 33px 23px;
+      .title{
+        font-size: 18px;
+        font-weight: 400;
+        margin: 0 0 24px 0;
+        padding-top: 33px;
+      }
+      .selections{
+        a{
+          span{
+            font-size: 12px;
+            font-weight: 400;
+          }
+          .validateInfo{
+            color: #dc2f2f;
+          }
+        }
+      }
+    }
+    .body{
+      margin: 33px 23px;
+      .left{
+        float: left;
+        .head_portrait{
+          position: relative;
+          .portrait{
+            margin: 44px 73px;
+            width: 145px;
+          }
+          div{
+            position: absolute;
+            left: 100px;
+            top: 70px;
+            img{
+              width: 91px;
+            }
+          }
+        }
+        .sel{
+          display: block;
+          width: 288px;
+          height: 33px;
+          text-align: center;
+          background: #5b88b4;
+          cursor: pointer;
+          border-radius: 3px;
+          margin: 25px 0;
+          span{
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 32px;
+            color: #ffffff;
+          }
+        }
+        .upload_portrait{
+          border: 2px solid rgba(91,136,180,1);
+          background: white;
+          span{
+            z-index: 10;
+            color: #5b88b4;
+          }
+        }
+      }
+      .right{
+        float: right;
+        .sel{
+          width: 288px;
+          margin: 24px 0;
+          p{
+            font-size: 9px;
+            font-weight: 400;
+          }
+        }
+        .submit{
+          width: 288px;
+          height: 33px;
+          text-align: center;
+          background: #5b88b4;
+          cursor: pointer;
+          span{
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 32px;
+            color: #ffffff;
+          }
+        }
+        .title{
+          span{
+            font-size: 9px;
+            font-weight: bold;
+            color: #dc2f2f;
+          }
+        }
+      }
+
+    }
+  }
+}

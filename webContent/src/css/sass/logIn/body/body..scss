@@ -1,0 +1,73 @@
+#body{
+  .container{
+    width: 70%;
+    margin: 68px auto;
+    border-radius: 5px;
+    box-shadow: 0px -1px 15px 3px;
+    background: -moz-linear-gradient(left, #e0e0e0, #ffffff);
+    /* Safari 5.1+, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #e0e0e0, #ffffff);
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #e0e0e0, #ffffff);
+    .logo_container{
+      float: left;
+      margin: 170px 210px;
+      .logo_tag{
+        font-family: "Microsoft YaHei UI";
+        text-align: center;
+        color: #5b88b4;
+        font-size: 18px;
+        font-weight: normal;
+      }
+    }
+    .login{
+      float: right;
+      margin: 105px 210px 0;
+      .title{
+        text-align: center;
+        margin: 0 0 34px 0;
+        span{
+          font-size: 18px;
+          color: #1a2a36;
+        }
+      }
+      .sel{
+        position: relative;
+        margin: 24px 0;
+        p{
+          font-size: 9px;
+          font-weight: 400;
+        }
+      }
+      .submit{
+        width: 100%;
+        height: 33px;
+        text-align: center;
+        background: #5b88b4;
+        cursor: pointer;
+        span{
+          color: white;
+          font-weight: bold;
+          line-height: 32px;
+        }
+      }
+      .register_find_back{
+        a{
+          span{
+            font-size: 12px;
+            color: #5b88b4;
+          }
+          .register{
+            float: left;
+          }
+          .find_back{
+            float: right;
+          }
+        }
+      }
+    }
+  }
+}
+.toTop{
+  visibility: hidden;
+}

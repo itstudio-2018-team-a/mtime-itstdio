@@ -33,3 +33,54 @@ $vertical_cutLine_right_right: -50px;
   background: #c0bfbf;
   float: left;
 }
+
+.arrow_left_black{
+  width: 0;
+  height: 0;
+  border: 12px solid;
+  border-color: transparent transparent transparent black;
+  position: relative;
+  float: left;
+  left: 153px;
+  top: 8px;
+  &:after{
+    position: absolute;
+    content: " ";
+    width: 0;
+    height: 0;
+    border: 12px solid;
+    left: -15px;
+    top: -12px;
+    border-color: transparent transparent transparent rgb(234,232,232);
+  }
+}
+
+.arrow_top{
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 8px;
+  left: 19px;
+  border: 20px solid;
+  border-color: transparent transparent white transparent;
+  &:after{
+    content: ' ';
+    position: absolute;
+    border: 20px solid;
+    border-color: transparent transparent  #5e6d73 transparent;
+    width: 0;
+    height: 0;
+    top: -15px;
+    left: -20px;
+  }
+}
+//rgba(91,136,180,1);
+.input{
+  width: 288px;
+  height: 33px;
+  outline: none;
+  padding: 0 0 0 10px;
+  border: 2px solid black;
+  border-radius: 3px;
+}
+

@@ -271,10 +271,12 @@
                     <form action="" method="post" class="select_board">
                         <div class="select_movie">
                             <input type="text" placeholder="选影片">
+                            <div class="number">共:<span id="number_movie">28</span>部</div>
                             <div class="arrow_down"></div>
                         </div>
                         <div class="select_cinema">
                             <input type="text" placeholder="选影院">
+                            <div class="number">共:<span id="number_cinema">28</span>家</div>
                             <div class="arrow_down"></div>
                         </div>
                         <div class="select_board_submit">立即购票</div>
@@ -364,47 +366,48 @@
                             </div>
                         </div>
                     </div>
+                    <div class="details"><span>了解更多</span></div>
                 </div>
                 <div class="vertical_cutLine_long"></div>
                 <div class="display_movie_mark">
                     <div class="title"><span>综合参考</span></div>
-                    <div class="mark_board">
-                        <div>
+                    <dl class="mark_board" id="mark_board">
+                        <dt class="head_info clearfix">
                             <span>名称</span>
                             <span>评分</span>
                             <span>昨日票房</span>
-                        </div>
-                        <div>
+                        </dt>
+                        <dd class="movie clearfix">
                             <span class="movie_name">惊奇队长</span>
                             <span class="movie_mark">7.1</span>
-                            <span class="movie_degree">1st</span>
-                        </div>
-                        <div>
+                            <span class="movie_rank">1st</span>
+                        </dd>
+                        <dd class="movie clearfix">
                             <span class="movie_name">绿皮书</span>
                             <span class="movie_mark">7.1</span>
-                            <span class="movie_degree">2nd</span>
-                        </div>
-                        <div>
+                            <span class="movie_rank">2nd</span>
+                        </dd>
+                        <dd class="movie clearfix">
                             <span class="movie_name">驯龙高手</span>
                             <span class="movie_mark">7.5</span>
-                            <span class="movie_degree">3rd</span>
-                        </div>
-                        <div>
+                            <span class="movie_rank">3rd</span>
+                        </dd>
+                        <dd class="movie clearfix">
                             <span class="movie_name">夏目友人帐</span>
                             <span class="movie_mark">7.1</span>
-                            <span class="movie_degree">4th</span>
-                        </div>
-                    </div>
+                            <span class="movie_rank">4th</span>
+                        </dd>
+                    </dl>
                     <a href="">了解更多></a>
                 </div>
             </div>
             <div class="cutLine"></div>
-            <div class="hot_video_top clearfix">
-                <div class="hot_video_title">
+            <div class="news_today_top hot_video_top clearfix">
+                <div class="news_today_top_title hot_video_title">
                     <a>
                         <span>正在热映</span>
-                        <img src="../templates/arrow_right.png" alt="">
                     </a>
+                    <div class="arrow_left_black"></div>
                 </div>
                 <div class="arrow_box">
                     <img src="../templates/arrow_left_rotate.png" alt="" class="arrow">
@@ -414,196 +417,44 @@
                 </div>
             </div>
             <div class="cutLine"></div>
-            <div class="hot_videos clearfix">
+            <div class="news_today hot_videos clearfix">
                 <div class="movie_container clearfix">
-                    <div class="movie">
-                        <div class="cover">
-                            <img src="../templates/marvel_captain_1.png" alt="">
-                        </div>
-                        <div class="info">
-                            <ul>
-                                <li class="movie_title">
-                                    <span class="movie_name movie_title_font">惊奇队长</span>
-                                </li>
-                                <li>
-                                    <span class="movie_lang movie_lang_time_font">英语</span>
-                                    <span class="movie_time movie_lang_time_font">2019</span>
-                                    <span class="movie_type movie_description_content_font">动作/科幻</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">导演</span>
-                                    <span class="movie_director movie_description_content_font">安娜·伯顿/瑞安·弗雷克</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">国家/地区：</span>
-                                    <span class="movie_location movie_description_content_font">美国</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">主演：</span>
-                                    <span class="movie_actor movie_description_content_font">布丽·拉尔森 /塞缪尔·杰克逊 /麦肯娜·格瑞丝 /嘉玛·陈 /李·佩斯</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">时长：</span>
-                                    <span class="movie_length movie_description_content_font">128</span>
-                                    <span class="movie_description_content_font">分钟</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">简介：</span>
-                                    <span class="movie_description movie_description_content_font">
-                                        漫画中的初代“惊奇女士”原名CarolDanvers，她曾经是一名美国空军情报局探员，暗恋惊奇先生。此后她得到了超能力，成为“惊奇女士”，在漫画中是非常典型的女性英雄人物。她可以吸收并控制任意...
-                                    </span>
-                                </li>
-                            </ul>
-                            <div class="purchase_button_container">
-                                <div class="purchase_button">
-                                    <span>立即购票</span>
-                                </div>
-                            </div>
+                    <div class="news">
+                        <img src="../templates/img_1.png" alt="" class="cover">
+                        <div class="news_info">
+                            <span>《波西米亚狂想曲》
+                                曝内地版特别海报</span>
                         </div>
                     </div>
-                    <div class="movie">
-                        <div class="cover">
-                            <img src="../templates/dragon-master.png" alt="">
-                        </div>
-                        <div class="info">
-                            <ul>
-                                <li class="movie_title">
-                                    <span class="movie_name movie_title_font">惊奇队长</span>
-                                </li>
-                                <li>
-                                    <span class="movie_lang movie_lang_time_font">英语</span>
-                                    <span class="movie_time movie_lang_time_font">2019</span>
-                                    <span class="movie_type movie_description_content_font">动作/科幻</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">导演</span>
-                                    <span class="movie_director movie_description_content_font">安娜·伯顿/瑞安·弗雷克</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">国家/地区：</span>
-                                    <span class="movie_location movie_description_content_font">美国</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">主演：</span>
-                                    <span class="movie_actor movie_description_content_font">布丽·拉尔森 /塞缪尔·杰克逊 /麦肯娜·格瑞丝 /嘉玛·陈 /李·佩斯</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">时长：</span>
-                                    <span class="movie_length movie_description_content_font">128</span>
-                                    <span class="movie_description_content_font">分钟</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">简介：</span>
-                                    <span class="movie_description movie_description_content_font">
-                                        漫画中的初代“惊奇女士”原名CarolDanvers，她曾经是一名美国空军情报局探员，暗恋惊奇先生。此后她得到了超能力，成为“惊奇女士”，在漫画中是非常典型的女性英雄人物。她可以吸收并控制任意...
-                                    </span>
-                                </li>
-                            </ul>
-                            <div class="purchase_button_container">
-                                <div class="purchase_button">
-                                    <span>立即购票</span>
-                                </div>
-                            </div>
+                    <div class="news middle_left">
+                        <img src="../templates/img_2.png" alt="" class="cover">
+                        <div class="news_info">
+                            <span>《波西米亚狂想曲》
+                                曝内地版特别海报</span>
                         </div>
                     </div>
-                    <div class="movie">
-                        <div class="cover">
-                            <img src="../templates/marvel_captain_2.png" alt="">
-                        </div>
-                        <div class="info">
-                            <ul>
-                                <li class="movie_title">
-                                    <span class="movie_name movie_title_font">惊奇队长</span>
-                                </li>
-                                <li>
-                                    <span class="movie_lang movie_lang_time_font">英语</span>
-                                    <span class="movie_time movie_lang_time_font">2019</span>
-                                    <span class="movie_type movie_description_content_font">动作/科幻</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">导演</span>
-                                    <span class="movie_director movie_description_content_font">安娜·伯顿/瑞安·弗雷克</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">国家/地区：</span>
-                                    <span class="movie_location movie_description_content_font">美国</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">主演：</span>
-                                    <span class="movie_actor movie_description_content_font">布丽·拉尔森 /塞缪尔·杰克逊 /麦肯娜·格瑞丝 /嘉玛·陈 /李·佩斯</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">时长：</span>
-                                    <span class="movie_length movie_description_content_font">128</span>
-                                    <span class="movie_description_content_font">分钟</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">简介：</span>
-                                    <span class="movie_description movie_description_content_font">
-                                        漫画中的初代“惊奇女士”原名CarolDanvers，她曾经是一名美国空军情报局探员，暗恋惊奇先生。此后她得到了超能力，成为“惊奇女士”，在漫画中是非常典型的女性英雄人物。她可以吸收并控制任意...
-                                    </span>
-                                </li>
-                            </ul>
-                            <div class="purchase_button_container">
-                                <div class="purchase_button">
-                                    <span>立即购票</span>
-                                </div>
-                            </div>
+                    <div class="news middle_right">
+                        <img src="../templates/img_3.png" alt="" class="cover">
+                        <div class="news_info">
+                            <span>《波西米亚狂想曲》
+                                曝内地版特别海报</span>
                         </div>
                     </div>
-                    <div class="movie">
-                        <div class="cover">
-                            <img src="../templates/earth_escape.png" alt="">
-                        </div>
-                        <div class="info">
-                            <ul>
-                                <li class="movie_title">
-                                    <span class="movie_name movie_title_font">惊奇队长</span>
-                                </li>
-                                <li>
-                                    <span class="movie_lang movie_lang_time_font">英语</span>
-                                    <span class="movie_time movie_lang_time_font">2019</span>
-                                    <span class="movie_type movie_description_content_font">动作/科幻</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">导演</span>
-                                    <span class="movie_director movie_description_content_font">安娜·伯顿/瑞安·弗雷克</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">国家/地区：</span>
-                                    <span class="movie_location movie_description_content_font">美国</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">主演：</span>
-                                    <span class="movie_actor movie_description_content_font">布丽·拉尔森 /塞缪尔·杰克逊 /麦肯娜·格瑞丝 /嘉玛·陈 /李·佩斯</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">时长：</span>
-                                    <span class="movie_length movie_description_content_font">128</span>
-                                    <span class="movie_description_content_font">分钟</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">简介：</span>
-                                    <span class="movie_description movie_description_content_font">
-                                        漫画中的初代“惊奇女士”原名CarolDanvers，她曾经是一名美国空军情报局探员，暗恋惊奇先生。此后她得到了超能力，成为“惊奇女士”，在漫画中是非常典型的女性英雄人物。她可以吸收并控制任意...
-                                    </span>
-                                </li>
-                            </ul>
-                            <div class="purchase_button_container">
-                                <div class="purchase_button">
-                                    <span>立即购票</span>
-                                </div>
-                            </div>
+                    <div class="news">
+                        <img src="../templates/img_4.png" alt="" class="cover">
+                        <div class="news_info">
+                            <span>《波西米亚狂想曲》
+                                曝内地版特别海报</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="hot_video_top clearfix">
-                <div class="hot_video_title">
+            <div class="hot_comment hot_video_top clearfix">
+                <div class="hot_comment_title news_today_top_title hot_video_title">
                     <a>
-                        <span>正在热映</span>
-                        <img src="../templates/arrow_right.png" alt="">
+                        <span>热门影评</span>
                     </a>
+                    <div class="arrow_left_black"></div>
                 </div>
                 <div class="arrow_box">
                     <img src="../templates/arrow_left_rotate.png" alt="" class="arrow">
@@ -613,184 +464,79 @@
                 </div>
             </div>
             <div class="cutLine"></div>
-            <div class="hot_videos clearfix">
+            <div class="hot_comments hot_videos clearfix">
                 <div class="movie_container clearfix">
-                    <div class="movie">
-                        <div class="cover">
-                            <img src="../templates/marvel_captain_1.png" alt="">
-                        </div>
-                        <div class="info">
-                            <ul>
-                                <li class="movie_title">
-                                    <span class="movie_name movie_title_font">惊奇队长</span>
-                                </li>
-                                <li>
-                                    <span class="movie_lang movie_lang_time_font">英语</span>
-                                    <span class="movie_time movie_lang_time_font">2019</span>
-                                    <span class="movie_type movie_description_content_font">动作/科幻</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">导演</span>
-                                    <span class="movie_director movie_description_content_font">安娜·伯顿/瑞安·弗雷克</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">国家/地区：</span>
-                                    <span class="movie_location movie_description_content_font">美国</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">主演：</span>
-                                    <span class="movie_actor movie_description_content_font">布丽·拉尔森 /塞缪尔·杰克逊 /麦肯娜·格瑞丝 /嘉玛·陈 /李·佩斯</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">时长：</span>
-                                    <span class="movie_length movie_description_content_font">128</span>
-                                    <span class="movie_description_content_font">分钟</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">简介：</span>
-                                    <span class="movie_description movie_description_content_font">
-                                        漫画中的初代“惊奇女士”原名CarolDanvers，她曾经是一名美国空军情报局探员，暗恋惊奇先生。此后她得到了超能力，成为“惊奇女士”，在漫画中是非常典型的女性英雄人物。她可以吸收并控制任意...
-                                    </span>
-                                </li>
-                            </ul>
-                            <div class="purchase_button_container">
-                                <div class="purchase_button">
-                                    <span>立即购票</span>
+                    <div class="hot_comment">
+                        <img src="../templates/comment_cover_1.png" class="img_cover" alt="">
+                        <div class="info_container">
+                            <div class="info">
+                                <div class="head">
+                                    <a>
+                                        <img src="../templates/user_portrait.png" alt="">
+                                        <span class="user_name">卡斯蒂亚公爵</span>
+                                    </a>
+                                    <span class="comment_time">2019.3.13</span>
+                                </div>
+                                <div class="body">
+                                    <div class="title">
+                                        <span>是谁唤醒了那些老男人们做过的春梦？</span>
+                                    </div>
+                                    <div class="content">
+                                        <span>“ 被丧尸小哥哥咬过的人都会有潜伏期。在潜伏期期间，男人能重振雄风一夜回春尿尿掷地有声..."</span>
+                                    </div>
+                                    <div class="movie_name">
+                                        <span>《奇妙的家族》</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="movie">
-                        <div class="cover">
-                            <img src="../templates/dragon-master.png" alt="">
-                        </div>
-                        <div class="info">
-                            <ul>
-                                <li class="movie_title">
-                                    <span class="movie_name movie_title_font">惊奇队长</span>
-                                </li>
-                                <li>
-                                    <span class="movie_lang movie_lang_time_font">英语</span>
-                                    <span class="movie_time movie_lang_time_font">2019</span>
-                                    <span class="movie_type movie_description_content_font">动作/科幻</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">导演</span>
-                                    <span class="movie_director movie_description_content_font">安娜·伯顿/瑞安·弗雷克</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">国家/地区：</span>
-                                    <span class="movie_location movie_description_content_font">美国</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">主演：</span>
-                                    <span class="movie_actor movie_description_content_font">布丽·拉尔森 /塞缪尔·杰克逊 /麦肯娜·格瑞丝 /嘉玛·陈 /李·佩斯</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">时长：</span>
-                                    <span class="movie_length movie_description_content_font">128</span>
-                                    <span class="movie_description_content_font">分钟</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">简介：</span>
-                                    <span class="movie_description movie_description_content_font">
-                                        漫画中的初代“惊奇女士”原名CarolDanvers，她曾经是一名美国空军情报局探员，暗恋惊奇先生。此后她得到了超能力，成为“惊奇女士”，在漫画中是非常典型的女性英雄人物。她可以吸收并控制任意...
-                                    </span>
-                                </li>
-                            </ul>
-                            <div class="purchase_button_container">
-                                <div class="purchase_button">
-                                    <span>立即购票</span>
+                    <div class="hot_comment">
+                        <img src="../templates/comment_cover_1.png" class="img_cover" alt="">
+                        <div class="info_container">
+                            <div class="info">
+                                <div class="head">
+                                    <a>
+                                        <img src="../templates/user_portrait.png" alt="">
+                                        <span class="user_name">卡斯蒂亚公爵</span>
+                                    </a>
+                                    <span class="comment_time">2019.3.13</span>
+                                </div>
+                                <div class="body">
+                                    <div class="title">
+                                        <span>是谁唤醒了那些老男人们做过的春梦？</span>
+                                    </div>
+                                    <div class="content">
+                                        <span>“ 被丧尸小哥哥咬过的人都会有潜伏期。在潜伏期期间，男人能重振雄风一夜回春尿尿掷地有声..."</span>
+                                    </div>
+                                    <div class="movie_name">
+                                        <span>《奇妙的家族》</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="movie">
-                        <div class="cover">
-                            <img src="../templates/marvel_captain_2.png" alt="">
-                        </div>
-                        <div class="info">
-                            <ul>
-                                <li class="movie_title">
-                                    <span class="movie_name movie_title_font">惊奇队长</span>
-                                </li>
-                                <li>
-                                    <span class="movie_lang movie_lang_time_font">英语</span>
-                                    <span class="movie_time movie_lang_time_font">2019</span>
-                                    <span class="movie_type movie_description_content_font">动作/科幻</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">导演</span>
-                                    <span class="movie_director movie_description_content_font">安娜·伯顿/瑞安·弗雷克</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">国家/地区：</span>
-                                    <span class="movie_location movie_description_content_font">美国</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">主演：</span>
-                                    <span class="movie_actor movie_description_content_font">布丽·拉尔森 /塞缪尔·杰克逊 /麦肯娜·格瑞丝 /嘉玛·陈 /李·佩斯</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">时长：</span>
-                                    <span class="movie_length movie_description_content_font">128</span>
-                                    <span class="movie_description_content_font">分钟</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">简介：</span>
-                                    <span class="movie_description movie_description_content_font">
-                                        漫画中的初代“惊奇女士”原名CarolDanvers，她曾经是一名美国空军情报局探员，暗恋惊奇先生。此后她得到了超能力，成为“惊奇女士”，在漫画中是非常典型的女性英雄人物。她可以吸收并控制任意...
-                                    </span>
-                                </li>
-                            </ul>
-                            <div class="purchase_button_container">
-                                <div class="purchase_button">
-                                    <span>立即购票</span>
+                    <div class="hot_comment">
+                        <img src="../templates/comment_cover_1.png" class="img_cover" alt="">
+                        <div class="info_container">
+                            <div class="info">
+                                <div class="head">
+                                    <a>
+                                        <img src="../templates/user_portrait.png" alt="">
+                                        <span class="user_name">卡斯蒂亚公爵</span>
+                                    </a>
+                                    <span class="comment_time">2019.3.13</span>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="movie">
-                        <div class="cover">
-                            <img src="../templates/earth_escape.png" alt="">
-                        </div>
-                        <div class="info">
-                            <ul>
-                                <li class="movie_title">
-                                    <span class="movie_name movie_title_font">惊奇队长</span>
-                                </li>
-                                <li>
-                                    <span class="movie_lang movie_lang_time_font">英语</span>
-                                    <span class="movie_time movie_lang_time_font">2019</span>
-                                    <span class="movie_type movie_description_content_font">动作/科幻</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">导演</span>
-                                    <span class="movie_director movie_description_content_font">安娜·伯顿/瑞安·弗雷克</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">国家/地区：</span>
-                                    <span class="movie_location movie_description_content_font">美国</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">主演：</span>
-                                    <span class="movie_actor movie_description_content_font">布丽·拉尔森 /塞缪尔·杰克逊 /麦肯娜·格瑞丝 /嘉玛·陈 /李·佩斯</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">时长：</span>
-                                    <span class="movie_length movie_description_content_font">128</span>
-                                    <span class="movie_description_content_font">分钟</span>
-                                </li>
-                                <li>
-                                    <span class="movie_description_content_font">简介：</span>
-                                    <span class="movie_description movie_description_content_font">
-                                        漫画中的初代“惊奇女士”原名CarolDanvers，她曾经是一名美国空军情报局探员，暗恋惊奇先生。此后她得到了超能力，成为“惊奇女士”，在漫画中是非常典型的女性英雄人物。她可以吸收并控制任意...
-                                    </span>
-                                </li>
-                            </ul>
-                            <div class="purchase_button_container">
-                                <div class="purchase_button">
-                                    <span>立即购票</span>
+                                <div class="body">
+                                    <div class="title">
+                                        <span>是谁唤醒了那些老男人们做过的春梦？</span>
+                                    </div>
+                                    <div class="content">
+                                        <span>“ 被丧尸小哥哥咬过的人都会有潜伏期。在潜伏期期间，男人能重振雄风一夜回春尿尿掷地有声..."</span>
+                                    </div>
+                                    <div class="movie_name">
+                                        <span>《奇妙的家族》</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -799,6 +545,39 @@
             </div>
         </div>
     </div>
-    <div id="footer"></div>
+    <div id="footer">
+        <div class="container">
+            <ul class="service">
+                <li class="title">服务</li>
+                <li>问题反馈</li>
+                <li>联系我们</li>
+                <li>加入我们</li>
+            </ul>
+            <ul class="subscribe">
+                <li class="title">关注我们</li>
+                <li>
+                    <a href="">
+                        <img src="../templates/facebook.png" alt="">
+                        <span>Facebook</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <img src="../templates/twitter.png" alt="">
+                        <span>Twiiter</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <img src="../templates/instagram.png" alt="">
+                        <span>Instargam</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="toTop">
+                <div class="arrow_top"></div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,0 +1,44 @@
+#footer{
+  background: #1c2d38;
+  .container{
+    display: flex;
+    justify-content: space-between;
+    ul{
+      *{
+        cursor: pointer;
+      }
+      li{
+        font-size: 24px;
+        color: #ffffff;
+        padding: 19px 0;
+      }
+      .title{
+        font-size: 32px;
+        padding: 45px 0;
+      }
+    }
+    .subscribe{
+      li {
+        a {
+          img, span {
+            vertical-align: middle;
+          }
+          span{
+            color: #ffffff;
+            font-size: 24px;
+          }
+        }
+      }
+    }
+    .toTop{
+      cursor: pointer;
+      width:78px;
+      height: 78px;
+      border-radius: 100%;
+      background: #5e6d73;
+      position: relative;
+      margin: 135px 0;
+    }
+  }
+
+}

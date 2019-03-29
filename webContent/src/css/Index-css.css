@@ -51,6 +51,9 @@
 ul li {
   list-style: none; }
 
+a {
+  text-decoration: none; }
+
 .clearfix {
   zoom: 1; }
 
@@ -62,7 +65,7 @@ ul li {
   visibility: hidden; }
 
 .container {
-  width: 70%;
+  width: 80%;
   margin: 0 auto; }
 
 .navi_font {
@@ -116,6 +119,51 @@ ul li {
   height: 328px;
   background: #c0bfbf;
   float: left; }
+
+.arrow_left_black {
+  width: 0;
+  height: 0;
+  border: 12px solid;
+  border-color: transparent transparent transparent black;
+  position: relative;
+  float: left;
+  left: 153px;
+  top: 8px; }
+  .arrow_left_black:after {
+    position: absolute;
+    content: " ";
+    width: 0;
+    height: 0;
+    border: 12px solid;
+    left: -15px;
+    top: -12px;
+    border-color: transparent transparent transparent #eae8e8; }
+
+.arrow_top {
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 8px;
+  left: 19px;
+  border: 20px solid;
+  border-color: transparent transparent white transparent; }
+  .arrow_top:after {
+    content: ' ';
+    position: absolute;
+    border: 20px solid;
+    border-color: transparent transparent  #5e6d73 transparent;
+    width: 0;
+    height: 0;
+    top: -15px;
+    left: -20px; }
+
+.input {
+  width: 288px;
+  height: 33px;
+  outline: none;
+  padding: 0 0 0 10px;
+  border: 2px solid black;
+  border-radius: 3px; }
 
 #header .navi .container .search {
   position: relative; }
@@ -210,7 +258,8 @@ ul li {
       justify-content: center; }
       #body .container .hot_videos .movie_container {
         display: flex;
-        justify-content: space-between; }
+        justify-content: space-between;
+        margin: 28px 0; }
         #body .container .hot_videos .movie_container .movie {
           position: relative;
           margin: 0 10px; }
@@ -252,7 +301,7 @@ ul li {
       position: relative; }
       #body .container .display_movie_by_date .select_cinema_part {
         float: left;
-        margin: 0 46px; }
+        margin: 0 36px; }
         #body .container .display_movie_by_date .select_cinema_part .arrow_down {
           width: 0;
           height: 0;
@@ -296,6 +345,14 @@ ul li {
             cursor: pointer; }
           #body .container .display_movie_by_date .select_cinema_part .select_board .select_cinema, #body .container .display_movie_by_date .select_cinema_part .select_board .select_movie {
             position: relative; }
+            #body .container .display_movie_by_date .select_cinema_part .select_board .select_cinema .number, #body .container .display_movie_by_date .select_cinema_part .select_board .select_movie .number {
+              position: absolute;
+              font-size: 20px;
+              color: #090909;
+              top: 30px;
+              right: 48px; }
+              #body .container .display_movie_by_date .select_cinema_part .select_board .select_cinema .number span, #body .container .display_movie_by_date .select_cinema_part .select_board .select_movie .number span {
+                color: #f02323; }
           #body .container .display_movie_by_date .select_cinema_part .select_board .select_board_submit {
             width: 172px;
             height: 47px;
@@ -369,13 +426,164 @@ ul li {
         #body .container .display_movie_by_date .display_movies .cutLine {
           position: absolute;
           margin: 34px 0; }
+        #body .container .display_movie_by_date .display_movies .details {
+          cursor: pointer;
+          text-align: center;
+          position: absolute;
+          top: 290px;
+          left: 290px;
+          display: block; }
+          #body .container .display_movie_by_date .display_movies .details span {
+            font-size: 19px;
+            color: #0b0b0b;
+            opacity: 0.8; }
       #body .container .display_movie_by_date .display_movie_mark {
         margin: 11px 15px;
         float: left; }
         #body .container .display_movie_by_date .display_movie_mark .title {
-          text-align: center; }
-        #body .container .display_movie_by_date .display_movie_mark .mark_board div {
-          display: flex;
-          justify-content: space-between; }
+          text-align: center;
+          font-size: 24px;
+          margin-bottom: 35px; }
+          #body .container .display_movie_by_date .display_movie_mark .title span {
+            padding: 0 100px 0 0; }
+        #body .container .display_movie_by_date .display_movie_mark a {
+          float: right;
+          font-size: 12px;
+          color: #070707;
+          opacity: 0.8;
+          padding: 36px 80px; }
+    #body .container .news_today_top .news_today_top_title a span {
+      color: #070707; }
+    #body .container .news_today .movie_container .middle_left {
+      margin: 0 -78px; }
+    #body .container .news_today .movie_container .middle_right {
+      margin-right: -78px; }
+    #body .container .news_today .movie_container .news .news_info {
+      text-align: center;
+      width: 190px;
+      margin: 0 auto; }
+      #body .container .news_today .movie_container .news .news_info span {
+        font-size: 20px;
+        color: #0b0b0b;
+        opacity: 0.9; }
+    #body .container .hot_comment .hot_comment_title a span {
+      color: black; }
+    #body .container .hot_comments {
+      margin-bottom: 0; }
+      #body .container .hot_comments .hot_comment {
+        position: relative; }
+        #body .container .hot_comments .hot_comment .img_cover {
+          width: 100%;
+          z-index: -1;
+          position: relative; }
+        #body .container .hot_comments .hot_comment .info_container {
+          z-index: 100;
+          position: relative;
+          width: 95%;
+          background: #eae8e8;
+          border-radius: 5px;
+          margin: -34px auto 0; }
+          #body .container .hot_comments .hot_comment .info_container .info .head {
+            position: relative; }
+            #body .container .hot_comments .hot_comment .info_container .info .head a {
+              cursor: pointer; }
+              #body .container .hot_comments .hot_comment .info_container .info .head a img {
+                position: absolute;
+                top: -30px;
+                left: 15px; }
+              #body .container .hot_comments .hot_comment .info_container .info .head a span {
+                padding: 0 0 0 70px;
+                font-size: 10px;
+                color: #1d1d1d;
+                opacity: 0.9; }
+            #body .container .hot_comments .hot_comment .info_container .info .head .comment_time {
+              padding-top: 5px;
+              float: right;
+              margin: 0 19px;
+              font-size: 10px;
+              color: #1d1d1d;
+              opacity: 0.7; }
+          #body .container .hot_comments .hot_comment .info_container .info .body .title {
+            margin: 10px 0;
+            text-align: center; }
+            #body .container .hot_comments .hot_comment .info_container .info .body .title span {
+              font-size: 20px;
+              color: #1d1d1d; }
+          #body .container .hot_comments .hot_comment .info_container .info .body .content {
+            margin: 10px; }
+            #body .container .hot_comments .hot_comment .info_container .info .body .content span {
+              padding: 0 28px;
+              font-size: 14px;
+              color: #1d1d1d;
+              opacity: 0.85; }
+          #body .container .hot_comments .hot_comment .info_container .info .body .movie_name {
+            float: right; }
+            #body .container .hot_comments .hot_comment .info_container .info .body .movie_name span {
+              font-size: 10px;
+              opacity: 0.8;
+              color: #1d1d1d; }
+
+#mark_board {
+  color: #090909; }
+  #mark_board dl {
+    position: relative; }
+  #mark_board dt {
+    clear: both;
+    overflow: hidden;
+    position: relative;
+    padding: 0 18px; }
+  #mark_board dt span {
+    width: 122px; }
+  #mark_board dd {
+    clear: both;
+    overflow: hidden;
+    position: relative;
+    padding: 0 18px; }
+  #mark_board dd span {
+    width: 110px;
+    padding: 0 5px; }
+  #mark_board dt, #mark_board dd {
+    display: block; }
+  #mark_board span {
+    float: left;
+    line-height: 45px; }
+  #mark_board .title {
+    font-size: 24px; }
+  #mark_board .head_info span {
+    font-size: 18px; }
+  #mark_board .movie span {
+    font-size: 16px; }
+  #mark_board .movie .movie_mark {
+    color: #16b45d; }
+  #mark_board .movie .movie_rank {
+    color: #db3131; }
+
+#footer {
+  background: #1c2d38; }
+  #footer .container {
+    display: flex;
+    justify-content: space-between; }
+    #footer .container ul * {
+      cursor: pointer; }
+    #footer .container ul li {
+      font-size: 24px;
+      color: #ffffff;
+      padding: 19px 0; }
+    #footer .container ul .title {
+      font-size: 32px;
+      padding: 45px 0; }
+    #footer .container .subscribe li a img, #footer .container .subscribe li a span {
+      vertical-align: middle; }
+    #footer .container .subscribe li a span {
+      color: #ffffff;
+      font-size: 24px; }
+    #footer .container .toTop {
+      cursor: pointer;
+      width: 78px;
+      height: 78px;
+      border-radius: 100%;
+      background: #5e6d73;
+      position: relative;
+      margin: 135px 0; }
 
 /*# sourceMappingURL=Index-css.css.map */
