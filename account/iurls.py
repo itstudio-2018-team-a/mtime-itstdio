@@ -29,7 +29,7 @@ urlpatterns = [
     # POST
     url(r'^register/', views.i_register),
     url(r'^login/', views.i_login),
-    url(r'^app_login/', views.i_login),
+    url(r'^app_login/', views.i_app_login),
     url(r'^changepasswd/(.+)', views.i_change_password),
     url(r'^foget_passwd/', views.i_forgot_password),
 ]
