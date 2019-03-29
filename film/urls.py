@@ -66,11 +66,6 @@ urlpatterns = [
     # selected: page=?(default=1) num=?(default=10)
     url(r'^i/film_review_comment', views.get_review_comment),
 
-    # 获取评分 GET
-    # required: film_id=?
-    # selected: null
-    url(r'^i/film_score?$', views.get_score)
-
 ]
 
 

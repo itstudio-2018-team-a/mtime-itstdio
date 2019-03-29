@@ -413,15 +413,4 @@ def get_review_comment(request):
         return HttpResponse(status=404)
 
 
-def get_score(request):
-    if request.method == 'GET':
-        film_id = request.GET.get('film_id')
-        if film_id:
-            pass
-        else:
-            pass
-    else:
-        return HttpResponse(status=404)
-
-
 
