@@ -78,107 +78,148 @@ def i_register(request):
 
 # 登陆接口函数
 def i_login(request):
-    if request.method == 'POST':
-        logger.info('收到post请求')
-        # 读取post的内容
-        # 使用try防止乱推出现异常崩溃
-        try:
-            post_body_json = json.loads(request.body)
-        except json.JSONDecodeError:
-            post_body_json = {}
-        except Exception:
-            post_body_json = {}
+    try:
+        if request.method == 'POST':
+            logger.info("收到POST请求")
+            # 读取post的内容
 
-        # post判断post_body是否存在所需内容
-        if post_body_json and ("user_id" in post_body_json or 'email' in post_body_json) and \
-                'password' in post_body_json and \
-                'verify_id' in post_body_json and \
-                'verify_code' in post_body_json:
+            # 使用try防止乱推出现异常崩溃
+            try:
+                post_body_json = json.loads(request.body)
+                logger.info('解析json成功')
+            except json.JSONDecodeError:
+                logger.error('json解析错误:' + request.body)
+                post_body_json = {}
+            except Exception:
+                logger.error('json解析出现未知错误:' + request.body)
+                post_body_json = {}
 
-            # 检查验证码
-            if True or check_verify_img(post_body_json['verify_id'], post_body_json['verify_code']):
+            # post判断post_body是否存在所需内容
+            if post_body_json and ("user_id" in post_body_json or 'email' in post_body_json) and \
+                    'password' in post_body_json:
 
                 # 检查各项是否为空
-                if not post_body_json['user_id'] and not post_body_json['emial']:
+                if not post_body_json['user_id'] and not post_body_json['email']:
                     # 无效的用户ID
+                    logger.info('无效的用户ID')
                     return HttpResponse("{\"result\":2}")
                 if not post_body_json['password']:
                     # 无效的密码
                     return HttpResponse("{\"result\":5}")
-
+                # 查询用户，获取用户数据库对象
                 user = User.objects.filter(username=post_body_json['user_id'])
                 if user:
+                    logger.debug('检索到用户' + post_body_json['user_id'])
                     user = user[0]
                     if user.active:
-                        if sign_password_md5(user.password) == post_body_json['password']:
-                            request.session['login_session'] = post_body_json['user_id'] + str(datetime.datetime.now())
-                            return HttpResponse("{\"result\":0}", status=200)
+                        if sign_password_md5(post_body_json['password']) == user.password:
+                            to_login(request, user)
+                            response = HttpResponse("{\"result\":0}", status=200)
+                            response.set_cookie('user_id', user.username)
+                            response.set_cookie('user_nick', user.nickname)
+                            return response
                         else:
                             # 密码错误
+                            logger.info('密码错误')
                             return HttpResponse("{\"result\":2}", status=200)
                     else:
                         # active为Flase，账户被封禁
+                        logger.info('账户被封禁')
                         return HttpResponse("{\"result\":4}")
                 else:
                     # 找不到用户，无效用户ID
+                    logger.info('找不到用户：' + post_body_json['user_id'])
                     return HttpResponse("{\"result\":2}")
-        else:
-            return HttpResponse("{\"result\":6}")
-    # 非POST不接，返回404
-    return HttpResponse(status=404)
+            else:
+                logger.info('post_body内容缺失')
+                return HttpResponse("{\"result\":6}")
+        # 非POST不接，返回404
+        logger.info('app_login收到非post请求')
+        return HttpResponse(status=404)
+    except Exception:
+        logger.error('出现未知错误')
+        return HttpResponse("{\"result\":6}")
 
 
 def i_app_login(request):
-    if request.method == 'POST':
-        logger.info("收到POST请求")
-        # 读取post的内容
+    try:
+        if request.method == 'POST':
+            logger.info("收到POST请求")
+            # 读取post的内容
 
-        # 使用try防止乱推出现异常崩溃
-        try:
-            post_body_json = json.loads(request.body)
-        except json.JSONDecodeError:
-            post_body_json = {}
-        except Exception:
-            post_body_json = {}
+            # 使用try防止乱推出现异常崩溃
+            try:
+                post_body_json = json.loads(request.body)
+                logger.info('解析json成功')
+            except json.JSONDecodeError:
+                logger.error('json解析错误:'+request.body)
+                post_body_json = {}
+            except Exception:
+                logger.error('json解析出现未知错误:'+request.body)
+                post_body_json = {}
 
-        # post判断post_body是否存在所需内容
-        if post_body_json and ("user_id" in post_body_json or 'email' in post_body_json) and \
-                'password' in post_body_json and \
-                'verify_id' in post_body_json and \
-                'verify_code' in post_body_json:
+            # post判断post_body是否存在所需内容
+            if post_body_json and ("user_id" in post_body_json or 'email' in post_body_json) and \
+                    'password' in post_body_json:
 
-            # 检查各项是否为空
-            if not post_body_json['user_id'] and not post_body_json['emial']:
-                # 无效的用户ID
-                return HttpResponse("{\"result\":2}")
-            if not post_body_json['password']:
-                # 无效的密码
-                return HttpResponse("{\"result\":5}")
-            # 查询用户，获取用户数据库对象
-            user = User.objects.filter(username=post_body_json['user_id'])
-            if user:
-                user = user[0]
-                if user.active:
-                    if sign_password_md5(user.password) == post_body_json['password']:
-                        request.session['login_session'] = post_body_json['user_id'] + str(datetime.datetime.now())
-                        return HttpResponse("{\"result\":0}", status=200)
+                # 检查各项是否为空
+                if not post_body_json['user_id'] and not post_body_json['email']:
+                    # 无效的用户ID
+                    logger.info('无效的用户ID')
+                    return HttpResponse("{\"result\":2}")
+                if not post_body_json['password']:
+                    # 无效的密码
+                    return HttpResponse("{\"result\":5}")
+                # 查询用户，获取用户数据库对象
+                user = User.objects.filter(username=post_body_json['user_id'])
+                if user:
+                    logger.debug('检索到用户'+post_body_json['user_id'])
+                    user = user[0]
+                    if user.active:
+                        if sign_password_md5(post_body_json['password']) == user.password:
+                            to_login(request, user)
+                            response = HttpResponse("{\"result\":0}", status=200)
+                            response.set_cookie('user_id', user.username)
+                            response.set_cookie('user_nick', user.nickname)
+                            return response
+                        else:
+                            # 密码错误
+                            logger.info('密码错误')
+                            return HttpResponse("{\"result\":2}", status=200)
                     else:
-                        # 密码错误
-                        return HttpResponse("{\"result\":2}", status=200)
+                        # active为Flase，账户被封禁
+                        logger.info('账户被封禁')
+                        return HttpResponse("{\"result\":4}")
                 else:
-                    # active为Flase，账户被封禁
-                    return HttpResponse("{\"result\":4}")
+                    # 找不到用户，无效用户ID
+                    logger.info('找不到用户：'+post_body_json['user_id'])
+                    return HttpResponse("{\"result\":2}")
             else:
-                # 找不到用户，无效用户ID
-                return HttpResponse("{\"result\":2}")
-        else:
-            return HttpResponse("{\"result\":6}")
-    # 非POST不接，返回404
-    return HttpResponse(status=404)
+                logger.info('post_body内容缺失')
+                return HttpResponse("{\"result\":6}")
+        # 非POST不接，返回404
+        logger.info('app_login收到非post请求')
+        return HttpResponse(status=404)
+    except Exception:
+        logger.error('出现未知错误')
+        return HttpResponse("{\"result\":6}")
 
 
 def i_logout(request):
-    pass
+    if request.method == 'GET':
+        if 'user_id' in request.session:
+            logger.info(request.session['user_id']+'退出登录')
+            request.session.flush()
+            response = HttpResponse("{\"status\":\"ok\"}")
+            try:
+                response.delete_cookie('sessionid')
+                response.delete_cookie('user_id')
+                response.delete_cookie('user_nick')
+            finally:
+                pass
+            return response
+        else:
+            return HttpResponse("{\"status\":\"not_logged_in\"}")
 
 
 def i_forgot_password(request, user_id):
@@ -235,6 +276,7 @@ def i_get_user_info(request, user_id):
                     'status':'ok'}
             return HttpResponse(json.dumps(data))
         else:
+            logger.info('位置用户'+user_id)
             return HttpResponse("{\"status\": \"unknow_user\"}")
 
 
