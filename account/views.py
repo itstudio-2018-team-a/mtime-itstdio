@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from mtime_itstudio.general import check_verify_img
 from .account_user import to_register, sign_password_md5, get_json, check_dirt_args_valid, to_login
 from news.models import NewsComment
+from film.models import FilmReviewComment
 from .models import User
 import json
 import datetime
@@ -318,15 +319,84 @@ def i_get_user_comments_news_list(request, user_id):
                                                "id": comment['news_id'],
                                                'image': "",
                                                'public_time': str(comment['create_time'])})
-                logger.info('返回'+str(num)+'条数据')
-                return HttpResponse([json.dumps({"num": len(comments_date_list),
-                                                 'page': page,
-                                                 "list": comments_date_list,
-                                                 'total': total_num,
-                                                 'status': 'ok'})])
+                if comments_date_list:
+                    logger.info('返回'+str(len(comments_date_list))+'条数据')
+                    return HttpResponse([json.dumps({"num": len(comments_date_list),
+                                                     'page': page,
+                                                     "list": comments_date_list,
+                                                     'total': total_num,
+                                                     'status': 'ok'})])
+                else:
+                    logger.info('空列表')
+                    return HttpResponse('{\"status\":\"none\"}')
             else:
                 logger.error('未知用户：'+user_id)
                 return HttpResponse('{\"status\":\"unknown_user\"}')
+        else:
+            logger.info('收到非POST请求')
+            return HttpResponse(status=404)
     except Exception:
         logger.error('出现未知错误')
         return HttpResponse('{\"status\":\"error\"}')
+
+
+# 用户影评评论列表
+def i_get_user_film_review_comment_list(request, user_id):
+    try:
+        if request.method == 'GET':
+            logger.info('接到get请求')
+            user = User.objects.filter(username=user_id)
+            if user:    # 检查用户是否存在
+                logger.info('已检索到用户：'+str(user_id))
+                user = user[0]
+
+                # 获取切片分页信息
+                page = request.GET.get('pages', '1')
+                num = request.GET.get('num', '10')
+                # 分页信息类型转换
+                try:
+                    num = int(num)
+                except TypeError:
+                    logger.error('num类型转换异常')
+                    num = 10
+                try:
+                    page = int(page)
+                except TypeError:
+                    logger.error('page类型转换异常')
+                    page = 1
+                logger.info('拉取第'+str(page)+'页，每页'+str(num)+'个数据')
+
+                # 搜索数据库
+                comments = FilmReviewComment.objects.select_related('film_review', 'film_review__film').filter(author_id=user.id).exclude(active=False). \
+                    values('film_review_id', 'film_review__title', 'content', 'create_time', 'film_review__film__name')
+                comments.reverse()      # 列表反向
+                total_num = comments.count()    # 计算总评论数，以便计算页数
+                # 分页切片
+                comments = comments[(page-1)*num:page*num]
+                comments_date_list = []
+                for comment in comments:
+                    comments_date_list.append({"content": comment['content'],
+                                               "titel": comment['news__title'],
+                                               "id": comment['news_id'],
+                                               'image': "",
+                                               'public_time': str(comment['create_time'])})
+                if comments_date_list:
+                    logger.info('返回'+str(len(comments_date_list))+'条数据')
+                    return HttpResponse([json.dumps({"num": len(comments_date_list),
+                                                     'page': page,
+                                                     "list": comments_date_list,
+                                                     'total': total_num,
+                                                     'status': 'ok'})])
+                else:
+                    logger.info('空列表')
+                    return HttpResponse('{\"status\":\"none\"}')
+            else:
+                logger.error('未知用户：'+user_id)
+                return HttpResponse('{\"status\":\"unknown_user\"}')
+        else:
+            logger.info('收到非POST请求')
+            return HttpResponse(status=404)
+    except Exception:
+        logger.error('出现未知错误')
+        return HttpResponse('{\"status\":\"error\"}')
+
