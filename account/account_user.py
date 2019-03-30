@@ -62,8 +62,10 @@ def check_dirt_args_valid(json_dirt, args_list):
 # 用于登录的函数
 def to_login(request, user):
     try:
-        request.session['user_id'] = user.id
+        request.session['user_id'] = user.username
         request.session['login_key'] = sign_password_md5(str(datetime.datetime.now()))
+        request.set_cookie('user_id', user.username)
+        request.set_cookie('user_nick', user.nickname)
         logger.info('登陆成功')
     except Exception:
         logger.error('登陆失败')
