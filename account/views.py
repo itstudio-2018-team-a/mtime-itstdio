@@ -245,7 +245,7 @@ def i_get_user_comments_news_list(request, user_id):
             logger.info('接到get请求')
             user = User.objects.filter(username=user_id)
             if user:    # 检查用户是否存在
-                logger.info('已检索到用户：'+user_id)
+                logger.info('已检索到用户：'+str(user_id))
                 user = user[0]
 
                 # 获取切片信息
@@ -261,7 +261,7 @@ def i_get_user_comments_news_list(request, user_id):
                 except TypeError:
                     logger.error('page类型转换异常')
                     page = 1
-                logger.info('拉取第'+page+'页，每页'+num+'个数据')
+                logger.info('拉取第'+str(page)+'页，每页'+str(num)+'个数据')
 
                 # 搜索数据库
                 comments = NewsComment.objects.select_related('news').filter(author_id=user.id).exclude(active=False).\
@@ -275,8 +275,8 @@ def i_get_user_comments_news_list(request, user_id):
                                                "titel": comment['news__title'],
                                                "id": comment['news_id'],
                                                'image': "",
-                                               'public_time': comment['create_time']})
-                logger.info('返回'+num+'条数据')
+                                               'public_time': str(comment['create_time'])})
+                logger.info('返回'+str(num)+'条数据')
                 return HttpResponse([json.dumps({"num": len(comments_date_list),
                                                  'page': page,
                                                  "list": comments_date_list,
@@ -284,6 +284,7 @@ def i_get_user_comments_news_list(request, user_id):
                                                  'status': 'ok'})])
             else:
                 logger.error('未知用户：'+user_id)
-                return HttpResponse('unknown_user')
+                return HttpResponse('{\"status\":\"unknown_user\"}')
     except Exception:
-        return HttpResponse('error')
+        logger.error('出现未知错误')
+        return HttpResponse('{\"status\":\"error\"}')
