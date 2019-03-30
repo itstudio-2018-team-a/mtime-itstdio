@@ -21,7 +21,8 @@ def to_register(user_id, user_name, password, email):
         return 1, None
     if User.objects.filter(email=email):
         return 2, None
-    user = User(username=user_id, password=password, email=email, nickname=user_name).save()
+    user = User(username=user_id, password=password, email=email, nickname=user_name, active=True)
+    user.save()
     return 0, user
 
 
@@ -60,10 +61,16 @@ def check_dirt_args_valid(json_dirt, args_list):
 
 
 # 用于登录的函数
+# 登陆session结构：
+#     'user_id': user.username
 def to_login(request, user):
     try:
-        request.session['user_id'] = user.id
-        request.session['login_key'] = sign_password_md5(str(datetime.datetime.now()))
+        request.session['user_id'] = user.username
+        request.session['login_time'] = str(datetime.datetime.now())
         logger.info('登陆成功')
     except Exception:
         logger.error('登陆失败')
+
+
+# def check_login(request,user_id):
+#     pass
