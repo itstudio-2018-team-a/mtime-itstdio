@@ -297,6 +297,8 @@ def commit_news(request):
                 if s:
                     if json_data['content']:
                         comment = models.NewsComment(author=user, news=news, content=json_data['content']).save()
+                        news.commented_members += 1
+                        news.save()
 
                         content['status'] = 'success'
 
@@ -333,7 +335,59 @@ def commit_news(request):
 # 0
 def delete_comment(request):
     if request.method == 'POST':
-        pass
+        cookie = request.COOKIES
+
+        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        user = account_models.User.objects.filter(id=1)[0]
+
+        try:
+            json_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            json_data = {}
+        except Exception:
+            json_data = {}
+
+        if json_data:
+
+            try:
+                comment_id = json_data['comment_id']
+            except:
+                comment_id = 0
+
+            if comment_id:
+                comment = models.NewsComment.objects.filter(id=comment_id, active=True)
+                if comment:
+                    comment = comment[0]
+                    if comment.author == user:
+                        comment.active = False
+                        comment.news.commented_members -= 1
+                        comment.news.save()
+                        comment.delete()
+                        content = {'status': 'success'}
+
+                        content = json.dumps(content)
+                        return HttpResponse(content,
+                                            content_type='application/json;charset = utf-8',
+                                            status='200',
+                                            reason='success',
+                                            charset='utf-8')
+
+                    else:
+                        content = {'status': 'denied'}
+                        content = json.dumps(content)
+                        return HttpResponse(content, status=404)
+
+                else:
+                    content = {'status': 'invalid'}
+                    content = json.dumps(content)
+                    return HttpResponse(content, status=404)
+            else:
+                content = {'status': 'null'}
+                content = json.dumps(content)
+                return HttpResponse(content, status=404)
+        else:
+            return HttpResponse(status=404)
     else:
         return HttpResponse(status=404)
 
