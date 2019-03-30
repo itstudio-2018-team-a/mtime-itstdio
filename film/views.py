@@ -48,7 +48,7 @@ def get_film_list(request):
         for one in page_of_list.object_list:
             content['list'].append({
                 'title': one.name,
-                'image': one.head_image,
+                'image': one.head_image.url,
                 'info': one.info,
                 'film_id': one.id,
                 'time': str(one.on_time.strftime('%Y-%m-%d %H:%M:%S'))
@@ -212,9 +212,10 @@ def get_film_review_list(request):
                 'title': one.title,
                 'subtitle': one.subtitle,
                 'content': one.content,
-                'comment_members': one.comment_members,
+                'comment_members': one.commented_members,
                 'thumbnail': one.thumbnail.url,
                 'pub_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'image': one.thumbnail.url
 
             })
 
@@ -246,6 +247,7 @@ def get_hot_review(request):
                 'comment_num': one.commented_members,
                 'create_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'update_time': str(one.update_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'image': one.thumbnail.url,
 
             })
 
@@ -279,6 +281,7 @@ def get_review(request):
                 'create_time': str(the_review.create_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'update_time': str(the_review.update_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'body': the_review.content,
+                'image': the_review.thumbnail.url,
 
                 'status': 'ok',
                 }
@@ -304,3 +307,113 @@ def get_review(request):
                                 charset='utf-8')
     else:
         return HttpResponse(status=404)
+
+
+def get_short_comment(request):
+    if request.method == 'GET':
+        film_id = request.GET.get('film_id')
+
+        content = {'list': []}
+
+        if film_id:
+            film = models.Film.objects.filter(id=film_id, active=True)
+            if film:
+                film = film[0]
+                all_comments_list = models.FilmComment.objects.filter(film=film, active=True).order_by('-create_time')
+                total_num = len(all_comments_list)
+                content['total_num'] = total_num
+                num = request.GET.get('num', default=10)
+                paginator = Paginator(all_comments_list, num)
+                content['num'] = num
+
+                page_num = int(request.GET.get('page', default='1'))
+
+                max_page_num = paginator.count
+                if page_num > max_page_num:
+                    page_num = max_page_num
+                if page_num < 1:
+                    page_num = 1
+
+                page_of_list = paginator.page(page_num).object_list
+                for one in page_of_list:
+                    content['list'].append({
+                        'comment_id': one.id,
+                        'content': one.content,
+                        'nickname': one.author.nickname,
+                        'user_id': one.author.id,
+                        'time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S'))
+                    })
+                content['status'] = 'ok'
+
+                content = json.dumps(content)
+
+                return HttpResponse(content,
+                                    content_type='application/json;charset = utf-8',
+                                    status='200',
+                                    reason='success',
+                                    charset='utf-8')
+
+        else:
+            content['num'] = 0
+            content['status'] = 'error'
+
+            content = json.dumps(content)
+
+            return HttpResponse(content,
+                                content_type='application/json;charset = utf-8',
+                                status='404',
+                                reason='Not_Found',
+                                charset='utf-8')
+    else:
+        return HttpResponse(status=404)
+
+
+def get_review_comment(request):
+    if request.method == 'GET':
+        review_id = request.GET.get('review_id')
+        content = {'list': []}
+        if review_id:
+            review = models.FilmReview.objects.filter(id=review_id, active=True)
+            if review:
+                review = review[0]
+                all_comments_list = models.FilmReviewComment.objects.filter(film_review=review, active=True)
+
+                total_num = len(all_comments_list)
+                content['total_num'] = total_num
+                num = int(request.GET.get('num', default='10'))
+                paginator = Paginator(all_comments_list, num)
+                content['num'] = num
+
+                page_num = int(request.GET.get('page', default='1'))
+
+                max_page_num = paginator.count
+                if page_num > max_page_num:
+                    page_num = max_page_num
+                if page_num < 1:
+                    page_num = 1
+
+                page_of_list = paginator.page(page_num).object_list
+
+                for one in page_of_list:
+                    content['list'].append({
+                        'comment_id': one.id,
+                        'content': one.content,
+                        'nickname': one.author.nickname,
+                        'user_id': one.author.id,
+                        'time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S'))
+                    })
+
+        content['num'] = 0
+        content['status'] = 'unknown'
+        content = json.dumps(content)
+
+        return HttpResponse(content,
+                            content_type='application/json;charset = utf-8',
+                            status='404',
+                            reason='Not_Found',
+                            charset='utf-8')
+    else:
+        return HttpResponse(status=404)
+
+
+

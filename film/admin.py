@@ -85,6 +85,8 @@ class MarkAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.score = obj.score
 
+        return super().save_model(request, obj, form, change)
+
 
 @admin.register(models.OnMovie)
 class OnMovieAdmin(admin.ModelAdmin):
@@ -112,4 +114,6 @@ class FilmReviewAdmin(admin.ModelAdmin):
     actions = [active_true, active_false]
 
 
-
+@admin.register(models.FilmReviewComment)
+class FilmReviewCommentAdmin(admin.ModelAdmin):
+    pass
