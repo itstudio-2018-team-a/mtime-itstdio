@@ -23,7 +23,7 @@ def check_verify_img(verify_id, verify_code):
         return 2
 
 
-def check_verify_email(verify_id, email, verify_code):
+def check_verify_email(verify_id, verify_code):
     if verify_id in verify_email:
         if verify_email[verify_id]['email'] == verify_email and verify_code == verify_email[verify_id]['code']:
             return 0

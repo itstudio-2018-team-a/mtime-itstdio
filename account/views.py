@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from mtime_itstudio.general import check_verify_img
-from .account_user import to_register, sign_password_md5, get_json, check_dirt_args_valid, to_login
+from mtime_itstudio.general import check_verify_img, check_verify_email
+from .account_user import to_register, sign_password_md5, get_json_dirt, check_dirt_args_valid, to_login, check_password_verify,check_user_id_verify
 from news.models import NewsComment
 from film.models import FilmReviewComment
 from .models import User
@@ -53,6 +53,12 @@ def i_register(request):
                 if not post_body_json['user_name']:
                     return HttpResponse("{\"result\":4}")
 
+                # 用户名密码合法性检查
+                if not check_user_id_verify(post_body_json['user_id']):
+                    return HttpResponse("{\"result\":7}")
+                if not check_password_verify(post_body_json['password']):
+                    return HttpResponse("{\"result\":5}")
+
                 # 写入数据库
                 logger.info('将注册信息写入数据库')
                 result, user = to_register(post_body_json['user_id'], post_body_json['user_name'], sign_password_md5(post_body_json['password']), post_body_json['email'])
@@ -61,8 +67,14 @@ def i_register(request):
                     # 注册成功
                     logger.info('注册成功')
                     # 注册后自动登陆
-                    to_login(request, user)
-                    return HttpResponse("{\"result\":0}", status=200)
+                    response = HttpResponse("{\"result\":0}", status=200)
+                    try:
+                        to_login(request, user)
+                        response.set_cookie('user_id', user.username)
+                        response.set_cookie('user_nick', user.nickname)
+                    finally:
+                        pass
+                    return response
                 else:
                     # 注册失败返回状态码
                     return HttpResponse("{\"result\":" + str(result) + "}}", status=200)
@@ -171,6 +183,11 @@ def i_app_login(request):
                 if not post_body_json['password']:
                     # 无效的密码
                     return HttpResponse("{\"result\":5}")
+
+                # 检查用户名密码合法
+                if not check_password_verify(post_body_json['password']):
+                    return HttpResponse("{\"result\":5}")
+
                 # 查询用户，获取用户数据库对象
                 user = User.objects.filter(username=post_body_json['user_id'])
                 if user:
@@ -206,6 +223,7 @@ def i_app_login(request):
         return HttpResponse("{\"result\":6}")
 
 
+# 登出
 def i_logout(request):
     if request.method == 'GET':
         if 'user_id' in request.session:
@@ -223,24 +241,47 @@ def i_logout(request):
             return HttpResponse("{\"status\":\"not_logged_in\"}")
 
 
+# 找回密码
 def i_forgot_password(request, user_id):
-    pass
+    try:
+        if request.method == 'POST':
+            args_list = ('verify_id', 'verfiy_code', 'new_password')
+            post_body_json = get_json_dirt(request.body, args_list)
+            check_problem = check_dirt_args_valid(post_body_json, args_list)
+            if not check_problem:
+                if True or check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
+                    user = User.objects.filter(username=user_id)
+                    user.password = sign_password_md5(post_body_json['new_password'])
+                    user.save()
+                    return HttpResponse("{\"result\":0}")
+            elif check_problem == 'verify_id' or check_problem == 'verfiy_code':
+                logger.info('缺少验证码'+check_problem)
+                return HttpResponse("{\"result\":1}")
+            elif check_problem == 'new_password':
+                pass
+        else:
+            # 不接受非POST请求
+            logger.info('收到非POST请求')
+            return HttpResponse(status=404)
+    except Exception:
+        return HttpResponse("{\"result\":4}")
 
 
+# 修改密码
 def i_change_password(request, user_id):
     if request.method == 'POST':
         logger.info('收到post请求')
         logger.debug('user_id='+user_id)
         user = User.objects.filter(username=user_id)
         if not user or not ('user_id' in request.session and request.session['user_id'] == user_id):
-            logger.info('位置用户或未登录')
-            return HttpResponse("{\"result\": 3}") # 返回未登录
+            logger.info('未知用户或未登录')
+            return HttpResponse("{\"result\": 3}")      # 返回未登录
         else:
             user = user[0]
             logger.info('已找到用户')
         args_list = ["old_password", "new_password", "verify_id", "verify_code"]
         # 安全解析json
-        post_body = get_json(request.body, args_list)
+        post_body = get_json_dirt(request.body, args_list)
         logger.debug('json已解析')
         # 检查元素合法
         check_problem = check_dirt_args_valid(post_body, args_list)

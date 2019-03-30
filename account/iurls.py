@@ -20,7 +20,7 @@ from account import views
 
 urlpatterns = [
     # GET
-    url(r'^user/info/(.+)',views.i_get_user_info),                    # 获取用户信息1
+    url(r'^user/info/(.+)', views.i_get_user_info),                    # 获取用户信息1
     # url(r'^user/film_review_list/(.+)'),        # 用户影评评论列表
     # url(r'^user/comments/(.+)'),               # 用户评论列表
     url(r'^user/comments_news/(.+)', views.i_get_user_comments_news_list),           # 用户新闻评论列表
