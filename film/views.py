@@ -215,6 +215,7 @@ def get_film_review_list(request):
                 'comment_members': one.commented_members,
                 'thumbnail': one.thumbnail.url,
                 'pub_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'image': one.thumbnail.url
 
             })
 
@@ -246,6 +247,7 @@ def get_hot_review(request):
                 'comment_num': one.commented_members,
                 'create_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'update_time': str(one.update_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'image': one.thumbnail.url,
 
             })
 
@@ -279,6 +281,7 @@ def get_review(request):
                 'create_time': str(the_review.create_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'update_time': str(the_review.update_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'body': the_review.content,
+                'image': the_review.thumbnail.url,
 
                 'status': 'ok',
                 }

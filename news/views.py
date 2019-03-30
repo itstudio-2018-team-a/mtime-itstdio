@@ -264,7 +264,15 @@ def get_commit_list(request):
 # 00000000000000000
 # 进行评论
 def commit_news(request):
+
     if request.method == 'POST':
+
+        cookie = request.COOKIES
+
+        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        user = account_models.User.objects.filter(id=1)[0]
+
         try:
             json_data = json.loads(request.body)
         except json.JSONDecodeError:
@@ -273,91 +281,61 @@ def commit_news(request):
             json_data = {}
 
         if json_data:
-            # 验证用户登陆
-            cookie = request.COOKIES()
-            if cookie:
 
-                # POST 的 内容验证
-                ###########################
-                if json_data['content']:
-                    user = account_models.User.objects.filter(id=int(json_data['id']))[0]
-                    news = models.News.objects.filter(id=int(json_data['id']))[0]
+            news = models.News.objects.filter(id=json_data['news_id'], active=True)
+            if news:
 
-                    if user and news:
+                news = news[0]
 
-                        if models.NewsComment.objects.filter(author=user):
+                content = {}
+                comment = models.NewsComment.objects.filter(news=news, author=user)
 
+                # 000 0 0 0 00 0 0 00000000000000
+                # if not comment:
 
-                            # 用户已评论
-                            HttpResponse(status=404)
-                        else:
+                s = True
+                if s:
+                    if json_data['content']:
+                        comment = models.NewsComment(author=user, news=news, content=json_data['content']).save()
 
-                            models.NewsComment(news=news,
-                                               author=user,
-                                               content=json_data['content']
-                                               ).save()
-                            # 评论成功
-                            HttpResponse(status=200)
+                        content['status'] = 'success'
 
+                        content = json.dumps(content)
+                        return HttpResponse(content,
+                                            content_type='application/json;charset = utf-8',
+                                            status='200',
+                                            reason='success',
+                                            charset='utf-8')
                     else:
-                        # 不存在 用户 或 新闻
-                        HttpResponse(status=404)
-                else:
-                    # POST 数据错误
-                    HttpResponse(status=404)
-            else:
-                # 未登录禁止评论
-                HttpResponse(status=404)
+                        content['status'] = 'No_content'
 
-        else:
-            # 无此新闻
-            HttpResponse(status=404)
+                        content = json.dumps(content)
+                        return HttpResponse(content,
+                                            content_type='application/json;charset = utf-8',
+                                            status='404',
+                                            reason='No_content',
+                                            charset='utf-8')
+                else:
+                    content['status'] = 'Commented'
+                    content = json.dumps(content)
+                    return HttpResponse(content,
+                                        content_type='application/json;charset = utf-8',
+                                        status='404',
+                                        reason='Commented',
+                                        charset='utf-8')
+
+        return HttpResponse(status=404)
 
     else:
-        HttpResponse(status=404)
+        return HttpResponse(status=404)
 
 
 # 0
 def delete_comment(request):
     if request.method == 'POST':
-        try:
-            json_data = json.loads(request.body)
-        except json.JSONDecodeError:
-            json_data = {}
-        except Exception:
-            json_data = {}
-        if json_data:
-            cookie = request.COOKIES
-            user = account_models.User.objects.filter(id=json_data['author_id'])
-            # cookie 验证 用户
-            ##########################################
-
-            if user:
-                user = user[0]
-                comment = models.NewsComment.objects.filter(id=json_data['news_comment_id'],
-                                                            author=user, active=True)
-                if comment:
-                    comment = comment[0]
-                    comment.active = False
-
-                    # 删除 是将 active = False
-                    HttpResponse(status=200)
-                else:
-                    # 不存在此评论 或 用户不对等
-                    HttpResponse(status=404)
-            else:
-                # 用户错误
-                HttpResponse(status=404)
-        else:
-            # json 无数据
-            HttpResponse(status=404)
-
+        pass
     else:
-        # method 错误
-        HttpResponse(status=404)
-
-
-
+        return HttpResponse(status=404)
 
 
 

@@ -22,5 +22,5 @@ urlpatterns = [
     # selected: page=?(default=1) num=?(default=10)
     url(r'^i/comment_list/', views.get_commit_list),
 
-    # url(r'^comment/i/')
+    url(r'^i/news_comment', views.commit_news),
 ]
