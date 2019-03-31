@@ -16,13 +16,19 @@ logger = logging.getLogger('account.user')
 #     2：邮箱已被注册
 # '''
 def to_register(user_id, user_name, password, email):
-    if User.objects.filter(username=user_id):
-        return 1, None
-    if User.objects.filter(email=email):
-        return 2, None
-    user = User(username=user_id, password=password, email=email, nickname=user_name, active=True)
-    user.save()
-    return 0, user
+    try:
+        if User.objects.filter(username=user_id):
+            logger.info('用户名重复')
+            return 1, None
+        if User.objects.filter(email=email):
+            logger.info('邮箱重复')
+            return 2, None
+        user = User(username=user_id, password=password, email=email, nickname=user_name, active=True)
+        user.save()
+        return 0, user
+    except Exception:
+        logger.error('写入数据库失败')
+        return 6, None
 
 
 # '''用于对密码进行MD5加密的函数'''
@@ -78,10 +84,12 @@ def check_password_verify(password):
     # 检查长度合法性
     if 5 < len(password) < 17:
         for c in password:
-            if 32 < ord(c) < 127:
+            if not 32 < ord(c) < 127:
+                logger.info('密码含有违规字符')
                 return False
         return True
     else:   # 长度不合法
+        logger.info('密码长度不合法')
         return False
 
 
