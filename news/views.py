@@ -28,14 +28,16 @@ from account import models as account_models
 # 获取热点新闻  今日热点
 def get_hotpot_list(request):
     if request.method == 'GET':
-        # 获取现在的时间 今日
-        now = timezone.now()
+        # # 获取现在的时间 今日
+        # now = timezone.now()
+        #
+        # # 状态 active == True
+        # hot_news = models.News.objects.filter(active=True,
+        #                                       create_time__year=now.year,
+        #                                       create_time__month=now.month,
+        #                                       create_time__day=now.day).order_by('-hits', '-create_time')[:10]
 
-        # 状态 active == True
-        hot_news = models.News.objects.filter(active=True,
-                                              create_time__year=now.year,
-                                              create_time__month=now.month,
-                                              create_time__day=now.day).order_by('-hits', '-create_time')[:10]
+        hot_news = models.News.objects.filter(active=True).order_by('-hits', '-create_time')[:10]
         num = len(hot_news)
         content = {'num': num, 'list': [], 'status': 'ok'}
         for one in hot_news:
