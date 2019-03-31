@@ -4,26 +4,31 @@ import hashlib
 import json
 import datetime
 import logging
+import re
 
 logger = logging.getLogger('account.user')
 
 
-'''
-返回值
-    0:注册成功
-    1：用户id重复
-    2：邮箱已被注册
-'''
-
-
+# '''
+# 返回值
+#     0:注册成功
+#     1：用户id重复
+#     2：邮箱已被注册
+# '''
 def to_register(user_id, user_name, password, email):
-    if User.objects.filter(username=user_id):
-        return 1, None
-    if User.objects.filter(email=email):
-        return 2, None
-    user = User(username=user_id, password=password, email=email, nickname=user_name, active=True)
-    user.save()
-    return 0, user
+    try:
+        if User.objects.filter(username=user_id):
+            logger.info('用户名重复')
+            return 1, None
+        if User.objects.filter(email=email):
+            logger.info('邮箱重复')
+            return 2, None
+        user = User(username=user_id, password=password, email=email, nickname=user_name, active=True)
+        user.save()
+        return 0, user
+    except Exception:
+        logger.error('写入数据库失败')
+        return 6, None
 
 
 # '''用于对密码进行MD5加密的函数'''
@@ -34,19 +39,21 @@ def sign_password_md5(passwd, salt='kHa4sDk3dhQf'):
 
 
 # 用于安全的获取json内容
-def get_json(data_str, args_list):
+# 保证获取到的json字典中包含args_list的内容
+def get_json_dirt(data_str, args_list = {}):
     # 读取post的内容
     # 使用try防止乱推出现异常崩溃
     try:
         post_body_json = json.loads(data_str)
-    except json.JSONDecodeError:
-        return {}
     except Exception:
-        return {}
+        post_body_json = {}
+        for arg in args_list:
+            post_body_json[arg] = ''
+        return post_body_json
 
     for arg in args_list:
         if arg not in post_body_json:
-            return {}
+            post_body_json[arg] = ''
     return post_body_json
 
 
@@ -72,5 +79,25 @@ def to_login(request, user):
         logger.error('登陆失败')
 
 
-# def check_login(request,user_id):
-#     pass
+# 检查密码是否合法
+def check_password_verify(password):
+    # 检查长度合法性
+    if 5 < len(password) < 17:
+        for c in password:
+            if not 32 < ord(c) < 127:
+                logger.info('密码含有违规字符')
+                return False
+        return True
+    else:   # 长度不合法
+        logger.info('密码长度不合法')
+        return False
+
+
+def check_user_id_verify(user_id):
+    if 5 < len(user_id) < 17:
+        if re.match(r'^\w+$', user_id):
+            return True
+        else:
+            return False
+    else:
+        return False
