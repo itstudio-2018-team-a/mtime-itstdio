@@ -83,8 +83,7 @@ def i_register(request):
                     try:
                         to_login(request, user)
                         response.set_cookie('user_id', user.username)
-                        response.set_cookie('user_nick', user.nickname)
-                        logger.info('自动登陆成功')
+                        logger.info('自动登陆完成')
                     except Exception:
                         logger.error('自动登陆出现异常')
                     return response
@@ -164,7 +163,6 @@ def i_login(request):
                                 to_login(request, user)
                                 response = HttpResponse("{\"result\":0}", status=200)
                                 response.set_cookie('user_id', user.username)
-                                response.set_cookie('user_nick', user.nickname)
                                 return response
                             else:
                                 # 密码错误
@@ -329,7 +327,7 @@ def i_get_user_comments_news_list(request, user_id):
                                                "title": comment['news__title'],
                                                "id": comment['news_id'],
                                                'image': "",
-                                               'public_time': str(comment['create_time'])})
+                                               'public_time': str(comment['create_time'].strftime('%Y-%m-%d %H:%M:%S'))})
                 if comments_date_list:
                     logger.info('返回'+str(len(comments_date_list))+'条数据')
                     return HttpResponse([json.dumps({"num": len(comments_date_list),
@@ -391,7 +389,7 @@ def i_get_user_film_review_comment_list(request, user_id):
                                                "film_name": comment['film_review__film__name'],
                                                'image': "",
                                                'review_id':comment['film_review_id'],
-                                               'public_time': str(comment['create_time'])})
+                                               'public_time': str(comment['create_time'].strftime('%Y-%m-%d %H:%M:%S'))})
                 if comments_date_list:
                     logger.info('返回'+str(len(comments_date_list))+'条数据')
                     return HttpResponse([json.dumps({"num": len(comments_date_list),
