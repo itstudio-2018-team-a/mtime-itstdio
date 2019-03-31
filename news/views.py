@@ -376,7 +376,7 @@ def delete_comment(request):
                                             charset='utf-8')
 
                     else:
-                        content = {'status': 'denied'}
+                        content = {'status': 'deny'}
                         content = json.dumps(content)
                         return HttpResponse(content, status=404)
 

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.paginator import Paginator
+from account import models as account_models
 from . import models
 import json
 from django.utils import timezone
@@ -93,6 +94,7 @@ def get_film(request):
 
             content = {'title': the_film.name,
                        'image': the_film.head_image.url,
+                       'info': the_film.info,
                        'film_id': the_film.id,
                        'mark': the_film.score,
                        'relase_date': str(the_film.on_time.strftime('%Y-%m-%d')),
@@ -206,6 +208,7 @@ def get_film_review_list(request):
         for one in page_of_list.object_list:
             content['list'].append({
                 'film_id': one.film.id,
+                'comment_id': one.id,
                 'author_name': one.author.username,
                 'author_id': one.author.id,
                 'author_head': one.author.head_image.url,
@@ -213,8 +216,7 @@ def get_film_review_list(request):
                 'subtitle': one.subtitle,
                 'content': one.content,
                 'film_name': one.film.name,
-                'comment_members': one.commented_members,
-                'thumbnail': one.thumbnail.url,
+                'comment_num': one.commented_members,
                 'pub_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'image': one.thumbnail.url
 
@@ -400,8 +402,9 @@ def get_review_comment(request):
                     content['list'].append({
                         'comment_id': one.id,
                         'content': one.content,
-                        'nickname': one.author.nickname,
-                        'user_id': one.author.id,
+                        'author_name': one.author.nickname,
+                        'author_head': one.author.head_image.url,
+                        'author_id': one.author.id,
                         'time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S'))
                     })
 
@@ -418,4 +421,36 @@ def get_review_comment(request):
         return HttpResponse(status=404)
 
 
+def write_review(request):
+    if request.method == 'POST':
+        cookie = request.COOKIES
+
+        # 000000000000000
+        user = account_models.User.objects.filter(id=1)[0]
+
+        try:
+            json_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            json_data = {}
+        except Exception:
+            json_data = {}
+
+        if json_data:
+            try:
+                film_id = json_data['film_id']
+                film_id = int(film_id)
+            except:
+                film_id = 0
+
+            if film_id:
+                film = models.Film.objects.filter()
+
+
+            else:
+                return HttpResponse(status=404)
+        else:
+            return HttpResponse(status=404)
+
+    else:
+        return HttpResponse(status=404)
 
