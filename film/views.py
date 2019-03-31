@@ -400,6 +400,7 @@ def get_review_comment(request):
 
                 for one in page_of_list:
                     content['list'].append({
+                        'page': page_num,
                         'comment_id': one.id,
                         'content': one.content,
                         'author_name': one.author.nickname,
@@ -407,6 +408,13 @@ def get_review_comment(request):
                         'author_id': one.author.id,
                         'time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S'))
                     })
+                content = json.dumps(content)
+
+                return HttpResponse(content,
+                                    content_type='application/json;charset = utf-8',
+                                    status='200',
+                                    reason='success',
+                                    charset='utf-8')
 
         content['num'] = 0
         content['status'] = 'unknown'
@@ -444,13 +452,106 @@ def write_review(request):
 
             if film_id:
                 film = models.Film.objects.filter()
+                if film:
+                    film = film[0]
+                else:
+                    return HttpResponse(status=404)
 
+                try:
+                    review_content = json_data['content']
+                    title = json_data['title']
+                    subtitle = json_data['subtitle']
+                except:
+                    review_content = ''
+                    title = ''
+                    subtitle = ''
+
+                content = {'status': ''}
+                if review_content and title and subtitle:
+                    review = models.FilmReview(film=film,
+                                               author=user,
+                                               title=title,
+                                               subtitle=subtitle,
+                                               active=True)
+                    review.save()
+                    content['status'] = 'success'
+                    content = json.dumps(content)
+                    return HttpResponse(content,
+                                        content_type='application/json;charset = utf-8',
+                                        status='200',
+                                        reason='success',
+                                        charset='utf-8')
+
+
+                else:
+                    content['status'] = 'null'
+
+                    content = json.dumps(content)
+
+                    return HttpResponse(content, status=404)
 
             else:
                 return HttpResponse(status=404)
         else:
             return HttpResponse(status=404)
 
+    else:
+        return HttpResponse(status=404)
+
+
+def delete_review(request):
+    if request.method == 'POST':
+        cookie = request.COOKIES
+
+        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        user = account_models.User.objects.filter(id=1)[0]
+
+        try:
+            json_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            json_data = {}
+        except Exception:
+            json_data = {}
+
+        if json_data:
+
+            try:
+                review_id = json_data['review_id']
+            except:
+                review_id = 0
+
+            if review_id:
+                review = models.FilmReview.objects.filter(id=review_id, active=True)
+                if review:
+                    review = review[0]
+                    if review.author == user:
+                        review.active = False
+                        review.delete()
+                        content = {'status': 'success'}
+
+                        content = json.dumps(content)
+                        return HttpResponse(content,
+                                            content_type='application/json;charset = utf-8',
+                                            status='200',
+                                            reason='success',
+                                            charset='utf-8')
+
+                    else:
+                        content = {'status': 'deny'}
+                        content = json.dumps(content)
+                        return HttpResponse(content, status=404)
+
+                else:
+                    content = {'status': 'invalid'}
+                    content = json.dumps(content)
+                    return HttpResponse(content, status=404)
+            else:
+                content = {'status': 'null'}
+                content = json.dumps(content)
+                return HttpResponse(content, status=404)
+        else:
+            return HttpResponse(status=404)
     else:
         return HttpResponse(status=404)
 

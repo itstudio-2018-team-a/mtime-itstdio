@@ -66,6 +66,10 @@ urlpatterns = [
     # selected: page=?(default=1) num=?(default=10)
     url(r'^i/film_review_comment', views.get_review_comment),
 
+
+    url(r'^i/new_review', views.write_review),
+    url(r'^i/delete_review', views.delete_review),
+
 ]
 
 
