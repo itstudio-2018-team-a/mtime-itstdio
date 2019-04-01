@@ -282,25 +282,25 @@ def i_upload_head_img(request, filename):
                         f = request.FILES[filename]
                     except KeyError:
                         logger.info('未在request中找到对应文件')
-                        return HttpResponse("{\"status\":\"2\"}", status=200)
+                        return HttpResponse("{\"status\":2}", status=200)
                     try:
                         user.head_image = f
                         user.save()
                     except Exception:
                         logger.error('数据库写入失败')
-                        return HttpResponse("{\"status\":\"6\"}", status=200)
+                        return HttpResponse("{\"status\":6}", status=200)
                     # 成功返回0
-                    return HttpResponse("{\"status\":\"0\"}", status=200)
+                    return HttpResponse("{\"status\":0}", status=200)
                 else:
-                    return HttpResponse("{\"status\":\"3\"}", status=200)
+                    return HttpResponse("{\"status\":3}", status=200)
             else:
-                return HttpResponse("{\"status\":\"3\"}", status=200)
+                return HttpResponse("{\"status\":3}", status=200)
         else:
             logger.info('收到非post请求')
             return HttpResponse(status=404)
     except Exception:
         logger.error('出现未知错误')
-        return HttpResponse("{\"status\":\"6\"}", status=500)
+        return HttpResponse("{\"status\":6}", status=500)
 
 
 '''GET'''
