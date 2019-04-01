@@ -70,10 +70,12 @@ def check_dirt_args_valid(json_dirt, args_list):
 # 用于登录的函数
 # 登陆session结构：
 #     'user_id': user.username
-def to_login(request, user):
+def to_login(request, response, user):
     try:
         request.session['user_id'] = user.username
         request.session['login_time'] = str(datetime.datetime.now())
+        response.set_cookie('user_id', user.username)
+        response.set_cookie('user_name', bytes(user.nickname, 'utf-8').decode("ISO-8859-1"))
         logger.info('登陆成功')
     except Exception:
         logger.error('登陆失败')
