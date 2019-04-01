@@ -81,8 +81,7 @@ def i_register(request):
                     response = HttpResponse("{\"result\":0}", status=200)
                     # 注册后自动登陆
                     try:
-                        to_login(request, user)
-                        response.set_cookie('user_id', user.username)
+                        to_login(request, response, user)
                         logger.info('自动登陆完成')
                     except Exception:
                         logger.error('自动登陆出现异常')
@@ -154,15 +153,14 @@ def i_login(request):
                         user = None
                         logger.info('无效的用户索引')
                         return HttpResponse("{\"result\":2}")
-
+                    # 检索到用户
                     if user:
                         logger.info('检索到用户'+post_body_json['user_key'])
                         user = user[0]
                         if user.active:
                             if sign_password_md5(post_body_json['password']) == user.password:
-                                to_login(request, user)
                                 response = HttpResponse("{\"result\":0}", status=200)
-                                response.set_cookie('user_id', user.username)
+                                to_login(request, response, user)
                                 return response
                             else:
                                 # 密码错误
@@ -267,6 +265,42 @@ def i_change_password(request, user_id):
                 return HttpResponse("{\"result\": 4}")  # 新密码不存在的状态等待定义
             elif check_problem == 'verify_id' or check_problem == 'verify_code':
                 return HttpResponse("{\"result\": 2}")
+
+
+# 上传头像
+# 2:未找到对应文件
+# 3：未登录
+# 6：未知错误
+def i_upload_head_img(request, filename):
+    try:
+        if request.method == 'POST':
+            if 'user_id' in request.session:
+                user = User.objects.filter(username=request.session['user_id'])
+                if user:
+                    user = user[0]
+                    try:
+                        f = request.FILES[filename]
+                    except KeyError:
+                        logger.info('未在request中找到对应文件')
+                        return HttpResponse("{\"status\":\"2\"}", status=200)
+                    try:
+                        user.head_image = f
+                        user.save()
+                    except Exception:
+                        logger.error('数据库写入失败')
+                        return HttpResponse("{\"status\":\"6\"}", status=200)
+                    # 成功返回0
+                    return HttpResponse("{\"status\":\"0\"}", status=200)
+                else:
+                    return HttpResponse("{\"status\":\"3\"}", status=200)
+            else:
+                return HttpResponse("{\"status\":\"3\"}", status=200)
+        else:
+            logger.info('收到非post请求')
+            return HttpResponse(status=404)
+    except Exception:
+        logger.error('出现未知错误')
+        return HttpResponse("{\"status\":\"6\"}", status=500)
 
 
 '''GET'''
@@ -410,3 +444,15 @@ def i_get_user_film_review_comment_list(request, user_id):
         logger.error('出现未知错误')
         return HttpResponse('{\"status\":\"error\"}')
 
+
+# 用户影评列表
+def i_film_review_list(request,user_id):
+    try:
+        if request.method == 'GET':
+            pass
+        else:
+            logger.info('收到非get请求')
+            return HttpResponse(status=404)
+    except Exception:
+        logger.error('出现未知错误')
+        return HttpResponse('{\"status\":\"error\"}')
