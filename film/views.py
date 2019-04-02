@@ -177,14 +177,6 @@ def get_on_four_movies_simple(request):
         return HttpResponse(status=404)
 
 
-def return_success(content):
-    return HttpResponse(content,
-                        content_type='application/json;charset = utf-8',
-                        status='200',
-                        reason='success',
-                        charset='utf-8')
-
-
 def get_on_four_movies_detailed(request):
     if request.method == 'GET':
         on_movies = models.OnMovie.objects.all().order_by('-film__on_time')[:4]
@@ -638,4 +630,79 @@ def delete_review(request):
             return HttpResponse(status=404)
     else:
         return HttpResponse(status=404)
+
+
+def search(request):
+    if request.method == 'POST':
+
+        try:
+            json_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            json_data = {}
+        except Exception:
+            json_data = {}
+
+        content = {'status': ''}
+
+        try:
+            page_num = int(json_data['page'])
+        except:
+            page_num = 1
+
+        try:
+            num = int(json_data['name'])
+        except:
+            num = 10
+
+        content['page'] = page_num
+        content['num'] = num
+
+        if json_data:
+
+            try:
+                information = str(json_data['content'])
+            except:
+                information = ''
+
+            if information:
+                films_list = models.Film.objects.filter(name__icontains=information)
+
+                total_num = len(films_list)
+
+                content['list'] = []
+                content['total_num'] = total_num
+
+                if films_list:
+
+                    paginator = Paginator(films_list, page_num)
+
+                    max_page_num = paginator.count
+                    if page_num > max_page_num:
+                        page_num = max_page_num
+                    if page_num < 1:
+                        page_num = 1
+
+                    page_of_list = paginator.page(page_num)
+
+                    for one in page_of_list.object_list:
+                        content['list'].append({
+                            'film_id': one.id,
+                            'film_name': one.name,
+                        })
+
+                content['status'] = 'ok'
+                print(content)
+                return response_success(content)
+            else:
+                content['status'] = 'content_error'
+                return response_error(content)
+
+        else:
+            content['status'] = 'json_error'
+            return response_error(content)
+
+    else:
+        return HttpResponse(status=404)
+
+
 

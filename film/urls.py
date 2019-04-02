@@ -73,6 +73,8 @@ urlpatterns = [
 
     url(r'^i/simple_on_films', views.get_on_four_movies_simple),
 
+    url(r'^search/', views.search),
+
 ]
 
 
