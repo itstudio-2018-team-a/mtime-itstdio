@@ -103,3 +103,7 @@ def check_user_id_verify(user_id):
             return False
     else:
         return False
+
+
+def check_email_verify(email):
+    return re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', email)

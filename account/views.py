@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from mtime_itstudio.general import check_verify_img, check_verify_email
-from .account_user import to_register, sign_password_md5, get_json_dirt, check_dirt_args_valid, to_login, check_password_verify,check_user_id_verify
+from .account_user import to_register, sign_password_md5, get_json_dirt, check_dirt_args_valid, to_login, check_password_verify,check_user_id_verify, check_email_verify
 from news.models import NewsComment
 from film.models import FilmReviewComment
 from .models import User
@@ -20,90 +20,96 @@ logger = logging.getLogger('account.view')
 # 8:注册数据不完整
 # 9:josn格式错误
 def i_register(request):
-    if request.method == 'POST':
-        logger.info('收到post请求')
-        # 读取post的内容
-        # 使用try防止乱推出现异常崩溃
-        try:
-            post_body_json = json.loads(request.body)
-            logger.debug('json解析成功')
-        except json.JSONDecodeError:
-            post_body_json = {}
-            logger.error('json解析失败，收到POST:'+str(request.body))
-            return HttpResponse("{\"result\":9}")
-        except Exception:
-            post_body_json = {}
-            logger.error('json解析出现未知错误，收到POST:'+str(request.body))
-            return HttpResponse("{\"result\":9}")
+    try:
+        if request.method == 'POST':
+            logger.info('收到post请求')
+            # 读取post的内容
+            # 使用try防止乱推出现异常崩溃
+            try:
+                post_body_json = json.loads(request.body)
+                logger.debug('json解析成功')
+            except json.JSONDecodeError:
+                post_body_json = {}
+                logger.error('json解析失败，收到POST:'+str(request.body))
+                return HttpResponse("{\"result\":9}",status=400)
+            except Exception:
+                post_body_json = {}
+                logger.error('json解析出现未知错误，收到POST:'+str(request.body))
+                return HttpResponse("{\"result\":9}", status=400)
 
-        # post判断post_body是否存在所需内容
-        if post_body_json and \
-                "user_id" in post_body_json and \
-                'email' in post_body_json and\
-                'user_name' in post_body_json and\
-                'password' in post_body_json and\
-                'verify_id' in post_body_json and\
-                'verify_code' in post_body_json:
-            logger.info('POST数据完整')
-            # 检查验证码是否正确
-            # 此处需要更换为email格式的验证码
-            if True or check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
-                logger.debug('验证码检查通过')
-                # 检查各项是否为空
-                if not post_body_json['user_id']:
-                    logger.info('空user_id')
-                    return HttpResponse("{\"result\":7}")       # 无效的用户ID
-                if not post_body_json['email']:
-                    logger.info('空email')
-                    return HttpResponse("{\"result\":6}")       # 等待添加错误标签
-                if not post_body_json['password']:
-                    logger.info('空密码')
-                    return HttpResponse("{\"result\":5}")
-                if not post_body_json['user_name']:
-                    logger.info('空昵称')
-                    return HttpResponse("{\"result\":4}")
+            # post判断post_body是否存在所需内容
+            if post_body_json and \
+                    "user_id" in post_body_json and \
+                    'email' in post_body_json and\
+                    'user_name' in post_body_json and\
+                    'password' in post_body_json and\
+                    'verify_id' in post_body_json and\
+                    'verify_code' in post_body_json:
+                logger.info('POST数据完整')
+                # 检查验证码是否正确
+                # 此处需要更换为email格式的验证码
+                if True or check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
+                    logger.debug('验证码检查通过')
+                    # 检查各项是否为空
+                    if not post_body_json['user_id']:
+                        logger.info('空user_id')
+                        return HttpResponse("{\"result\":7}", status=400)       # 无效的用户ID
+                    if not post_body_json['email']:
+                        logger.info('空email')
+                        return HttpResponse("{\"result\":10}", status=400)       # 无效的email
+                    if not post_body_json['password']:
+                        logger.info('空密码')
+                        return HttpResponse("{\"result\":5}", status=400)
+                    if not post_body_json['user_name']:
+                        logger.info('空昵称')
+                        return HttpResponse("{\"result\":4}", status=400)
 
-                # 用户名密码合法性检查
-                if not check_user_id_verify(post_body_json['user_id']):
-                    logger.info('用户名不合法')
-                    return HttpResponse("{\"result\":7}")
-                if not check_password_verify(post_body_json['password']):
-                    logger.info('密码不合法')
-                    return HttpResponse("{\"result\":5}")
+                    # 用户名密码合法性检查
+                    if not check_user_id_verify(post_body_json['user_id']):
+                        logger.info('用户名不合法')
+                        return HttpResponse("{\"result\":7}", status=403)
+                    if not check_password_verify(post_body_json['password']):
+                        logger.info('密码不合法')
+                        return HttpResponse("{\"result\":5}", status=403)
+                    if not check_email_verify(post_body_json['email']):
+                        logger.info('邮箱格式不合法')
+                        return HttpResponse("{\"result\":10}", status=400)
 
-                # 写入数据库
-                logger.info('将注册信息写入数据库')
-                result, user = to_register(post_body_json['user_id'], post_body_json['user_name'], sign_password_md5(post_body_json['password']), post_body_json['email'])
-                # 返回结果
-                if not result:
-                    # 注册成功
-                    logger.info('返回注册成功')
-                    response = HttpResponse("{\"result\":0}", status=200)
-                    # 注册后自动登陆
-                    try:
-                        to_login(request, response, user)
-                        logger.info('自动登陆完成')
-                    except Exception:
-                        logger.error('自动登陆出现异常')
-                    return response
+                    # 写入数据库
+                    logger.info('将注册信息写入数据库')
+                    result, user = to_register(post_body_json['user_id'], post_body_json['user_name'], sign_password_md5(post_body_json['password']), post_body_json['email'])
+                    # 返回结果
+                    if not result:
+                        # 注册成功
+                        logger.info('返回注册成功')
+                        response = HttpResponse("{\"result\":0}", status=200)
+                        # 注册后自动登陆
+                        try:
+                            to_login(request, response, user)
+                            logger.info('自动登陆完成')
+                        except Exception:
+                            logger.error('自动登陆出现异常')
+                        return response
+                    else:
+                        # 注册失败返回状态码
+                        logger.error('注册失败返回状态码')
+                        return HttpResponse("{\"result\":" + str(result) + "}}", status=500)
+
                 else:
-                    # 注册失败返回状态码
-                    logger.error('注册失败返回状态码')
-                    return HttpResponse("{\"result\":" + str(result) + "}}", status=200)
-
+                    # 验证码错误，返回状态码
+                    logger.info('验证码错误')
+                    return HttpResponse("{\"result\":3}", status=403)
             else:
-                # 验证码错误，返回状态码
-                logger.info('验证码错误')
-                return HttpResponse("{\"result\":3}", status=503)
+                # post数据不完整，返回状态码
+                logger.info('注册数据不完整')
+                return HttpResponse("{\"result\":8}", status=400)
         else:
-            # post数据不完整，返回状态码
-            logger.info('注册数据不完整')
-            return HttpResponse("{\"result\":8}", status=503)
-    else:
-        # 非post请求，404
-        logger.info('收到非POST请求')
-        return HttpResponse(status=404)
-
+            # 非post请求，404
+            logger.info('收到非POST请求')
+            return HttpResponse(status=404)
+    except Exception:
+        logger.error('出现未知错误')
+        return HttpResponse("{\"result\":6}", status=500)
 
 # 登陆接口函数
 # 2：无效的用户索引
@@ -123,11 +129,11 @@ def i_login(request):
                 except json.JSONDecodeError:
                     logger.error('json解析错误:' + str(request.body))
                     post_body_json = {}
-                    return HttpResponse("{\"result\":9}")
+                    return HttpResponse("{\"result\":9}", status=400)
                 except Exception:
                     logger.error('json解析出现未知错误:' + str(request.body))
                     post_body_json = {}
-                    return HttpResponse("{\"result\":9}")
+                    return HttpResponse("{\"result\":9}", status=400)
 
                 # post判断post_body是否存在所需内容
                 if post_body_json and "user_key" in post_body_json and 'key_type' in post_body_json and \
@@ -138,11 +144,11 @@ def i_login(request):
                     if not post_body_json['user_key'] or not post_body_json['key_type']:
                         # 无效的用户ID
                         logger.info('无效的用户索引')
-                        return HttpResponse("{\"result\":2}")
+                        return HttpResponse("{\"result\":1}", status=400)
                     if not post_body_json['password']:
                         # 无效的密码
                         logger.info('无效的密码')
-                        return HttpResponse("{\"result\":5}")
+                        return HttpResponse("{\"result\":2}", status=400)
 
                     # 查询用户，获取用户数据库对象
                     if post_body_json['key_type'] == 'user_id':
@@ -152,7 +158,7 @@ def i_login(request):
                     else:
                         user = None
                         logger.info('无效的用户索引')
-                        return HttpResponse("{\"result\":2}")
+                        return HttpResponse("{\"result\":1}", status=400)
                     # 检索到用户
                     if user:
                         logger.info('检索到用户'+post_body_json['user_key'])
@@ -161,6 +167,7 @@ def i_login(request):
                             if sign_password_md5(post_body_json['password']) == user.password:
                                 response = HttpResponse("{\"result\":0}", status=200)
                                 to_login(request, response, user)
+                                # 登录成功
                                 return response
                             else:
                                 # 密码错误
@@ -169,24 +176,24 @@ def i_login(request):
                         else:
                             # active为Flase，账户被封禁
                             logger.info('账户被封禁')
-                            return HttpResponse("{\"result\":4}")
+                            return HttpResponse("{\"result\":4}", status=403)
                     else:
                         # 找不到用户，无效用户ID
                         logger.info('找不到用户：' + post_body_json['user_key'])
-                        return HttpResponse("{\"result\":2}")
+                        return HttpResponse("{\"result\":1}", status=404)
                 else:
                     logger.info('post_body内容缺失')
-                    return HttpResponse("{\"result\":8}")
+                    return HttpResponse("{\"result\":8}", status=400)
             else:
                 logger.info('已登录，请勿重复登陆')
-                return HttpResponse("{\"result\":5}")
+                return HttpResponse("{\"result\":5}", status=403)
         else:
             # 非POST不接，返回404
             logger.info('app_login收到非post请求')
             return HttpResponse(status=404)
     except Exception:
         logger.error('出现未知错误')
-        return HttpResponse("{\"result\":6}")
+        return HttpResponse("{\"result\":6}", status=500)
 
 
 # 登出
