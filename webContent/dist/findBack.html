@@ -48,24 +48,25 @@
             <div class="title">
                 <span>找回密码</span>
             </div>
-            <form action="">
+            <form action="" id="findBackPassword">
                 <div class="email sel">
-                    <input type="text" class="input" placeholder="新密码">
+                    <input type="text" class="input" placeholder="邮箱" name="email" id="email">
+                    <p class="tips"></p>
                 </div>
                 <div class="usr_name sel">
-                    <input type="text" class="input" placeholder="新密码">
+                    <input type="password" class="input" placeholder="新密码" name="password" id="password">
+                    <p class="tips"></p>
                 </div>
                 <div class="psw sel">
-                    <input type="password" class="input" placeholder="确认密码">
-                    <p>允许使用 数字+字母+特殊字符 长度6-16字符</p>
+                    <input type="password" class="input" placeholder="确认密码" name="confirm_password">
+                    <p class="tips"></p>
                 </div>
                 <div class="confirm sel">
-                    <input type="text" class="input" placeholder="验证码" name="ensure_code" id="ensure_code">
+                    <input type="text" class="input" placeholder="验证码" name="verify_code" id="ensure_code">
                     <span id="request_verify_img_button" style="position: absolute;top: 12px;right: 0;font-size: 12px;color: #5b88b4;cursor: pointer;">发送验证码</span>
-                    <img src="" alt="" width="50px" id="verify_img">
                     <p class="tips"> </p>
                 </div>
-                <div class="submit sel">
+                <div class="submit sel" id="submit">
                     <span>重设密码</span>
                 </div>
             </form>
@@ -107,5 +108,5 @@
     </div>
 </div>
 </body>
-<script src="../src/js/"></script>
+<script src="../src/js/findback.js"></script>
 </html>

@@ -1,358 +1,284 @@
-
-let registerForm = document.getElementById("register");
+//cookie及后续未完成
+let registerForm = document.getElementById("logInForm");
 let submit = document.getElementById("submit");
-let requestVerifyPicButton = document.getElementById("request_verify_img_button");
-let verifyImg = document.getElementById("verify_img");
-let verifyCode = {};
 
-/*
-常量
+/***
+ * cookieUtils
+ * @param name
+ * @param value
+ * @param expireDays
  */
-const Url_Options = {
-    VERIFY_CODE: "\\i\\verify_code",
-    VERIFY_PICTURE: "\\i\\verify_code_picture",
-    LOGIN: "\\account\\i\\login"
-};
-const RegExpPattern = {
-    EMAIL_PATTERN: /^\w+@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/,
-    CHINESE_PATTERN: /^[\u4e00-\u9fa5]*$/,
-};
-const ErrorMessage = {
-    IS_EMPTY: "不能为空",
-    CHINESE_PATTERN_ERROR: "内容包含中文"
-};
-
-/*
-Utils
- */
-const ServerURL = ()=>{ //获取服务器地址
-    let __URL = "106.13.106.1";
+function setCookie(name, value, expireDays) {
+    let exdate = new Date();
+    exdate.setDate(exdate.getDate() + expireDays);
+    document.cookie = name + "=" + (value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+}
+function getCookie(c_name) {
+    if (document.cookie.length>0)
+    {
+        let c_start=document.cookie.indexOf(c_name + "=");
+        if (c_start!==-1)
+        {
+            c_start=c_start + c_name.length+1;
+            let c_end=document.cookie.indexOf(";",c_start);
+            if (c_end===-1) c_end=document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+        }
+    }
+    return "";
+}
+/**
+ * 登陆
+ * 106.13.106.1/account/i/login
+ * request: POST
+ * {user_key:"","key_type":"","'password":""}
+ * response
+ * {"result": ""}
+ * 0：登陆成功
+ * 1：无效用户ID
+ * 2：无效密码
+ * 3：验证码错误
+ * 4：账号被封禁
+ * 5：已登陆
+ * 6：未知错误
+ * 8：登陆数据缺失
+ * 9：json格式错误
+ * */
+const SERVER_URL = ()=>{
+    let __URL = "http://106.13.106.1";
     return ()=>{
         return __URL;
     }
 };
-function getPatternType(valueType) {//获取匹配模式
-    let types = {
-        'username': ()=>{return RegExpPattern.EMAIL_PATTERN}
-    };
-    return ((types[valueType])());
-}
-function getXMLObject() {
-    let xmlHttp;
-    if(window.XMLHttpRequest){
-        xmlHttp = new XMLHttpRequest();
-    }else{
-        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    return xmlHttp;
-}
-/*
-操作cookie
+const URL_INTERFACE = {
+    REQUEST_LOG_IN: "\\account\\i\\login",
+};
+const RegExpPattern = {
+    EMAIL_PATTERN: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+    CHINESE_PATTERN: /^[\u4e00-\u9fa5]*$/
+};
+const ERROR_MESSAGE = {
+    IS_EMPTY: "不能为空",
+    CHINESE_PATTERN_ERROR: "内容包含中文"
+};
+/***
+ * 标识input的状态
  */
-let cookieUtils = {
-    get: function (name) {
-        var cookieName = encodeURIComponent(name) + "=";
-        //只取得最匹配的name，value
-        var cookieStart = document.cookie.indexOf(cookieName);
-        var cookieValue = null;
-
-        if (cookieStart > -1) {
-            // 从cookieStart算起
-            var cookieEnd = document.cookie.indexOf(';', cookieStart);
-            //从=后面开始
-            if (cookieEnd > -1) {
-                cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length, cookieEnd));
-            } else {
-                cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length, document.cookie.length));
+let InputStatus = {
+    username: "0",
+    password: "0",
+    setStatus: function (name, value) {
+        this[name] = String(value);
+    },
+    getStatus: function () {
+        let flag = true;
+        let status = Object.getOwnPropertyNames(this);
+        for(let i in status){
+            if(this[status[i]] === "0"){
+                flag = false;
+                break;
             }
         }
-
-        return cookieValue;
-    },
-
-    set: function (name, val, options) {
-        if (!name) {
-            throw new Error("coolie must have name");
-        }
-        var enc = encodeURIComponent;
-        var parts = [];
-
-        val = (val !== null && val !== undefined) ? val.toString() : "";
-        options = options || {};
-        parts.push(enc(name) + "=" + enc(val));
-        // domain中必须包含两个点号
-        if (options.domain) {
-            parts.push("domain=" + options.domain);
-        }
-        if (options.path) {
-            parts.push("path=" + options.path);
-        }
-        // 如果不设置expires和max-age浏览器会在页面关闭时清空cookie
-        if (options.expires) {
-            parts.push("expires=" + options.expires.toGMTString());
-        }
-        if (options.maxAge && typeof options.maxAge === "number") {
-            parts.push("max-age=" + options.maxAge);
-        }
-        if (options.httpOnly) {
-            parts.push("HTTPOnly");
-        }
-        if (options.secure) {
-            parts.push("secure");
-        }
-
-        document.cookie = parts.join(";");
-    },
-    delete: function (name, options) {
-        options.expires = new Date(0);// 设置为过去日期
-        this.set(name, null, options);
+        return flag;
     }
 };
-
 /**
- *
- * @param url
- * @param type
- * @param contentType
- * @param requestMethod
- * @param data
- * @returns {Promise<any>}
- */
-
-function getRequest(url, type, contentType, requestMethod, data) {
-    return new Promise(function (resolve, reject) {
-        let xmlHttp = getXMLObject();
-        xmlHttp.onreadystatechange = function () {
-            console.log(this.status);
-            console.log(this.readyState);
-            if(this.readyState === 4){
-                if(this.status === 200){
-                    resolve(this.response);
-                }else{
-                    reject();
-                }
-            }
-        };
-        xmlHttp.open(requestMethod, url);
-        xmlHttp.responseType = type;
-        xmlHttp.setRequestHeader("Content-Type", contentType + ";charset=utf-8");
-        if(requestMethod === "POST"){
-            xmlHttp.send(data);
-        }else if(requestMethod === "GET"){
-            xmlHttp.send();
-        }
-    });
-}
-
-/*
-保存输入框状态
- */
-let InputStatus = function () {
-    this.username = "0";
-    this.password = "0";
-    this.ensure_code = "0";
-};
-InputStatus.prototype.setStatus = function (name, value) {
-    this[name] = value;
-};
-InputStatus.prototype.getStatus = function () {
-    let flag = true;
-    let status = Object.getOwnPropertyNames(this);
-    for(let i in status){
-        console.log(this[status[i]]);
-        if(this[status[i]] === "0"){
-            flag = false;
-            break;
-        }
-    }
-    return flag;
-};
-let inputStatus = new InputStatus();
-
-/*
-校验策略组
- */
+ * 校验策略组
+ * */
 let CheckValidationStrategies = {
     isEmpty: (value)=>{
-        if(value === "") {
-            return ErrorMessage.IS_EMPTY;
-        }
-    },
-    hasChinese: (value)=>{
-        if(new RegExp(RegExpPattern.CHINESE_PATTERN).test(value)){
-            return ErrorMessage.CHINESE_PATTERN_ERROR;
-        }
-    },
-    checkBaseValidate: function(value){
-        let errorMessage;
-        errorMessage = this.isEmpty(value);
-        if(errorMessage){
-            return errorMessage;
-        }
-        errorMessage = this.hasChinese(value);
-        if(errorMessage){
-            return errorMessage;
-        }
+        if(value === "")
+            return ERROR_MESSAGE.IS_EMPTY;
     },
     isEmail: (value)=>{
-        let typeReg = new RegExp(RegExpPattern[RegExpPattern.EMAIL_PATTERN]);
-        if(!typeReg.test(value)){
-            return false;
+        let emailReg = new RegExp(RegExpPattern.EMAIL_PATTERN);
+        return emailReg.test(value);
+    },
+    hasChinese: (value)=>{
+        let chineseReg = new RegExp(RegExpPattern.CHINESE_PATTERN);
+        if(chineseReg.test(value))
+            return ERROR_MESSAGE.CHINESE_PATTERN_ERROR;
+    },
+    checkBaseValidate: function(value){
+        let errorMessage = this.isEmpty(value);
+        if(errorMessage)
+            return errorMessage;
+        errorMessage = this.hasChinese(value);
+        if(errorMessage)
+            return errorMessage;
+    }
+};
+/**
+ * 校验业务组
+ * */
+const Validator = {
+    validate: (dom)=>{
+        let message = CheckValidationStrategies.checkBaseValidate(dom.value);
+        if(message){
+            return message;
+        }
+        if(dom.name === "username"){
+            return CheckValidationStrategies.isEmail(dom.value)
+        }else{
+            return CheckValidationStrategies.checkBaseValidate(dom.value)
         }
     }
 };
-/*
-校验业务组
- */
-let Validator = function () {};
-Validator.prototype.validateBase = function (dom) {
-    return CheckValidationStrategies.checkBaseValidate(dom.value);
-};
-Validator.prototype.checkIsEmail = function (dom) {
-    return CheckValidationStrategies.isEmail(dom.value);
-};
-/*
-获取验证码
- */
-let requestVerifyCodeHandler = function () {
-    let successHandler = (json)=>{
-        verifyCode = json;
-        console.log(verifyCode);
-        return getRequest((ServerURL())() + Url_Options.VERIFY_PICTURE + "\\" + verifyCode.id);
-    };
-    let failHandler = ()=>{
-        alert("请求超时");
-    };
-    getRequest((ServerURL())() + Url_Options.VERIFY_CODE, "json", "application/json", "GET").then((json)=>{
-        return successHandler(json);
-    },()=>{
-        failHandler();
-    }).then((blob)=>{
-        verifyImg.onload = function () {
-            window.URL.revokeObjectURL(verifyImg.src);
-            return new Promise(((resolve, reject) => {
-                let countDown = Number(verifyCode.wait);
-                let setTime = ()=>{
-                    if(countDown === 0){
-                        requestVerifyPicButton.innerText = "获取验证码";
-                        clearInterval(click);
-                        requestVerifyPicButton.removeAttribute("disabled");
-                    }else{
-                        requestVerifyPicButton.disabled = "disabled";
-                        requestVerifyPicButton.innerText = count + "S";
-                        countDown--;
-                    }
-                };
-                let click = setInterval(setTime, 1000);
-            }));
-        };
-        verifyImg.src = window.URL.createObjectURL(blob);
-    })
-};
-/*
-* 表单序列化
-* */
-function getFormJsonName(valueType) {
+/**
+ * input输入框
+ * 事件Handler
+ * 绑定事件
+ * */
+function getTarget(event){
+    return event.target || event.srcElement;
+}
+function inputFocusHandler(event) {
+    let target = getTarget(event);
+    target.style.borderColor = "rgba(91,136,180,1)";
+}
+function inputBlurHandler(event) {
+    let target = getTarget(event);
+    let message =  Validator.validate(target);
+    if(message){
+        InputStatus.setStatus(target.name, 0);
+        target.style.borderColor = "red";
+    }else{
+        InputStatus.setStatus(target.name, 1);
+        target.style.borderColor = "green";
+    }
+}
+registerForm.addEventListener("focus", inputFocusHandler, true);
+registerForm.addEventListener("blur", inputBlurHandler, true);
+/**
+ * 序列化表单
+ * */
+function getFormJsonName(valueType){
     let types = {
-        'username': ()=>{ return "user_id"},
-        'password': ()=>{ return "password"},
-        'email': ()=> {return "email"},
-        'ensure_code': ()=>{return "verify_code"}
+        'username': ()=>{return "user_key"},
+        'password': ()=>{return "password"}
     };
     return ((types[valueType])());
 }
 function getFormJsonObject() {
     let inputArray = registerForm.getElementsByTagName("input");
     let formObj = {};
+    //测试
+    // formObj["user_key"] = "fronttest";
+    // formObj["key_type"] = "user_id";
+    // formObj["password"] = "fronttest123";
     for(let i in inputArray){
         let input = inputArray[i];
         let name = input.name;
-        if(name && name!=="confirm_password" && name !== "item" && name !== "nameItem"){
+        if(name && name !== "item" && name !== "namedItem"){
             if(name === "username"){
-                let validator = new Validator();
-                if(validator.checkIsEmail(input)){
-                    formObj["email"] = input.value;
+                if(Validator.validate(input)){
+                    formObj["key_type"] = "email";
                 }else{
-                    formObj[getFormJsonName(name)] = input.value;
+                    formObj["key_type"] = "user_id";
                 }
+                formObj["user_key"] = input.value;
             }else{
                 formObj[getFormJsonName(name)] = input.value;
             }
         }
     }
+    console.log(formObj);
     return formObj;
 }
-let formSerialize = function () {
-    let obj = getFormJsonObject();
-    if(verifyCode){
-        obj["verify_id"] = verifyCode.id;
-    }
-    return JSON.stringify(getFormJsonObject());
-};
 
-/*
-事件处理
+/***
+ * 获取form的JSON数据
+ * @returns {string}
  */
-function getEventTarget(event) {
-    return event.target || target.srcElement;
+function formSerialize() {
+    return JSON.stringify(getFormJsonObject());
 }
-function inputFocusHandler(event) {
-    let target = getEventTarget(event);
-    target.style.borderColor = "rgba(91,136,180,1)";
-}
-function inputBlurHandler(event) {
-    let target = getEventTarget(event);
-    let message = validator.validate(target);
-    if(message){
-        inputStatus.setStatus(target.name, 0);
-        target.style.borderColor = "red";
-        /*
-        是否加提示项待定
-         */
-    }else{
-        inputStatus.setStatus(target.name, 1);
-        /*
-        是否加提示项待定
-         */
+/**
+ * 获取XMLHttpRequest
+ * */
+function getXMLObject(){
+    let xmlHttp;
+    if (window.XMLHttpRequest) {
+        xmlHttp=new XMLHttpRequest();
+    } else {
+        xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
+    return xmlHttp;
 }
 
-/*
-提交
+/***
+ *
+ * @param url
+ * @param contentType
+ * @param responseType
+ * @param method
+ * @param data
+ * @returns {Promise<any>}
+ */
+function getRequest(url, contentType, responseType, method, data){
+    return new Promise(function (resolve, reject) {
+        console.log(data);
+        let xmlHttp = getXMLObject();
+        xmlHttp.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                if (this.status === 200) {
+                    resolve(this.response);
+                } else {
+                    reject(this.error);
+                }
+            }
+        };
+        xmlHttp.open(method, url);
+        xmlHttp.responseType = responseType;
+        xmlHttp.setRequestHeader("Content-Type", contentType)
+        if(method === "POST"){
+            xmlHttp.send(data);
+        }else{
+            xmlHttp.send(null);
+        }
+    })
+}
+function postLogInForm(json) {
+    let successHandler = (json)=>{
+        if(json["result"] === 0){
+            alert("登陆成功");
+            console.log(getCookie("user_id"));
+            window.location.href = "personalPage.html";
+        }else{
+            let errorMessage = {
+                "1": "无效用户ID",
+                "2": "无效的密码",
+                "3": "验证码错误",
+                "4": "账号被封禁",
+                "5": "已登录",
+                "6": "未知错误",
+                "8": "登陆数据缺失",
+                "9": "json格式错误"
+            };
+            alert(errorMessage[String(json["result"])]);
+            submit.removeAttribute("style");
+            submit.removeAttribute("disabled");
+        }
+    };
+    getRequest((SERVER_URL())() + URL_INTERFACE.REQUEST_LOG_IN, "application/json","json", "POST", json).then((json)=>{
+        successHandler(json);
+    });
+}
+/***
+ * 提交处理handler
  */
 function submitHandler() {
-    let status = inputStatus.getStatus();
+    let status = InputStatus.getStatus();
     if(Number(status) === 0){
-        alert("请完成登陆信息填写");
+        alert("请完成表单填写");
         return false;
     }
     submit.style.background = "grey";
     submit.disabled = "disabled";
     let formJson = formSerialize();
-    getRequest((ServerURL())() + Url_Options.LOGIN, "json", "application/json", "post", formJson).then(json=>{
-        let types = {
-            "0": ()=>{alert("登陆成功！")},
-            "1": ()=>{alert("无效的用户名")},
-            "2": ()=>{alert("无效的密码")},
-            "3": ()=>{alert("验证码错误")},
-            "4": ()=>{alert("账号被封禁")},
-            "5": ()=>{alert("已登录")},
-            "6": ()=>{alert("未知错误")}
-        };
-        let result = json["result"];
-        (types[result])();
-        if(result === "0"){
-            /*
-            * cookie待处理
-            * */
-            window.location.href = "index.html";
-        }else{
-            submit.removeAttribute("style");
-            submit.removeAttribute("disabled");
-        }
-    });
+    console.log(formJson);
+    postLogInForm(formJson);
 }
-requestVerifyPicButton.addEventListener("click", requestVerifyCodeHandler);
-registerForm.addEventListener("focus", inputFocusHandler, true);
-registerForm.addEventListener("blur", inputBlurHandler, true);
 submit.onclick = submitHandler;
+
+

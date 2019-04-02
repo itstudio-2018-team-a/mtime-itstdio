@@ -231,6 +231,7 @@ a {
           #body .container .body .left .head_portrait div img {
             width: 91px; }
       #body .container .body .left .sel {
+        position: relative;
         display: block;
         width: 288px;
         height: 33px;
@@ -244,12 +245,29 @@ a {
           font-weight: bold;
           line-height: 32px;
           color: #ffffff; }
+        #body .container .body .left .sel #select_portrait {
+          width: 100%;
+          height: 100%; }
       #body .container .body .left .upload_portrait {
+        cursor: pointer;
+        position: relative;
         border: 2px solid #5b88b4;
-        background: white; }
-        #body .container .body .left .upload_portrait span {
-          z-index: 10;
-          color: #5b88b4; }
+        background: white;
+        border-radius: 4px;
+        padding: 4px -1px;
+        overflow: hidden;
+        text-decoration: none;
+        text-indent: 0;
+        color: #5b88b4;
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 32px; }
+        #body .container .body .left .upload_portrait input {
+          position: absolute;
+          font-size: 100px;
+          right: 0;
+          top: 0;
+          opacity: 0; }
     #body .container .body .right {
       float: right; }
       #body .container .body .right .sel {

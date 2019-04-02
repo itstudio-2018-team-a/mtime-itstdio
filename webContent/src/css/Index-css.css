@@ -211,6 +211,16 @@ a {
     position: absolute;
     z-index: 1;
     float: left; }
+    #body .banner div {
+      position: relative; }
+      #body .banner div em {
+        width: 100%;
+        height: 100%;
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: rgba(0, 0, 0, 0.3); }
     #body .banner img {
       width: 100%; }
   #body .container {
@@ -263,6 +273,9 @@ a {
         #body .container .hot_videos .movie_container .movie {
           position: relative;
           margin: 0 10px; }
+          #body .container .hot_videos .movie_container .movie .cover img {
+            width: 310px;
+            height: 466px; }
           #body .container .hot_videos .movie_container .movie .info {
             visibility: hidden;
             position: absolute;
@@ -390,6 +403,9 @@ a {
             z-index: -1; }
           #body .container .display_movie_by_date .display_movies .movie .movie_cover {
             position: relative; }
+            #body .container .display_movie_by_date .display_movies .movie .movie_cover img {
+              width: 120px;
+              height: 180px; }
             #body .container .display_movie_by_date .display_movies .movie .movie_cover:hover .info {
               visibility: visible; }
             #body .container .display_movie_by_date .display_movies .movie .movie_cover .info {
@@ -460,12 +476,13 @@ a {
       margin-right: -78px; }
     #body .container .news_today .movie_container .news .news_info {
       text-align: center;
-      width: 190px;
+      width: 200px;
       margin: 0 auto; }
       #body .container .news_today .movie_container .news .news_info span {
         font-size: 20px;
         color: #0b0b0b;
-        opacity: 0.9; }
+        opacity: 0.9;
+        letter-spacing: 2px; }
     #body .container .hot_comment .hot_comment_title a span {
       color: black; }
     #body .container .hot_comments {
@@ -482,6 +499,9 @@ a {
           width: 95%;
           background: #eae8e8;
           border-radius: 5px;
+          -moz-box-shadow: 0 0 10px grey;
+          -webkit-box-shadow: 0 0 10px grey;
+          box-shadow: 0 0 10px grey;
           margin: -34px auto 0; }
           #body .container .hot_comments .hot_comment .info_container .info .head {
             position: relative; }

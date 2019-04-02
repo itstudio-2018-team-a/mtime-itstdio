@@ -56,6 +56,18 @@ $display_movie_vertical_cutLine_left: 60px;
     position: absolute;
     z-index: 1;
     float: left;
+    div{
+      position: relative;
+      em{
+        width: 100%;
+        height: 100%;
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: rgba(0,0,0,0.3);
+      }
+    }
     img{
       width: 100%;
     }
@@ -127,6 +139,12 @@ $display_movie_vertical_cutLine_left: 60px;
         .movie{
           position: relative;
           margin: 0 10px;
+          .cover{
+            img{
+              width: 310px;
+              height: 466px;
+            }
+          }
           .info{
             visibility: hidden;
             position: absolute;
@@ -285,6 +303,10 @@ $display_movie_vertical_cutLine_left: 60px;
           }
           .movie_cover{
             position: relative;
+            img{
+              width: 120px;
+              height: 180px;
+            }
             &:hover .info{
               visibility: visible;
             }
@@ -390,12 +412,13 @@ $display_movie_vertical_cutLine_left: 60px;
         .news{
           .news_info{
             text-align: center;
-            width: 190px;
+            width: 200px;
             margin: 0 auto;
             span{
               font-size: 20px;
               color: #0b0b0b;
               opacity: 0.9;
+              letter-spacing: 2px;
             }
           }
         }
@@ -413,6 +436,7 @@ $display_movie_vertical_cutLine_left: 60px;
     .hot_comments{
       margin-bottom: 0;
       .hot_comment{
+
         position: relative;
         .img_cover{
           width:100%;
@@ -425,6 +449,9 @@ $display_movie_vertical_cutLine_left: 60px;
           width: 95%;
           background: #eae8e8;
           border-radius: 5px;
+          -moz-box-shadow:0 0 10px grey;
+          -webkit-box-shadow:0 0 10px grey;
+          box-shadow:0 0 10px grey;
           margin: -34px auto 0;
           .info{
             .head{

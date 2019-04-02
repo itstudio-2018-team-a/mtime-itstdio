@@ -49,6 +49,7 @@
           }
         }
         .sel{
+          position: relative;
           display: block;
           width: 288px;
           height: 33px;
@@ -63,14 +64,32 @@
             line-height: 32px;
             color: #ffffff;
           }
+          #select_portrait{
+            width: 100%;
+            height: 100%;
+          }
         }
         .upload_portrait{
+          cursor: pointer;
+          position: relative;
           border: 2px solid rgba(91,136,180,1);
           background: white;
-          span{
-            z-index: 10;
-            color: #5b88b4;
+          border-radius: 4px;
+          padding: 4px -1px;
+          overflow: hidden;
+          text-decoration: none;
+          text-indent: 0;
+          input{
+            position: absolute;
+            font-size: 100px;
+            right: 0;
+            top: 0;
+            opacity: 0;
           }
+          color: #5b88b4;
+          font-size: 15px;
+          font-weight: bold;
+          line-height: 32px;
         }
       }
       .right{

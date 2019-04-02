@@ -15,12 +15,11 @@
             <div class="log_register clearfix">
                 <a href="" class="log">
                     <div class="head_portrait">
-                        <img src="../templates/login.png" alt="" class="head_portrait">
-                        <div><img src="../templates/ellipse.png" alt="" class="ellipse"></div>
+                        <div><img src="../templates/ellipse.png" alt="" class="ellipse" ></div>
                     </div>
                 </a>
                 <a href="" class="register">
-                    <span class="login_in navi_font">蒜头王八</span>
+                    <span class="login_in navi_font" id="username">蒜头王八</span>
                 </a>
             </div>
             <ul class="selections clearfix">
@@ -47,31 +46,29 @@
         <div class="body">
             <div class="left">
                 <div class="head_portrait">
-                    <img src="../templates/ellipse.png" alt="" class="portrait">
-                    <div><img src="../templates/login.png" alt="" class="ellipse"></div>
+                    <img src="../templates/ellipse.png" alt="" class="portrait" id="display_portrait">
                 </div>
-                <div class="upload_portrait sel"><span>上传头像</span></div>
-                <div class="confirm sel"><span>确认</span></div>
+                <form action="" id="portrait">
+                    <!--<div class="upload_portrait sel"><span id="select_portrait">上传头像</span></div>-->
+                    <a class="upload_portrait sel"><input type="file" id="select_portrait">上传头像</a>
+                    <div class="confirm sel"><span id="confirm_portrait">确认</span></div>
+                </form>
             </div>
             <div class="right">
-                <div class="title"><span>*不修改项目请留空</span></div>
-                <form action="">
+                <form action="" id="change_nickname">
                     <div class="nickname sel">
-                        <input type="text" class="input" placeholder="修改昵称">
+                        <input type="text" class="input" placeholder="修改昵称" id="input_username" name="nickname">
                     </div>
+                    <div class="submit sel" id="nickname_submit"><span>确认</span></div>
+                </form>
+                <form id="change_password">
                     <div class="password sel">
-                        <input type="text" class="input" placeholder="修改密码">
+                        <input type="password" class="input" placeholder="原密码" name="password">
                     </div>
                     <div class="confirm_password sel">
-                        <input type="text" class="input" placeholder="确认密码">
+                        <input type="password" class="input" placeholder="新密码" name="confirm_password">
                     </div>
-                    <div class="email sel">
-                        <input type="text" class="input" placeholder="修改电子邮箱">
-                    </div>
-                    <div class="checkout sel">
-                        <input type="text" class="input" placeholder="验证码">
-                    </div>
-                    <div class="submit sel"><span>确认</span></div>
+                    <div class="submit sel" id="password_submit"><span>确认</span></div>
                 </form>
             </div>
         </div>
@@ -112,4 +109,5 @@
     </div>
 </div>
 </body>
+<script src="../src/js/personalPage.js"></script>
 </html>

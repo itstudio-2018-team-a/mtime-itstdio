@@ -1,223 +1,254 @@
-let registerForm = document.getElementById("register");
+//未完成
+/***
+ * URLServer: 106.13.106.1
+ * 请求邮箱验证码：
+ * GET//i/email_verify_code?email=?
+ * response
+ * {"id","wait"}
+ * @type {HTMLElement}
+ */
+let registerForm = document.getElementById("findBackPassword");
 let submit = document.getElementById("submit");
 let requestVerifyPicButton = document.getElementById("request_verify_img_button");
-let verifyImg = document.getElementById("verify_img");
 let verifyCode = {};
-
-/*
-常量
+/***
+ * 获取服务器URL
+ * @returns {function(): string}
+ * @constructor
  */
-const Url_Options = {
-    VERIFY_CODE: "\\i\\verify_code",
-    VERIFY_PICTURE: "\\i\\verify_code_picture",
-    FIND_BACK_PASSWORD: "\\account\\i\\forget_passwd\\"
-};
-const RegExpPattern = {
-    EMAIL_PATTERN: /^\w+@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/,
-    CHINESE_PATTERN: /^[\u4e00-\u9fa5]*$/,
-    PASSWORD_PATTERN: "",
-    ENSURE_PATTERN: "*"
-};
-const ErrorMessage = {
-    IS_EMPTY: "不能为空",
-    PASSWORD_PATTERN: "请使用数字+字母+特殊字符",
-    CONFIRM_PASSWORD: "两次输入的密码不相同",
-    EMAIL_PATTERN: "邮箱格式不正确",
-    CHINESE_PATTERN_ERROR: "内容包含中文"
-};
-/*
-Utils
- */
-const ServerURL = ()=>{ //获取服务器地址
-    let __URL = "106.13.106.1";
+let ServerURL = ()=>{
+    let __URL = "http://106.13.106.1";
     return ()=>{
         return __URL;
     }
 };
-function getPatternType(valueType) {//获取匹配模式
-    let types = {
-        'username': ()=>{return RegExpPattern.EMAIL_PATTERN}
-    };
-    return ((types[valueType])());
-}
-function getXMLObject() {
-    let xmlHttp;
-    if(window.XMLHttpRequest){
-        xmlHttp = new XMLHttpRequest();
-    }else{
-        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    return xmlHttp;
-}
-/**
- *
- * @param url
- * @param type
- * @param contentType
- * @param requestMethod
- * @param data
- * @returns {Promise<any>}
+const URL_INTERFACE = {
+    REQUEST_FOR_EMAIL_VERIFY_CODE: "\\i\\email_verify_code",
+    REQUEST_FOR_CHANGE_ORIDINARY_PASSWORD: "\\account\\i\\foget_passwd"
+};
+const RegExpPattern = {
+    EMAIL_PATTERN: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+    CHINESE_PATTERN: /^[\u4e00-\u9fa5]*$/,
+    PASSWORD_PATTERN: /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[_])[\da-zA-Z_]{6,16}$/
+};
+const ERROR_MESSAGE = {
+    IS_EMPTY: "不能为空",
+    CHINESE_PATTERN_ERROR: "内容包含中文",
+    NOT_SAME_PASSWORD: "密码不相同",
+    PASSWORD_PATTERN: "请使用数字+字母+特殊字符",
+    CONFIRM_PASSWORD: "两次输入的密码不相同",
+    EMAIL_PATTERN: "邮箱格式不正确"
+};
+const typesReflect = {
+    'password': RegExpPattern.PASSWORD_PATTERN,
+    'email': RegExpPattern.EMAIL_PATTERN,
+};
+const errorMessageReflect = {
+    'password': ERROR_MESSAGE.PASSWORD_PATTERN,
+    'confirm_password': ERROR_MESSAGE.NOT_SAME_PASSWORD,
+    'email': ERROR_MESSAGE.EMAIL_PATTERN
+};
+/***
+ * 标识input状态
  */
-
-function getRequest(url, type, contentType, requestMethod, data) {
-    return new Promise(function (resolve, reject) {
-        let xmlHttp = getXMLObject();
-        xmlHttp.onreadystatechange = function () {
-            console.log(this.status);
-            console.log(this.readyState);
-            if(this.readyState === 4){
-                if(this.status === 200){
-                    resolve(this.response);
-                }else{
-                    reject();
-                }
+let InputStatus = {
+    email: "0",
+    password: "0",
+    confirm_password: "0",
+    verify_code: "0",
+    setStatus: function (name, value) {
+        this[name] = String(value);
+    },
+    getStatus: function () {
+        let flag = true;
+        let status = Object.getOwnPropertyNames(this);
+        console.log(status);
+        for(let i in status){
+            console.log(this[status[i]]);
+            if(this[status[i]] === "0"){
+                flag = false;
+                break;
             }
-        };
-        xmlHttp.open(requestMethod, url);
-        xmlHttp.responseType = type;
-        xmlHttp.setRequestHeader("Content-Type", contentType + ";charset=utf-8");
-        if(requestMethod === "POST"){
-            xmlHttp.send(data);
-        }else if(requestMethod === "GET"){
-            xmlHttp.send();
         }
-    });
-}
-
-function getType(valueType) {   //获取匹配模式
-    let types = {
-        'username': ()=>{ return RegExpPattern.USERNAME_PATTERN},
-        'password': ()=>{ return RegExpPattern.PASSWORD_PATTERN},
-        'email': ()=> {return RegExpPattern.EMAIL_PATTERN},
-        'ensure_code': ()=>{return RegExpPattern.ENSURE_PATTERN}
-    };
-    return ((types[valueType])());
-}
-let InputStatus = function () {
-    this.username = "0";
-    this.password = "0";
-    this.confirm_password = "0";
-    this.ensure_code = "0";
-};
-InputStatus.prototype.setStatus = function (name, value) {
-    this[name] = value;
-};
-InputStatus.prototype.getStatus = function () {
-    let flag = true;
-    let status = Object.getOwnPropertyNames(this);
-    for(let i in status){
-        console.log(this[status[i]]);
-        if(this[status[i]] === "0"){
-            flag = false;
-            break;
-        }
+        return flag;
     }
-    return flag;
 };
-let inputStatus = new InputStatus();
-
+/**
+ * 策略组
+ * */
 let CheckValidationStrategies = {
-    isEmpty: (value)=>{ //判断是否为空
-        if(value === ""){
-            return ErrorMessage.IS_EMPTY;
-        }
+    isEmpty: (value)=>{
+        if(value === "")
+            return ERROR_MESSAGE.IS_EMPTY;
     },
-    hasChinese: (value)=>{  //判断内容是否包含中文
-        let ChineseReg = new RegExp(RegExpPattern.CHINESE_PATTERN);
-        if(ChineseReg.test(value)){
-            return ErrorMessage.CHINESE_PATTERN_ERROR;
-        }
+    hasChinese: (value)=>{
+        let chineseReg = new RegExp(RegExpPattern.CHINESE_PATTERN);
+        if(chineseReg.test(value))
+            return ERROR_MESSAGE.CHINESE_PATTERN_ERROR;
     },
-    checkBaseValidate: function(value){
-        let errorMessage;
-        errorMessage = this.isEmpty(value);
-        if(errorMessage){
+    checkBaseValidate: function (value) {
+        let errorMessage = this.isEmpty(value);
+        if(errorMessage)
             return errorMessage;
-        }
         errorMessage = this.hasChinese(value);
-        if(errorMessage){
+        if(errorMessage)
             return errorMessage;
+    },
+    checkIsTheSame: function (value_1, value_2) {
+        console.log(value_1 + " " + value_2);
+        if(value_1 !== value_2){
+            return ERROR_MESSAGE.CONFIRM_PASSWORD;
         }
     },
     checkValidate: function(value, regType){    //value待判断的值，regType为正则匹配模式的类型
         let errorMessage = this.checkBaseValidate(value);
         if(errorMessage){
             return errorMessage;
+        }
+        console.log(typesReflect[regType]);
+        let typeReg = new RegExp(typesReflect[regType]);
+        console.log(typeReg.test(value));
+        if(!typeReg.test(value)){
+            console.log(errorMessageReflect[regType]);
+            return errorMessageReflect[regType];
+        }
+    }
+};
+/**
+ * 校验业务组
+ * */
+const Validator = {
+    validate: (dom)=>{
+        let message = CheckValidationStrategies.checkBaseValidate(dom.value);
+        if(message){
+            return message;
+        }
+        if(dom.name === "confirm_password"){
+            let password = document.getElementById("password").value;
+            console.log(CheckValidationStrategies.checkIsTheSame(password, dom.value));
+            return CheckValidationStrategies.checkIsTheSame(password, dom.value);
+        }else if(dom.name === "verify_code"){
+            return CheckValidationStrategies.isEmpty(dom.value);
         }else{
-            let typeReg = new RegExp(RegExpPattern[regType]);
-            if(!typeReg.test(value)){
-                return ErrorMessage[regType];
-            }
-        }
-    },
-    confirmPassword: function (password, password_confirm) {
-        if(password !== password_confirm){
-            return ErrorMessage.CONFIRM_PASSWORD;
+            return CheckValidationStrategies.checkValidate(dom.value, dom.name);
         }
     }
 };
-/*
-校验业务组
- */
-let Validator = function () {};
-const validator = new Validator();
-Validator.prototype.validate = function (dom) {
-    if(dom.name === confirm_password){
-        return CheckValidationStrategies.confirmPassword(document.getElementById("password").value, dom.value);
-    }else if(dom.name === ensure_code){
-        return CheckValidationStrategies.checkBaseValidate(dom.value);
+/**
+ * input输入表单
+ * 事件绑定
+ * */
+function getTarget(event){
+    return event.target || event.srcElement;
+}
+function inputFocusHandler(event) {
+    let target = getTarget(event);
+    target.style.borderColor = "rgba(91,136,180,1)";
+}
+function inputBlurHandler(event) {
+    let target = getTarget(event);
+    let message =  Validator.validate(target);
+    if(message){
+        InputStatus.setStatus(target.name, 0);
+        target.style.borderColor = "red";
     }else{
-        let type = getType(dom.name);
-        return CheckValidationStrategies.checkValidate(dom.value, type);
+        InputStatus.setStatus(target.name, 1);
+        target.style.borderColor = "green";
     }
-};
-/*
-获取验证码
+}
+registerForm.addEventListener("focus", inputFocusHandler, true);
+registerForm.addEventListener("blur", inputBlurHandler, true);
+/**
+ * 获取XMLHttpRequest
+ * */
+function getXMLObject(){
+    let xmlHttp;
+    if (window.XMLHttpRequest) {
+        xmlHttp=new XMLHttpRequest();
+    } else {
+        xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    return xmlHttp;
+}
+/***
+ *  获取请求对象
+ * @param url
+ * @param contentType
+ * @param responseType
+ * @param method
+ * @param data
+ * @returns {Promise<any>}
  */
-let requestVerifyCodeHandler = function () {
-    let successHandler = (json)=>{
-        verifyCode = json;
-        console.log(verifyCode);
-        return getRequest((ServerURL())() + Url_Options.VERIFY_PICTURE + "\\" + verifyCode.id);
-    };
-    let failHandler = ()=>{
-        alert("请求超时");
-    };
-    getRequest((ServerURL())() + Url_Options.VERIFY_CODE, "json", "application/json", "GET").then((json)=>{
-        return successHandler(json);
-    },()=>{
-        failHandler();
-    }).then((blob)=>{
-        verifyImg.onload = function () {
-            window.URL.revokeObjectURL(verifyImg.src);
-            return new Promise(((resolve, reject) => {
+function getRequest(url, contentType, responseType, method, data){
+    return new Promise(function (resolve, reject) {
+        let xmlHttp = getXMLObject();
+        xmlHttp.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                if (this.status === 200) {
+                    resolve(this.response);
+                } else {
+                    reject(new Error("请求失败"));
+                }
+            }
+        };
+        xmlHttp.open(method, url);
+        xmlHttp.responseType = responseType;
+        xmlHttp.setRequestHeader("Content-Type", contentType);
+        if(method === "POST"){
+            xmlHttp.send(data);
+        }else{
+            xmlHttp.send(null);
+        }
+    })
+}
+/***
+ * 请求邮箱验证码handler
+ */
+function getEmailVerifyCode() {
+    let email = document.getElementById("email");
+    let result = Validator.validate(email);
+    if(result === false || result === ERROR_MESSAGE.IS_EMPTY){
+        alert(new Error("邮箱为空或格式错误"));
+        return null;
+    }else {
+        let successHandler = (json) => {
+            verifyCode = json;
+            console.log(verifyCode);
+            return new Promise(() => {
                 let countDown = Number(verifyCode.wait);
-                let setTime = ()=>{
-                    if(countDown === 0){
+                let setTime = () => {
+                    if (countDown === 0) {
                         requestVerifyPicButton.innerText = "获取验证码";
                         clearInterval(click);
                         requestVerifyPicButton.removeAttribute("disabled");
-                    }else{
+                    } else {
                         requestVerifyPicButton.disabled = "disabled";
-                        requestVerifyPicButton.innerText = count + "S";
+                        requestVerifyPicButton.innerText = countDown + " S";
                         countDown--;
                     }
                 };
                 let click = setInterval(setTime, 1000);
-            }));
+            })
         };
-        verifyImg.src = window.URL.createObjectURL(blob);
-    })
-};
-/*
-表单序列化
- */
-function getFormJsonName(valueType) {
+        let failHandler = (error) => {
+            alert(error.message);
+        };
+        getRequest((ServerURL())() + URL_INTERFACE.REQUEST_FOR_EMAIL_VERIFY_CODE + "?" + "email=" + email.value, "application/x-www-form-urlencoded", "json", "GET")
+            .then((json) => {
+                return successHandler(json);
+            }, (error) => {
+                failHandler(error);
+            });
+    }
+}
+requestVerifyPicButton.addEventListener("click", getEmailVerifyCode);
+/**
+ * 序列化表单
+ * */
+function getFormJsonName(valueType){
     let types = {
-        'username': ()=>{ return "user_id"},
-        'password': ()=>{ return "password"},
-        'email': ()=> {return "email"},
-        'ensure_code': ()=>{return "verify_code"}
+        'password': ()=>{return "new_password"},
+        'verify_code': ()=>{return "verify_code"},
     };
     return ((types[valueType])());
 }
@@ -227,94 +258,52 @@ function getFormJsonObject() {
     for(let i in inputArray){
         let input = inputArray[i];
         let name = input.name;
-        if(name && name!=="confirm_password" && name !== "item" && name !== "nameItem"){
-            if(name === "username"){
-                let validator = new Validator();
-                if(validator.checkIsEmail(input)){
-                    formObj["email"] = input.value;
-                }else{
-                    formObj[getFormJsonName(name)] = input.value;
-                }
-            }else{
-                formObj[getFormJsonName(name)] = input.value;
-            }
+        if(name && name !== "item" && name !== "namedItem" && name !== "email" && name !== "confirm_password"){
+            formObj[getFormJsonName(name)] = input.value;
         }
     }
+    formObj["verify_id"] = verifyCode["id"];
     return formObj;
 }
-let formSerialize = function () {
-    let obj = getFormJsonObject();
-    if(verifyCode){
-        obj["verify_id"] = verifyCode.id;
-    }
+/***
+ * 获取form的JSON数据
+ * @returns {string}
+ */
+function formSerialize() {
     return JSON.stringify(getFormJsonObject());
-};
-
-/*
-事件处理
- */
-/*
-事件处理
- */
-function getEventTarget(event) {
-    return event.target || target.srcElement;
 }
-function inputFocusHandler(event) {
-    let target = getEventTarget(event);
-    target.style.borderColor = "rgba(91,136,180,1)";
-}
-function inputBlurHandler(event) {
-    let target = getEventTarget(event);
-    let message = validator.validate(target);
-    if(message){
-        inputStatus.setStatus(target.name, 0);
-        target.style.borderColor = "red";
-        /*
-        是否加提示项待定
-         */
-    }else{
-        inputStatus.setStatus(target.name, 1);
-        /*
-        是否加提示项待定
-         */
+/**
+ * 发送修改密码请求
+ * */
+let postFindBackForm = function () {
+    if(!InputStatus.getStatus()){
+        alert("请完成表单查询");
+        return null;
     }
-}
-/*
-提交
- */
-function submitHandler() {
-    let status = inputStatus.getStatus();
-    if(Number(status) === 0){
-        alert("请完成登陆信息填写");
-        return false;
-    }
-    submit.style.background = "grey";
-    submit.disabled = "disabled";
-    let formJson = formSerialize();
-    getRequest((ServerURL())() + Url_Options.LOGIN, "json", "application/json", "post", formJson).then(json=>{
-        let types = {
-            /*"0": ()=>{alert("登陆成功！")},
-            "1": ()=>{alert("无效的用户名")},
-            "2": ()=>{alert("无效的密码")},
-            "3": ()=>{alert("验证码错误")},
-            "4": ()=>{alert("账号被封禁")},
-            "5": ()=>{alert("已登录")},
-            "6": ()=>{alert("未知错误")}*/
+    let successHandler = (json)=>{
+        let result = json;
+        let resultTypes = {
+            "0": "修改成功",
+            "1": "验证码错误",
+            "2": "新密码不合法",
+            "3": "用户不存在",
+            "4": "未知错误"
         };
-        let result = json["result"];
-        (types[result])();
-        if(result === "0"){
-            /*
-            * cookie待处理
-            * */
-            window.location.href = "index.html";
+        if(result["result"] === "0"){
+            alert(resultTypes["0"]);
+            window.location.href = "logIn.html";
         }else{
-            submit.removeAttribute("style");
-            submit.removeAttribute("disabled");
+            alert(resultTypes[result["id"]]);
         }
-    });
-}
-requestVerifyPicButton.addEventListener("click", requestVerifyCodeHandler);
-registerForm.addEventListener("focus", inputFocusHandler, true);
-registerForm.addEventListener("blur", inputBlurHandler, true);
-submit.onclick = submitHandler;
+    };
+    let failHandler  = (error)=>{
+        alert(error.message);
+    };
+    getRequest((ServerURL())() + URL_INTERFACE.REQUEST_FOR_CHANGE_ORIDINARY_PASSWORD, "application/json", "json", "POST", formSerialize())
+        .then((json) => {
+            return successHandler(json);
+        }, (error) => {
+            failHandler(error);
+        });
+};
+submit.onclick = postFindBackForm;
