@@ -21,7 +21,7 @@ from account import views
 urlpatterns = [
     # GET
     url(r'^user/info/(.+)', views.i_get_user_info),                    # 获取用户信息1
-    # url(r'^user/film_review_list/(.+)'),        # 用户影评评论列表
+    # url(r'^user/film_review_list/(.+)',views.i_film_review_list),        # 用户影评列表
     # url(r'^user/comments/(.+)'),               # 用户评论列表
     url(r'^user/comments_news/(.+)', views.i_get_user_comments_news_list),           # 用户新闻评论列表
     url(r'^user/comments_filmreview/(.+)', views.i_get_user_film_review_comment_list),
@@ -32,5 +32,6 @@ urlpatterns = [
     url(r'^login', views.i_login),
     url(r'^changepasswd/(.+)', views.i_change_password),
     url(r'^foget_passwd', views.i_forgot_password),
+    url(r'upload_head/(.+)', views.i_upload_head_img),
 ]
 
