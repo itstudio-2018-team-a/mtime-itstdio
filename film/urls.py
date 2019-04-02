@@ -34,7 +34,7 @@ urlpatterns = [
     # 正在上映的电影 GET
     # required: null
     # selected: null
-    url(r'^i/ticketing_film/', views.get_on_movie),
+    url(r'^i/ticketing_film/', views.get_on_movie_list),
 
     # 即将上映的电影 GET
     # required: null
@@ -69,6 +69,9 @@ urlpatterns = [
 
     url(r'^i/new_review', views.write_review),
     url(r'^i/delete_review', views.delete_review),
+
+
+    url(r'^i/simple_on_films', views.get_on_four_movies_simple),
 
 ]
 

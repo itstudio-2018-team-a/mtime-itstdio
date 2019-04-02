@@ -8,6 +8,24 @@ from django.utils import timezone
 # Create your views here.
 
 
+def response_success(content):
+    json.dumps(content)
+    return HttpResponse(content,
+                        content_type='application/json;charset = utf-8',
+                        status='200',
+                        reason='OK',
+                        charset='utf-8')
+
+
+def response_error(content):
+    json.dumps(content)
+    return HttpResponse(content,
+                        content_type='application/json;charset = utf-8',
+                        status='400',
+                        reason='Bad Request',
+                        charset='utf-8')
+
+
 # {
 #   "num":"数量(int)",
 #   "list":[{
@@ -29,12 +47,22 @@ from django.utils import timezone
 # 获取全部电影
 def get_film_list(request):
     if request.method == 'GET':
+        content = {'status': ''}
+
+        try:
+            num = int(request.GET.get('num', default='10'))
+        except:
+            content['status'] = 'num_error'
+            return response_error(content)
+
+        try:
+            page_num = int(request.GET.get('page', default='1'))
+        except:
+            content['status'] = 'page_error'
+            return response_error(content)
+
         all_film_list = models.Film.objects.filter(active=True).order_by('-on_time')
-
-        num = int(request.GET.get('num', default='10'))
         paginator = Paginator(all_film_list, num)
-
-        page_num = int(request.GET.get('page', default='1'))
 
         max_page_num = paginator.count
         if page_num > max_page_num:
@@ -55,13 +83,7 @@ def get_film_list(request):
                 'time': str(one.on_time.strftime('%Y-%m-%d %H:%M:%S'))
             })
 
-        content = json.dumps(content)
-
-        return HttpResponse(content,
-                            content_type='application/json;charset = utf-8',
-                            status='200',
-                            reason='success',
-                            charset='utf-8')
+        return response_success(content)
 
     else:
         return HttpResponse(status=404)
@@ -128,7 +150,69 @@ def get_film(request):
         return HttpResponse(status=404)
 
 
-def get_on_movie(request):
+def get_on_four_movies_simple(request):
+    if request.method == 'GET':
+        on_movies = models.OnMovie.objects.all().order_by('-film__on_time')[:4]
+
+        num = len(on_movies)
+
+        content = {'num': num, 'list': [], 'status': 'ok'}
+
+        for one in on_movies:
+            content['list'].append({
+                'pub_time': str(one.film.on_time.strftime('%m-%d')),
+                'film_name': one.film.name,
+                'info': one.film.info,
+                'picture': one.film.head_image.url,
+            })
+
+        content = json.dumps(content)
+
+        return HttpResponse(content,
+                            content_type='application/json;charset = utf-8',
+                            status='200',
+                            reason='success',
+                            charset='utf-8')
+    else:
+        return HttpResponse(status=404)
+
+
+def return_success(content):
+    return HttpResponse(content,
+                        content_type='application/json;charset = utf-8',
+                        status='200',
+                        reason='success',
+                        charset='utf-8')
+
+
+def get_on_four_movies_detailed(request):
+    if request.method == 'GET':
+        on_movies = models.OnMovie.objects.all().order_by('-film__on_time')[:4]
+
+        num = len(on_movies)
+
+        content = {'num': num, 'list': [], 'status': 'ok'}
+
+        for one in on_movies:
+            content['list'].append({
+                'pub_time': str(one.film.on_time.strftime('%m-%d')),
+                'film_name': one.film.name,
+                'info': one.film.info,
+                'picture': one.film.head_image.url,
+            })
+
+        content = json.dumps(content)
+
+        return HttpResponse(content,
+                            content_type='application/json;charset = utf-8',
+                            status='200',
+                            reason='success',
+                            charset='utf-8')
+    else:
+        return HttpResponse(status=404)
+
+
+def get_on_movie_list(request):
     if request.method == 'GET':
         on_movies = models.OnMovie.objects.all()
 
