@@ -9,7 +9,7 @@ from django.utils import timezone
 
 
 def response_success(content):
-    json.dumps(content)
+    content = json.dumps(content)
     return HttpResponse(content,
                         content_type='application/json;charset = utf-8',
                         status='200',
@@ -18,7 +18,7 @@ def response_success(content):
 
 
 def response_error(content):
-    json.dumps(content)
+    content = json.dumps(content)
     return HttpResponse(content,
                         content_type='application/json;charset = utf-8',
                         status='400',
