@@ -93,7 +93,7 @@ def i_register(request):
                     else:
                         # 注册失败返回状态码
                         logger.error('注册失败返回状态码')
-                        return HttpResponse("{\"result\":" + str(result) + "}}", status=500)
+                        return HttpResponse("{\"result\":" + str(result) + "}}", status=406)
 
                 else:
                     # 验证码错误，返回状态码
