@@ -674,7 +674,7 @@ def search(request):
 
                 if films_list:
 
-                    paginator = Paginator(films_list, page_num)
+                    paginator = Paginator(films_list, num)
 
                     max_page_num = paginator.count
                     if page_num > max_page_num:
@@ -691,7 +691,6 @@ def search(request):
                         })
 
                 content['status'] = 'ok'
-                print(content)
                 return response_success(content)
             else:
                 content['status'] = 'content_error'
