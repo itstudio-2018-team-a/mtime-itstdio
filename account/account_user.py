@@ -40,7 +40,7 @@ def sign_password_md5(passwd, salt='kHa4sDk3dhQf'):
 
 # 用于安全的获取json内容
 # 保证获取到的json字典中包含args_list的内容
-def get_json_dirt(data_str, args_list = {}):
+def get_json_dirt_safe(data_str, args_list=[]):
     # 读取post的内容
     # 使用try防止乱推出现异常崩溃
     try:
@@ -50,7 +50,8 @@ def get_json_dirt(data_str, args_list = {}):
         for arg in args_list:
             post_body_json[arg] = ''
         return post_body_json
-
+    if not isinstance(post_body_json, dict):
+        post_body_json = {}
     for arg in args_list:
         if arg not in post_body_json:
             post_body_json[arg] = ''
@@ -60,7 +61,7 @@ def get_json_dirt(data_str, args_list = {}):
 # 检查dirt中各个元素是否有效
 # 若无效，则返回无效元素名称
 # 若全部有效，则返回空字符串
-def check_dirt_args_valid(json_dirt, args_list):
+def check_dirt_args_valid(json_dirt, args_list=[]):
     for arg in args_list:
         if not json_dirt[arg]:
             return arg
@@ -107,3 +108,14 @@ def check_user_id_verify(user_id):
 
 def check_email_verify(email):
     return re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', email)
+
+
+def check_nickname_verify(nickname):
+    try:
+        if 0 < len(nickname) < 21:
+            if re.match(r'^w+$', nickname):
+                return True
+        else:
+            return False
+    except Exception:
+        return False
