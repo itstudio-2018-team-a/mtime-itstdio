@@ -37,7 +37,10 @@
       text-align: center;
       display: flex;
       justify-content: center; }
+      #header .navi .container .selections.hover {
+        text-decoration: underline; }
       #header .navi .container .selections .selection {
+        cursor: pointer;
         padding: 20px 0;
         vertical-align: middle;
         display: inline-block;
@@ -165,6 +168,14 @@ a {
   border: 2px solid black;
   border-radius: 3px; }
 
+.navi_cutline {
+  width: 100%;
+  height: 1px;
+  position: absolute;
+  background: #8c959b;
+  left: 0;
+  top: 76px; }
+
 #header .navi .container .search {
   position: relative; }
   #header .navi .container .search .search_movie {
@@ -185,6 +196,7 @@ a {
       opacity: 0.75;
       padding-left: 117px; }
     #header .navi .container .search .search_movie .select_mode {
+      z-index: 100;
       position: absolute;
       top: 35px;
       left: 15px;
@@ -273,9 +285,12 @@ a {
         #body .container .hot_videos .movie_container .movie {
           position: relative;
           margin: 0 10px; }
-          #body .container .hot_videos .movie_container .movie .cover img {
+          #body .container .hot_videos .movie_container .movie .cover {
             width: 310px;
             height: 466px; }
+            #body .container .hot_videos .movie_container .movie .cover img {
+              width: 310px;
+              height: 466px; }
           #body .container .hot_videos .movie_container .movie .info {
             visibility: hidden;
             position: absolute;
@@ -402,7 +417,9 @@ a {
             left: 60px;
             z-index: -1; }
           #body .container .display_movie_by_date .display_movies .movie .movie_cover {
-            position: relative; }
+            position: relative;
+            width: 120px;
+            height: 180px; }
             #body .container .display_movie_by_date .display_movies .movie .movie_cover img {
               width: 120px;
               height: 180px; }
@@ -490,7 +507,8 @@ a {
       #body .container .hot_comments .hot_comment {
         position: relative; }
         #body .container .hot_comments .hot_comment .img_cover {
-          width: 100%;
+          width: 500px;
+          height: 300px;
           z-index: -1;
           position: relative; }
         #body .container .hot_comments .hot_comment .info_container {
@@ -508,6 +526,8 @@ a {
             #body .container .hot_comments .hot_comment .info_container .info .head a {
               cursor: pointer; }
               #body .container .hot_comments .hot_comment .info_container .info .head a img {
+                width: 52px;
+                height: 52px;
                 position: absolute;
                 top: -30px;
                 left: 15px; }

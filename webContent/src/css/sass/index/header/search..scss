@@ -37,6 +37,7 @@ $submit_right: -96px;
 
           }
           .select_mode{
+            z-index: 100;
             position: absolute;
             top: $select_mode_top;
             left: $select_mode_left;

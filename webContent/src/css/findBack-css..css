@@ -120,6 +120,14 @@ a {
   border: 2px solid black;
   border-radius: 3px; }
 
+.navi_cutline {
+  width: 100%;
+  height: 1px;
+  position: absolute;
+  background: #8c959b;
+  left: 0;
+  top: 76px; }
+
 #header {
   z-index: 100;
   position: relative; }
@@ -159,7 +167,10 @@ a {
       text-align: center;
       display: flex;
       justify-content: center; }
+      #header .navi .container .selections.hover {
+        text-decoration: underline; }
       #header .navi .container .selections .selection {
+        cursor: pointer;
         padding: 20px 0;
         vertical-align: middle;
         display: inline-block;

@@ -140,6 +140,8 @@ $display_movie_vertical_cutLine_left: 60px;
           position: relative;
           margin: 0 10px;
           .cover{
+            width: 310px;
+            height: 466px;
             img{
               width: 310px;
               height: 466px;
@@ -303,6 +305,8 @@ $display_movie_vertical_cutLine_left: 60px;
           }
           .movie_cover{
             position: relative;
+            width: 120px;
+            height: 180px;
             img{
               width: 120px;
               height: 180px;
@@ -436,10 +440,10 @@ $display_movie_vertical_cutLine_left: 60px;
     .hot_comments{
       margin-bottom: 0;
       .hot_comment{
-
         position: relative;
         .img_cover{
-          width:100%;
+          width: 500px;
+          height: 300px;
           z-index: -1;
           position: relative;
         }
@@ -459,6 +463,8 @@ $display_movie_vertical_cutLine_left: 60px;
               a{
                 cursor: pointer;
                 img{
+                  width: 52px;
+                  height: 52px;
                   position: absolute;
                   top: -30px;
                   left: 15px;

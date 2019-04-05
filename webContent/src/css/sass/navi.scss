@@ -67,7 +67,11 @@ $logo_padding: 10px;
         text-align: center;
         display: flex;
         justify-content: center;
+        &.hover{
+          text-decoration: underline;
+        }
          .selection {
+           cursor: pointer;
            padding: $selection_padding 0;
            vertical-align: middle;
            display: inline-block;
