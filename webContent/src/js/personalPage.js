@@ -98,9 +98,6 @@ window.onload = (function checkIsLogIn() {
 });
 ////////////////
 
-let confirmPortrait = document.getElementById("select");
-let portraitForm = document.getElementById("portrait");
-let displayImg = document.getElementById("display_img");
 let changeNickname = document.getElementById("change_nickname");
 let nicknameSubmit = document.getElementById("nickname_submit");
 let changePassword = document.getElementById("change_password");
@@ -141,7 +138,7 @@ const ERROR_MESSAGE = {
     IS_EMPTY: "不能为空",
     NICKNAME_PATTERN: "请使用数字+字母+下划线",
     PASSWORD_PATTERN: "请使用数字+字母+特殊字符",
-    CONFIRM_PASSWORD: "两次输入的密码不相同",
+    CONFIRM_PASSWORD: "两次输入的密码相同",
     CHINESE_PATTERN_ERROR: "内容包含中文"
 };
 /***
@@ -185,6 +182,18 @@ InputStatus.prototype.getStatus = function(){
     }
     return flag;
 };
+InputStatus.prototype.getGroupStatus = function(array){
+    let flag = true;
+    for(let i = 0; i < array.length; i++){
+        let element = this[array[i]];
+        console.log(element);
+        if(element === "0"){
+            flag = false;
+            return flag;
+        }
+    }
+    return flag;
+};
 let inputStatus = new InputStatus();
 /***
  * 校验策略组
@@ -210,7 +219,7 @@ let CheckValidationStrategies = {
     },
     checkIsTheSame: function (value_1, value_2) {
         console.log(value_1 + " " + value_2);
-        if(value_1 !== value_2){
+        if(value_1 === value_2){
             return ERROR_MESSAGE.CONFIRM_PASSWORD;
         }
     },
@@ -241,6 +250,13 @@ const Validator = {
             let password = document.getElementById("password").value;
             console.log(CheckValidationStrategies.checkIsTheSame(password, dom.value));
             return CheckValidationStrategies.checkIsTheSame(password, dom.value);
+        }else if(dom.name === "nickname"){
+            let preUserName = user["username"];
+            if(dom.value === preUserName){
+                return "与原用户名相同";
+            }
+            return CheckValidationStrategies.checkValidate(dom.value, dom.name);
+
         }else{
             return CheckValidationStrategies.checkValidate(dom.value, dom.name);
         }
@@ -262,7 +278,7 @@ function inputBlurHandler(event) {
     if(message){
         inputStatus.setStatus(target.name, 0);
         target.style.borderColor = "red";
-    }else{
+    } else{
         inputStatus.setStatus(target.name, 1);
         target.style.borderColor = "green";
     }
@@ -291,8 +307,6 @@ function getFormJsonObject(form) {
             formObj[getFormJsonName(name)] = input.value;
         }
     }
-    formObj["verify_id"] = verifyCode["id"];
-    // formObj["verify_id"] = "1";
     console.log(formObj);
     return formObj;
 }
@@ -377,32 +391,92 @@ function requestChangeNickname() {
         failHandler(error);
     })
 }
-nicknameSubmit.onclick = requestChangeNickname;
+function nicknameSubmitHandler(){
+    let flag = inputStatus.getGroupStatus(["nickname"]);
+    if(flag === true){
+        requestChangeNickname();
+    }else{
+        alert("表单填写有误");
+    }
+}
+nicknameSubmit.onclick = nicknameSubmitHandler;
 /***
  * 请求修改用户密码
  * request:{"new_nick}
  * response: {"result"}
  */
-function requestChangeNickname() {
+function requestChangePassword() {
     let passwordJson = formSerialize(changePassword);
     let successHandler = (json)=> {
-        /*
-
-         */
-        alert(json["result"]);
-        /*
-        修改input
-        */
+        let result = {
+            "0": "成功",
+            "1": "原密码错误",
+            "2": "验证码错误",
+            "3": "未登录",
+            "4": "未知错误"
+        };
+        alert(result[String(json["result"])]);
     };
     let failHandler = (error)=>{
         alert(error.message);
     };
-    getRequest((ServerURL())() + Url_Options.CHANGE_NICKNAME, "json", "application/json", "POST", nicknameJson).then((json)=>{
+    getRequest((ServerURL())() + Url_Options.CHANGE_PASSWORD + "\\" + "Frontend_test02", "json", "application/json", "POST", passwordJson).then((json)=>{
         successHandler(json);
     }, (error)=>{
         failHandler(error);
     })
 }
+function passwordSubmitHandler(){
+    let flag = inputStatus.getGroupStatus(["password","confirm_password"]);
+    if(flag === true){
+        requestChangePassword();
+    }else{
+        alert("表单填写有误");
+    }
+}
+passwordSubmit.onclick = passwordSubmitHandler;
+/***
+ * 头像上传
+ */
+let portraitSelect = document.getElementById("select_portrait");    //选取img
+let displayPortrait = document.getElementById("display_portrait");   //img
+let portraitSubmit = document.getElementById("confirm_portrait");   //上传头像
+let uploadImgHandler = ()=>{
+    console.log(portraitSelect.files[0].name);
+    if(!portraitSelect.files.length || portraitSelect.files.length === 0){
+        alert("您的头像未更改");
+        return null;
+    }else{
+        let file = portraitSelect.files[0];
+        let name = file.name;
+        console.log(file);
+        getRequest((ServerURL())() + Url_Options.UPLOAD_PORTRAIT + "\\" + name, "json", "application/", "POST", file).then((json)=>{
+            console.log(json["result"]);
+            if(json["result"] !== "成功"){
+                console.log("error");
+            }
+        }, (error)=>{
+            alert(error.message);
+        });
+    }
+};
+function portraitImgChangeHandler() {
+    window.URL = window.URL || window.webkitURL;
+    let displayPortrait = document.getElementById("display_portrait");   //img
+    if(this.files.length === 0){
+        return null;
+    }
 
-
-
+    console.log(this.files[0].name);
+    let file =  this.files[0];
+    if((file.size / 1024) > 1000){
+        alert("头像不能超过1M");
+        return null;
+    }
+    displayPortrait.src = window.URL.createObjectURL(this.files[0]);
+    displayPortrait.onload = function () {
+        window.URL.revokeObjectURL(this.src);
+    }
+}
+portraitSelect.addEventListener("change", portraitImgChangeHandler);
+portraitSubmit.onclick = uploadImgHandler;

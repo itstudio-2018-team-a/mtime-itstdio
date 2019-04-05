@@ -210,3 +210,5 @@ public123
   - 我的tomcatURL：[http://127.0.0.1:8080](http://127.0.0.1:8080/)
 
   - ![1553760357058](C:\Users\dell\AppData\Roaming\Typora\typora-user-images\1553760357058.png)
+
+- 上传文件，contentType设置为false
