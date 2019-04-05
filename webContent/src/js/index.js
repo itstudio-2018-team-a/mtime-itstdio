@@ -154,7 +154,7 @@ function requestForFilmList(){
                 })(), true);
             }
         }else {
-            alert(json["status"]);
+            console.log(json["status"]);
         }
     };
     /***
@@ -242,7 +242,7 @@ function requestDisplayingFilmList(){
         }
     };
     let failHandler = function (error) {
-        alert(error.message);
+        console.log(error.message);
     };
     for(let element in display_movies){
         if(hotMovieList.hasOwnProperty(element)){
@@ -278,7 +278,9 @@ function requestHotPot(){
             let list = json["list"];
             for (let i = 0; i < newsList.length; i++) {
                 let element = newsList[i];
-                element.getElementsByClassName("news_info")[0].innerText = list[i]["title"];
+                element.getElementsByClassName("news_info")[0].getElementsByTagName("span")[0].innerText = list[i]["title"];
+                element.getElementsByClassName("news_info")[1].getElementsByTagName("span")[0].innerText = list[i]["title"];
+                // element.getElementsByClassName("detail")[0].getElementsByTagName("span")[0].innerText = list[i]
                 element.getElementsByTagName("img").src = ((ServerURL())() + list[i]["picture"]);
             }
         }else{
@@ -329,10 +331,15 @@ function requestHotComments() {
             }
             hotCommentsList[i].getElementsByClassName("portrait")[0].src = (ServerURL())() + (commentList[i])["author_head"];
             hotCommentsList[i].getElementsByClassName("img_cover")[0].src = (ServerURL())() + (commentList[i])["image"];
+            hotCommentsList[i].getElementsByClassName("info_container")[0].addEventListener("click", (()=>{
+                return ()=>{
+                    window.location.href = "http://www.baidu.com?user_id=" + commentList[i]["author_id"];
+                }
+            })(), true);
         }
     };
     let failHandler = function (error) {
-        alert(error.message);
+        console.log(error.message);
     };
     getRequest((ServerURL())() + Url_Options.HOT_REVIEW_LIST, "application/x-www-form-urlencoded", "json", "GET").then((json)=>{
         successHandler(json);
@@ -341,3 +348,103 @@ function requestHotComments() {
     })
 }
 requestHotComments();
+//回到顶部
+//置顶
+$(".toTop").click(function () {
+    $('html,body').animate({scrollTop: '0px'}, 300);
+});
+/***
+ * 全局User
+ */
+let user;
+
+/***
+ * CookieUtils
+ * @param c_name
+ */
+function getCookie(c_name) {
+    if (document.cookie.length>0)
+    {
+        let c_start=document.cookie.indexOf(c_name + "=");
+        if (c_start!==-1)
+        {
+            c_start=c_start + c_name.length+1;
+            let c_end=document.cookie.indexOf(";",c_start);
+            if (c_end===-1) c_end=document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+        }
+    }
+    return "";
+}
+/***
+ * 处理个人信息
+ */
+let createUser = function (json) {
+    let user = {};
+    let types = ["user_id","username", "head","email"];
+    //测试用
+    // user = {"user_id": "1", "username": "newive", "head": "#","email": "738767136@qq.com"};
+    for(let i in types){
+        if(types.hasOwnProperty(i)){
+            user[types[i]] = json[types[i]];
+        }
+    }
+    return user;
+};
+let getUserInfo = function (json) {
+    let user;
+    return function () {
+        return user || (user = createUser.apply(this, json));
+    }
+};
+/***
+ * 取得请求用户信息的接口
+ * @returns {function(): string}
+ * @constructor
+ */
+const UserServerURL = function () {
+    let __URL =  "http://106.13.106.1\\account\\i\\user\\info";  //在ajax属性内拼接
+    // let __URL = "ellipse.png";
+    return ()=>{
+        return __URL;
+    }
+};
+/***
+ *
+ * @type {HTMLElement}
+ */
+let username = document.getElementById("username");
+let userPortrait = document.getElementById("user_portrait");
+let pre_username = document.getElementById("input_username");
+let register = document.getElementsByClassName("register")[1];
+window.onload = (function checkIsLogIn() {
+    // if(!getCookie("user_id")){
+    if(0){
+
+    }else{
+        let user_id = getCookie("user_id");
+        getRequest(UserServerURL() + "\\" + user_id, "json", "application/x-www-form-urlencoded", "GET").then(
+            (json)=>{
+                if(json["status"] === "unknow_user"){
+                    alert("找不到用户");
+                }else if(json["status"] === "ok") {
+                    console.log(json);
+                    user = getUserInfo(json);
+                    console.log(user);
+                }else{
+                    alert("未知错误");
+                }
+            },
+            (error)=>{
+                alert(error.message);
+            }
+        )
+    }
+    user = (getUserInfo())();
+    console.log(user);
+    username.innerText = user["username"];
+    pre_username.value = user["username"];
+    userPortrait = user["head"];
+    userPortrait.href = "PersonalPage.html";
+    register.style.visibility = "hidden";
+});

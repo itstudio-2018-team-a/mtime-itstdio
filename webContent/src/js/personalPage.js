@@ -34,14 +34,14 @@ function getCookie(c_name) {
 let createUser = function () {
     let user = {};
     let types = ["user_id","username", "head","email"];
-    // types.forEach(item, (item)=>{
-    //     user[item] = json[item];
-    // });
+    types.forEach(item, (item)=>{
+        user[item] = json[item];
+    });
     //测试用
     user = {"user_id": "1", "username": "newive", "head": "#","email": "738767136@qq.com"};
-    // types.forEach(item, ()=>{
-    //     user[item] = json[item];
-    // });
+    types.forEach(item, ()=>{
+        user[item] = json[item];
+    });
     return user;
 };
 let getUserInfo = function (json) {
@@ -56,8 +56,8 @@ let getUserInfo = function (json) {
  * @constructor
  */
 const UserServerURL = function () {
-    // let __URL =  "http://106.13.106.1/account/i/user/info";  //在ajax属性内拼接
-    let __URL = "ellipse.png";
+    let __URL =  "http://106.13.106.1\\account\\i\\user\\info";  //在ajax属性内拼接
+    // let __URL = "ellipse.png";
     return ()=>{
         return __URL;
     }
@@ -67,34 +67,37 @@ const UserServerURL = function () {
  * @type {HTMLElement}
  */
 let username = document.getElementById("username");
+let userPortrait = document.getElementById("user_portrait");
 let pre_username = document.getElementById("input_username");
 
 window.onload = (function checkIsLogIn() {
-    // if(!getCookie("user_id")){
-    //     alert("请登录");
-    //     window.location.href = "logIn.html";
-    // }else{
-    //     let user_id = getCookie("user_id");
-    //     getRequest(UserServerURL(), "json", "application/x-www-form-urlencoded", "GET").then(
-    //         (json)=>{
-    //             if(json["status"] === "unknow_user"){
-    //                 alert("找不到用户");
-    //             }else if(json["status"] === "ok") {
-    //                 user = getUserInfo(json);
-    //                 console.log(user);
-    //             }else{
-    //                 alert("未知错误");
-    //             }
-    //         },
-    //         (error)=>{
-    //             alert(error.message);
-    //         }
-    //     )
-    // }
+    if(!getCookie("user_id")){
+        alert("请登录");
+        window.location.href = "logIn.html";
+    }else{
+        let user_name = getCookie("user_name");
+        let user_id = getCookie("user_id");
+        getRequest(UserServerURL() + "\\" + user_id, "json", "application/x-www-form-urlencoded", "GET").then(
+            (json)=>{
+                if(json["status"] === "unknow_user"){
+                    alert("找不到用户");
+                }else if(json["status"] === "ok") {
+                    user = getUserInfo(json);
+                    console.log(user);
+                }else{
+                    alert("未知错误");
+                }
+            },
+            (error)=>{
+                alert(error.message);
+            }
+        )
+    }
     user = (getUserInfo())();
     console.log(user);
     username.innerText = user["username"];
     pre_username.value = user["username"];
+    userPortrait = user["head"];
 });
 ////////////////
 

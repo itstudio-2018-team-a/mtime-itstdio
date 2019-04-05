@@ -281,4 +281,97 @@ function submitHandler() {
 }
 submit.onclick = submitHandler;
 
+/***
+ * 全局User
+ */
+let user;
 
+/***
+ * CookieUtils
+ * @param c_name
+ */
+function getCookie(c_name) {
+    if (document.cookie.length>0)
+    {
+        let c_start=document.cookie.indexOf(c_name + "=");
+        if (c_start!==-1)
+        {
+            c_start=c_start + c_name.length+1;
+            let c_end=document.cookie.indexOf(";",c_start);
+            if (c_end===-1) c_end=document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+        }
+    }
+    return "";
+}
+/***
+ * 处理个人信息
+ */
+let createUser = function () {
+    let user = {};
+    let types = ["user_id","username", "head","email"];
+    types.forEach(item, (item)=>{
+        user[item] = json[item];
+    });
+    //测试用
+    user = {"user_id": "1", "username": "newive", "head": "#","email": "738767136@qq.com"};
+    types.forEach(item, ()=>{
+        user[item] = json[item];
+    });
+    return user;
+};
+let getUserInfo = function (json) {
+    let user;
+    return function () {
+        return user || (user = createUser.apply(this, json));
+    }
+};
+/***
+ * 取得请求用户信息的接口
+ * @returns {function(): string}
+ * @constructor
+ */
+const UserServerURL = function () {
+    let __URL =  "http://106.13.106.1\\account\\i\\user\\info";  //在ajax属性内拼接
+    // let __URL = "ellipse.png";
+    return ()=>{
+        return __URL;
+    }
+};
+/***
+ *
+ * @type {HTMLElement}
+ */
+let username = document.getElementById("username");
+let userPortrait = document.getElementById("user_portrait");
+let pre_username = document.getElementById("input_username");
+let register = document.getElementsByClassName("register")[1];
+window.onload = (function checkIsLogIn() {
+    if(!getCookie("user_id")){
+
+    }else{
+        let user_id = getCookie("user_id");
+        getRequest(UserServerURL() + "\\" + user_id, "json", "application/x-www-form-urlencoded", "GET").then(
+            (json)=>{
+                if(json["status"] === "unknow_user"){
+                    alert("找不到用户");
+                }else if(json["status"] === "ok") {
+                    user = getUserInfo(json);
+                    console.log(user);
+                }else{
+                    alert("未知错误");
+                }
+            },
+            (error)=>{
+                alert(error.message);
+            }
+        )
+    }
+    user = (getUserInfo())();
+    console.log(user);
+    username.innerText = user["username"];
+    pre_username.value = user["username"];
+    userPortrait = user["head"];
+    userPortrait.href = "PersonalPage.html";
+    register.style.visibility = "hidden";
+});
