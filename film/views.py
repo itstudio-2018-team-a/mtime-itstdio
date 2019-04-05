@@ -235,10 +235,11 @@ def get_on_movie_list(request):
 
 def get_coming_movie(request):
     if request.method == 'GET':
-        on_movies = models.ComingMovie.objects.all()
+        on_movies = models.ComingMovie.objects.filter(film__active=True)
 
         num = len(on_movies)
-        content = {'num': num, 'list': [], 'status': 'ok'}
+        content = {'num': num, 'list': [], 'status': 'success'}
+
         for one in on_movies:
             content['list'].append({
                 'title': one.film.name,
@@ -251,25 +252,37 @@ def get_coming_movie(request):
                 'commented_members': one.film.commented_member,
             })
 
-        content = json.dumps(content)
-
-        return HttpResponse(content,
-                            content_type='application/json;charset = utf-8',
-                            status='200',
-                            reason='success',
-                            charset='utf-8')
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
 def get_film_review_list(request):
     if request.method == 'GET':
+        content = {'list': [], 'status': '', 'total_num': 0}
+
+        try:
+            num = int(request.GET.get('num', default='10'))
+        except:
+            num = 0
+        if not num:
+            content['status'] = 'num_error'
+            return response_error(content)
+        content['num'] = num
+
+        try:
+            page_num = int(request.GET.get('page', default='1'))
+        except:
+            page_num = -1
+        if page_num == -1:
+            content['status'] = 'page_error'
+            return response_error(content)
+
         all_review_list = models.FilmReview.objects.filter(active=True).order_by('-create_time')
+        total_num = len(all_review_list)
+        content['total_num'] = total_num
 
-        num = int(request.GET.get('num', default=10))
         paginator = Paginator(all_review_list, num)
-
-        page_num = int(request.GET.get('page', default='1'))
 
         max_page_num = paginator.count
         if page_num > max_page_num:
@@ -277,240 +290,386 @@ def get_film_review_list(request):
         if page_num < 1:
             page_num = 1
 
-        page_of_list = paginator.page(page_num)
-        total_num = len(all_review_list)
-        content = {'list': [], 'total_num': total_num, 'num': num, 'status': 'ok'}
+        page_of_list = paginator.page(page_num).object_list
+        content['on_page'] = page_num
+        content['num_in_page'] = len(page_of_list)
+        content['num'] = num
 
-        for one in page_of_list.object_list:
+        for one in page_of_list:
             content['list'].append({
-                'film_id': one.film.id,
-                'comment_id': one.id,
-                'author_name': one.author.username,
                 'author_id': one.author.id,
+                'author_name': one.author.username,
                 'author_head': one.author.head_image.url,
+                'author_nickname': one.author.nickname,
+
+                'review_id': one.id,
                 'title': one.title,
                 'subtitle': one.subtitle,
-                'content': one.content,
-                'film_name': one.film.name,
-                'comment_num': one.commented_members,
-                'pub_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
-                'image': one.thumbnail.url
+                'thumbnail': one.thumbnail.url,
+                'body': one.content,
 
+                'create_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'update_time': str(one.update_time.strftime('%Y-%m-%d %H:%M:%S')),
+                'comment_num': one.commented_members,
+
+                'film_id': one.film.id,
+                'film_name': one.film.name,
             })
 
-            content = json.dumps(content)
+            content['status'] = 'success'
 
-            return HttpResponse(content,
-                                content_type='application/json;charset = utf-8',
-                                status='200',
-                                reason='success',
-                                charset='utf-8')
+            return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
 def get_hot_review(request):
     if request.method == 'GET':
+        content = {'list': [], 'status': 'success'}
 
         hot_review = models.FilmReview.objects.filter(active=True).order_by('-hits', '-create_time')[:10]
+        content['total_num'] = len(hot_review)
 
-        content = {'num': hot_review.count(), 'list': [], 'status': 'ok'}
         for one in hot_review:
             content['list'].append({
-                'comment_id': one.id,
-                'title': one.title,
-                'subtitle': one.subtitle,
                 'author_id': one.author.id,
                 'author_name': one.author.username,
                 'author_head': one.author.head_image.url,
-                'comment_num': one.commented_members,
+                'author_nickname': one.author.nickname,
+
+                'review_id': one.id,
+                'title': one.title,
+                'subtitle': one.subtitle,
+                'thumbnail': one.thumbnail.url,
+                'body': one.content,
+
                 'create_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'update_time': str(one.update_time.strftime('%Y-%m-%d %H:%M:%S')),
-                'film_name': one.film.name,
-                'image': one.thumbnail.url,
+                'comment_num': one.commented_members,
 
+                'film_id': one.film.id,
+                'film_name': one.film.name,
             })
 
-        content = json.dumps(content)
-
-        return HttpResponse(content,
-                            content_type='application/json;charset = utf-8',
-                            status='200',
-                            reason='success',
-                            charset='utf-8')
-
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
 def get_review(request):
     if request.method == 'GET':
-        review_id = request.GET.get('review_id') # 000
-        the_review = models.FilmReview.objects.filter(id=review_id, active=True)
+        content = {'status': ''}
 
-        if the_review:
-            the_review = the_review[0]
+        try:
+            review_id = int(request.GET.get('review_id'))
+        except:
+            review_id = 0
+        if not review_id:
+            content['status'] = 'review_error'
+            return response_error(content)
+        review = models.FilmReview.objects.filter(id=review_id, active=True)
+        if not review:
+            content['status'] = 'review_error'
+            return response_error(content)
+        review = review[0]
 
-            content = {
-                'title': the_review.title,
-                'subtitle': the_review.subtitle,
-                'author_id': the_review.author.id,
-                'author_name': the_review.author.username,
-                'author_head': the_review.author.head_image.url,
-                'comment_num': the_review.commented_members,
-                'create_time': str(the_review.create_time.strftime('%Y-%m-%d %H:%M:%S')),
-                'update_time': str(the_review.update_time.strftime('%Y-%m-%d %H:%M:%S')),
-                'body': the_review.content,
-                'image': the_review.thumbnail.url,
+        content = {
+            'author_id': review.author.id,
+            'author_name': review.author.username,
+            'author_head': review.author.head_image.url,
+            'author_nickname': review.author.nickname,
 
-                'status': 'ok',
-                }
+            'review_id': review.id,
+            'title': review.title,
+            'subtitle': review.subtitle,
+            'thumbnail': review.thumbnail.url,
+            'body': review.content,
 
-            content = json.dumps(content)
+            'create_time': str(review.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+            'update_time': str(review.update_time.strftime('%Y-%m-%d %H:%M:%S')),
+            'comment_num': review.commented_members,
 
-            return HttpResponse(content,
-                                content_type='application/json;charset = utf-8',
-                                status='200',
-                                reason='success',
-                                charset='utf-8')
+            'film_id': review.film.id,
+            'film_name': review.film.name,
 
-        else:
+            'status': 'success',
+            }
 
-            content = {'status': 'unknow'}
-
-            content = json.dumps(content)
-
-            return HttpResponse(content,
-                                content_type='application/json;charset = utf-8',
-                                status='404',
-                                reason='Not_Found',
-                                charset='utf-8')
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
 def get_short_comment(request):
     if request.method == 'GET':
-        film_id = request.GET.get('film_id')
+        content = {'status': '', 'list': [], 'total_num': 0}
 
-        content = {'list': []}
+        try:
+            film_id = int(request.GET.get('film_id'))
+        except:
+            film_id = 0
+        if not film_id:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = models.Film.objects.filter(id=film_id, active=True)
+        if not film:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = film[0]
 
-        if film_id:
-            film = models.Film.objects.filter(id=film_id, active=True)
-            if film:
-                film = film[0]
-                all_comments_list = models.FilmComment.objects.filter(film=film, active=True).order_by('-create_time')
-                total_num = len(all_comments_list)
-                content['total_num'] = total_num
-                num = request.GET.get('num', default=10)
-                paginator = Paginator(all_comments_list, num)
-                content['num'] = num
+        try:
+            num = int(request.GET.get('num', default='10'))
+        except:
+            num = -1
+        if num == -1:
+            content['status'] = 'num_error'
+            return response_error(content)
+        content['num'] = num
 
-                page_num = int(request.GET.get('page', default='1'))
+        try:
+            page_num = int(request.GET.get('page', default='1'))
+        except:
+            page_num = -1
+        if page_num == -1:
+            content['status'] = 'page_error'
+            return response_error(content)
 
-                max_page_num = paginator.count
-                if page_num > max_page_num:
-                    page_num = max_page_num
-                if page_num < 1:
-                    page_num = 1
+        all_comments_list = models.FilmComment.objects.filter(film=film, active=True).order_by('-create_time')
+        total_num = len(all_comments_list)
+        content['total_num'] = total_num
 
-                page_of_list = paginator.page(page_num).object_list
-                for one in page_of_list:
-                    content['list'].append({
-                        'comment_id': one.id,
-                        'content': one.content,
-                        'nickname': one.author.nickname,
-                        'user_id': one.author.id,
-                        'time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S'))
-                    })
-                content['status'] = 'ok'
+        paginator = Paginator(all_comments_list, num)
 
-                content = json.dumps(content)
+        max_page_num = paginator.count
+        if page_num > max_page_num:
+            page_num = max_page_num
+        if page_num < 1:
+            page_num = 1
 
-                return HttpResponse(content,
-                                    content_type='application/json;charset = utf-8',
-                                    status='200',
-                                    reason='success',
-                                    charset='utf-8')
+        page_of_list = paginator.page(page_num).object_list
+        content['on_page'] = page_num
+        content['num_in_page'] = len(page_of_list)
+        content['fim_id'] = film_id
+        content['num'] = num
 
-        else:
-            content['num'] = 0
-            content['status'] = 'error'
+        for one in page_of_list:
+            content['list'].append({
+                'author_name': one.author.nickname,
+                'author_nickname': one.author.nickname,
+                'author_head': one.author.head_image.url,
+                'author_id': one.author.id,
 
-            content = json.dumps(content)
+                'comment_id': one.id,
+                'content': one.content,
+                'time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S'))
+            })
 
-            return HttpResponse(content,
-                                content_type='application/json;charset = utf-8',
-                                status='404',
-                                reason='Not_Found',
-                                charset='utf-8')
+        content['status'] = 'success'
+
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
 def get_review_comment(request):
     if request.method == 'GET':
-        review_id = request.GET.get('review_id')
-        content = {'list': []}
-        if review_id:
-            review = models.FilmReview.objects.filter(id=review_id, active=True)
-            if review:
-                review = review[0]
-                all_comments_list = models.FilmReviewComment.objects.filter(film_review=review, active=True)
+        content = {'status': '', 'list': [], 'total_num': 0}
 
-                total_num = len(all_comments_list)
-                content['total_num'] = total_num
-                num = int(request.GET.get('num', default='10'))
-                paginator = Paginator(all_comments_list, num)
-                content['num'] = num
+        try:
+            review_id = int(request.GET.get('review_id'))
+        except:
+            review_id = 0
+        if not review_id:
+            content['status'] = 'review_error'
+            return response_error(content)
+        review = models.FilmReview.objects.filter(id=review_id, active=True)
+        if not review:
+            content['status'] = 'review_error'
+            return response_error(content)
+        review = review[0]
 
-                page_num = int(request.GET.get('page', default='1'))
+        try:
+            num = int(request.GET.get('num', default='10'))
+        except:
+            num = -1
+        if num == -1:
+            content['status'] = 'num_error'
+            return response_error(content)
+        content['num'] = num
 
-                max_page_num = paginator.count
-                if page_num > max_page_num:
-                    page_num = max_page_num
-                if page_num < 1:
-                    page_num = 1
+        try:
+            page_num = int(request.GET.get('page', default='1'))
+        except:
+            page_num = -1
+        if page_num == -1:
+            content['status'] = 'page_error'
+            return response_error(content)
 
-                page_of_list = paginator.page(page_num).object_list
+        all_comments_list = models.FilmReviewComment.objects.filter(film_review=review, active=True)
+        total_num = len(all_comments_list)
+        content['total_num'] = total_num
 
-                for one in page_of_list:
-                    content['list'].append({
-                        'page': page_num,
-                        'comment_id': one.id,
-                        'content': one.content,
-                        'author_name': one.author.nickname,
-                        'author_head': one.author.head_image.url,
-                        'author_id': one.author.id,
-                        'time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S'))
-                    })
-                content = json.dumps(content)
+        paginator = Paginator(all_comments_list, num)
 
-                return HttpResponse(content,
-                                    content_type='application/json;charset = utf-8',
-                                    status='200',
-                                    reason='success',
-                                    charset='utf-8')
+        max_page_num = paginator.count
+        if page_num > max_page_num:
+            page_num = max_page_num
+        if page_num < 1:
+            page_num = 1
 
-        content['num'] = 0
-        content['status'] = 'unknown'
-        content = json.dumps(content)
+        page_of_list = paginator.page(page_num).object_list
+        content['on_page'] = page_num
+        content['num_in_page'] = len(page_of_list)
+        content['review_id'] = review_id
+        content['num'] = num
+        for one in page_of_list:
+            content['list'].append({
+                'author_name': one.author.nickname,
+                'author_nickname': one.author.nickname,
+                'author_head': one.author.head_image.url,
+                'author_id': one.author.id,
 
-        return HttpResponse(content,
-                            content_type='application/json;charset = utf-8',
-                            status='404',
-                            reason='Not_Found',
-                            charset='utf-8')
+                'comment_id': one.id,
+                'content': one.content,
+                'time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S'))
+            })
+
+        content['status'] = 'success'
+
+        return response_success(content)
+
+    else:
+        return HttpResponse(status=404)
+
+
+def write_short_comment(request):
+    if request.method == 'POST':
+        content = {'status': ''}
+
+        try:
+            user_id = int(request.session['user_id'])
+        except:
+            user_id = 0
+        if not user_id:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = account_models.User.objects.filter(id=user_id)
+        if not user:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = user[0]
+
+        try:
+            json_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            json_data = {}
+        except Exception:
+            json_data = {}
+        if not json_data:
+            content['status'] = 'json_error'
+            return response_error(content)
+
+        try:
+            film_id = int(json_data['film_id'])
+        except:
+            film_id = 0
+        if not film_id:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = models.Film.objects.filter()
+        if not film:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = film[0]
+
+        try:
+            information = json_data['content']
+        except:
+            information = ''
+        if not information:
+            content['status'] = 'content_error'
+            return response_error(content)
+
+        comment = models.FilmComment(film=film,
+                                     author=user,
+                                     content=information,
+                                     active=True)
+        comment.save()
+        content['status'] = 'success'
+
+        return response_success(content)
+    else:
+        return HttpResponse(status=404)
+
+
+def delete_short_comment(request):
+    if request.method == 'POST':
+        content = {'status': ''}
+
+        try:
+            user_id = int(request.session['user_id'])
+        except:
+            user_id = 0
+        if not user_id:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = account_models.User.objects.filter(id=user_id)
+        if not user:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = user[0]
+
+        try:
+            json_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            json_data = {}
+        except Exception:
+            json_data = {}
+        if not json_data:
+            content['status'] = 'json_error'
+            return response_error(content)
+
+        try:
+            comment_id = int(json_data['comment_id'])
+        except:
+            comment_id = 0
+        if not comment_id:
+            content['status'] = 'comment_error'
+            return response_error(content)
+        comment = models.FilmComment.objects.filter(id=comment_id)
+        if not comment_id:
+            content['status'] = 'comment_error'
+            return response_error(content)
+        comment = comment[0]
+
+        if comment.author != user:
+            content['status'] = 'deny'
+            return response_error(content)
+
+        comment.delete()
+        content = {'status': 'success'}
+
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
 def write_review(request):
     if request.method == 'POST':
-        cookie = request.COOKIES
+        content = {'status': ''}
 
-        # 000000000000000
-        user = account_models.User.objects.filter(id=1)[0]
+        try:
+            user_id = int(request.session['user_id'])
+        except:
+            user_id = 0
+        if not user_id:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = account_models.User.objects.filter(id=user_id)
+        if not user:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = user[0]
 
         try:
             json_data = json.loads(request.body)
@@ -518,70 +677,74 @@ def write_review(request):
             json_data = {}
         except Exception:
             json_data = {}
+        if not json_data:
+            content['status'] = 'json_error'
+            return response_error(content)
 
-        if json_data:
-            try:
-                film_id = json_data['film_id']
-                film_id = int(film_id)
-            except:
-                film_id = 0
+        try:
+            film_id = int(json_data['film_id'])
+        except:
+            film_id = 0
+        if not film_id:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = models.Film.objects.filter()
+        if not film:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = film[0]
 
-            if film_id:
-                film = models.Film.objects.filter()
-                if film:
-                    film = film[0]
-                else:
-                    return HttpResponse(status=404)
+        try:
+            review_content = json_data['content']
+            title = json_data['title']
+            subtitle = json_data['subtitle']
+        except:
+            review_content = ''
+            title = ''
+            subtitle = ''
+        if not (review_content and title and subtitle):
+            content['status'] = 'lack_error'
+            return response_error(content)
 
-                try:
-                    review_content = json_data['content']
-                    title = json_data['title']
-                    subtitle = json_data['subtitle']
-                except:
-                    review_content = ''
-                    title = ''
-                    subtitle = ''
+        try:
+            img = request.FILES.get('thumbnail')
+        except:
+            img = 0
+        if not img:
+            content['status'] = 'thumbnail_error'
+            return response_error(content)
 
-                content = {'status': ''}
-                if review_content and title and subtitle:
-                    review = models.FilmReview(film=film,
-                                               author=user,
-                                               title=title,
-                                               subtitle=subtitle,
-                                               active=True)
-                    review.save()
-                    content['status'] = 'success'
-                    content = json.dumps(content)
-                    return HttpResponse(content,
-                                        content_type='application/json;charset = utf-8',
-                                        status='200',
-                                        reason='success',
-                                        charset='utf-8')
+        review = models.FilmReview(film=film,
+                                   author=user,
+                                   title=title,
+                                   subtitle=subtitle,
+                                   content=content,
+                                   thumbnail=img,
+                                   active=True)
+        review.save()
+        content['status'] = 'success'
 
-
-                else:
-                    content['status'] = 'null'
-
-                    content = json.dumps(content)
-
-                    return HttpResponse(content, status=404)
-
-            else:
-                return HttpResponse(status=404)
-        else:
-            return HttpResponse(status=404)
-
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
 def delete_review(request):
     if request.method == 'POST':
-        cookie = request.COOKIES
+        content = {'status': ''}
 
-        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        user = account_models.User.objects.filter(id=1)[0]
+        try:
+            user_id = int(request.session['user_id'])
+        except:
+            user_id = 0
+        if not user_id:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = account_models.User.objects.filter(id=user_id)
+        if not user:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = user[0]
 
         try:
             json_data = json.loads(request.body)
@@ -589,51 +752,38 @@ def delete_review(request):
             json_data = {}
         except Exception:
             json_data = {}
+        if not json_data:
+            content['status'] = 'json_error'
+            return response_error(content)
 
-        if json_data:
+        try:
+            review_id = int(json_data['review_id'])
+        except:
+            review_id = 0
+        if not review_id:
+            content['status'] = 'review_error'
+            return response_error(content)
+        review = models.FilmReview.objects.filter(id=review_id, active=True)
+        if not review:
+            content['status'] = 'review_error'
+            return response_error(content)
+        review = review[0]
 
-            try:
-                review_id = json_data['review_id']
-            except:
-                review_id = 0
+        if review.author != user:
+            content['status'] = 'deny'
+            return response_error(content)
 
-            if review_id:
-                review = models.FilmReview.objects.filter(id=review_id, active=True)
-                if review:
-                    review = review[0]
-                    if review.author == user:
-                        review.active = False
-                        review.delete()
-                        content = {'status': 'success'}
+        review.delete()
+        content = {'status': 'success'}
 
-                        content = json.dumps(content)
-                        return HttpResponse(content,
-                                            content_type='application/json;charset = utf-8',
-                                            status='200',
-                                            reason='success',
-                                            charset='utf-8')
-
-                    else:
-                        content = {'status': 'deny'}
-                        content = json.dumps(content)
-                        return HttpResponse(content, status=404)
-
-                else:
-                    content = {'status': 'invalid'}
-                    content = json.dumps(content)
-                    return HttpResponse(content, status=404)
-            else:
-                content = {'status': 'null'}
-                content = json.dumps(content)
-                return HttpResponse(content, status=404)
-        else:
-            return HttpResponse(status=404)
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
 def search(request):
     if request.method == 'POST':
+        content = {'status': ''}
 
         try:
             json_data = json.loads(request.body)
@@ -641,67 +791,172 @@ def search(request):
             json_data = {}
         except Exception:
             json_data = {}
-
-        content = {'status': ''}
+        if not json_data:
+            content['status'] = 'json_error'
+            return response_error(content)
 
         try:
             page_num = int(json_data['page'])
         except:
             page_num = 1
-
         try:
             num = int(json_data['name'])
         except:
             num = 10
-
         content['page'] = page_num
         content['num'] = num
 
-        if json_data:
-
-            try:
-                information = str(json_data['content'])
-            except:
-                information = ''
-
-            if information:
-                films_list = models.Film.objects.filter(name__icontains=information)
-
-                total_num = len(films_list)
-
-                content['list'] = []
-                content['total_num'] = total_num
-
-                if films_list:
-
-                    paginator = Paginator(films_list, num)
-
-                    max_page_num = paginator.count
-                    if page_num > max_page_num:
-                        page_num = max_page_num
-                    if page_num < 1:
-                        page_num = 1
-
-                    page_of_list = paginator.page(page_num)
-
-                    for one in page_of_list.object_list:
-                        content['list'].append({
-                            'film_id': one.id,
-                            'film_name': one.name,
-                        })
-
-                content['status'] = 'ok'
-                return response_success(content)
-            else:
-                content['status'] = 'content_error'
-                return response_error(content)
-
-        else:
-            content['status'] = 'json_error'
+        try:
+            information = str(json_data['content'])
+        except:
+            information = ''
+        if not information:
+            content['status'] = 'content_error'
             return response_error(content)
+
+        films_list = models.Film.objects.filter(name__icontains=information)
+
+        total_num = len(films_list)
+        content['list'] = []
+        content['total_num'] = total_num
+
+        if films_list:
+
+            paginator = Paginator(films_list, num)
+
+            max_page_num = paginator.count
+            if page_num > max_page_num:
+                page_num = max_page_num
+            if page_num < 1:
+                page_num = 1
+
+            page_of_list = paginator.page(page_num)
+
+            for one in page_of_list.object_list:
+                content['list'].append({
+                    'film_id': one.id,
+                    'film_name': one.name,
+                })
+
+        content['status'] = 'success'
+        return response_success(content)
 
     else:
         return HttpResponse(status=404)
+
+
+def mark(request):
+    if request.method == 'POST':
+        content = {'status': ''}
+
+        try:
+            json_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            json_data = {}
+        except Exception:
+            json_data = {}
+        if not json_data:
+            content['status'] = 'json_error'
+            return response_error(content)
+
+        try:
+            user_id = int(request.session['user_id'])
+        except:
+            user_id = 0
+        if not user_id:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = account_models.User.objects.filter(id=user_id)
+        if not user:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = user[0]
+
+        try:
+            film_id = int(json_data['film_id'])
+        except:
+            film_id = 0
+        if not film_id:
+            content['status'] = 'film_error'
+        film = models.Film.objects.filter(id=film_id, active=True)
+        if not film:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = film[0]
+
+        try:
+            score = int(json_data['score'])
+        except:
+            score = -1
+        if score < 0 or score > 10:
+            score = -1
+        if score == -1:
+            content['status'] = 'score_error'
+            return response_error(content)
+
+        if models.Mark.objects.filter(user=user, film=film):
+            content['status'] = 'marked'
+            return response_error(content)
+
+        film.score = (film.score * film.marked_members + score) / (film.marked_members + 1)
+        film.marked_members += 1
+        film.save()
+
+        the_mark = models.Mark(user=user,
+                               film=film,
+                               score=score)
+        the_mark.save()
+
+        content['status'] = 'success'
+
+        return response_success(content)
+    else:
+        return HttpResponse(status=404)
+
+
+def mark_authority(request):
+    if request.method == 'GET':
+        content = {'status': ''}
+
+        try:
+            user_id = int(request.session['user_id'])
+        except:
+            user_id = 0
+        if not user_id:
+            content['status'] = 'un_login'
+            return response_error(content)
+        user = account_models.User.objects.filter(id=user_id)
+        if not user:
+            content['status'] = 'un_login'
+            return response_error(content)
+        user = user[0]
+
+        try:
+            film_id = int(request.GET.get('film_id'))
+        except:
+            film_id = 0
+        if not film_id:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = models.Film.objects.filter(id=film_id, active=True)
+        if not film:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = film[0]
+
+        the_mark = models.Mark.objects.filter(user=user, film=film)
+        if the_mark:
+            content['status'] = 'marked'
+            content['username'] = user.username
+            content['score'] = the_mark.score
+            return response_success(content)
+        else:
+            content['status'] = 'ready'
+            return response_success(content)
+    else:
+        return HttpResponse(status=404)
+
+
 
 
 

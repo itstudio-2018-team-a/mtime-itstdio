@@ -44,7 +44,7 @@ urlpatterns = [
     # 影评列表 GET
     # required: null
     # selected: page=?(default=1) num=?(default=10)
-    url(r'^i/film_review_list', views.get_film_review_list),
+    url(r'^i/film_review_list/', views.get_film_review_list),
 
     # 影评内容 GET
     # required: review_id=?
@@ -64,16 +64,22 @@ urlpatterns = [
     #  影评评论 GET
     # required: review_id=?
     # selected: page=?(default=1) num=?(default=10)
-    url(r'^i/film_review_comment', views.get_review_comment),
+    url(r'^i/film_review_comment/', views.get_review_comment),
 
 
-    url(r'^i/new_review', views.write_review),
-    url(r'^i/delete_review', views.delete_review),
+    url(r'^i/new_short_comment/', views.write_short_comment),
+    url(r'^i/delete_short_comment/', views.delete_short_comment),
+
+    url(r'^i/new_review/', views.write_review),
+    url(r'^i/delete_review/', views.delete_review),
 
 
-    url(r'^i/simple_on_films', views.get_on_four_movies_simple),
+    url(r'^i/simple_on_films/', views.get_on_four_movies_simple),
 
     url(r'^search/', views.search),
+
+    url(r'^i/mark/', views.mark),
+    url(r'^i/confirm_mark/$', views.mark_authority),
 
 ]
 
