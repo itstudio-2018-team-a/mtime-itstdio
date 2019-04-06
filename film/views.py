@@ -4,8 +4,6 @@ from django.core.paginator import Paginator
 from account import models as account_models
 from . import models
 import json
-from django.utils import timezone
-# Create your views here.
 
 
 def response_success(content):
@@ -26,126 +24,98 @@ def response_error(content):
                         charset='utf-8')
 
 
-# {
-#   "num":"数量(int)",
-#   "list":[{
-#     "title":"电影标题",
-#     "image":"缩略图",
-#     "info":"简介",
-#     "time":"YYYY-MM-DD hh:mm:ss",
-#     "film_id":"电影ID"
-#     }],
-#     "status": "ok"
-# }
-# status存在以下几种情况
-#     ok:正常
-#     deny：拒绝
-#     null：电影列表为空
-#     error：未知错误
-
-# 11
 # 获取全部电影
 def get_film_list(request):
     if request.method == 'GET':
-        content = {'status': ''}
+        content = {'status': '', 'list': [], 'total_num': 0}
 
         try:
             num = int(request.GET.get('num', default='10'))
         except:
+            num = -1
+        if num == -1:
             content['status'] = 'num_error'
             return response_error(content)
+        content['num'] = num
 
         try:
             page_num = int(request.GET.get('page', default='1'))
         except:
+            page_num = -1
+        if page_num == -1:
             content['status'] = 'page_error'
             return response_error(content)
 
         all_film_list = models.Film.objects.filter(active=True).order_by('-on_time')
+        total_num = len(all_film_list)
+        content['total_num'] = total_num
+
         paginator = Paginator(all_film_list, num)
 
-        max_page_num = paginator.count
+        max_page_num = paginator.num_pages
         if page_num > max_page_num:
             page_num = max_page_num
         if page_num < 1:
             page_num = 1
 
-        page_of_list = paginator.page(page_num)
-        total_num = len(all_film_list)
-        content = {'list': [], 'num': num, 'page_num': page_num, 'total_num': total_num, 'status': 'ok'}
+        page_of_list = paginator.page(page_num).object_list
+        content['on_page'] = page_num
+        content['num_in_page'] = len(page_of_list)
+        content['num'] = num
+        content['max_page'] = max_page_num
 
-        for one in page_of_list.object_list:
+        for one in page_of_list:
             content['list'].append({
-                'title': one.name,
+                'film_id': one.id,
+                'name': one.name,
                 'image': one.head_image.url,
                 'info': one.info,
-                'film_id': one.id,
                 'time': str(one.on_time.strftime('%Y-%m-%d %H:%M:%S'))
             })
 
-        return response_success(content)
+        content['status'] = 'success'
 
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
-# {
-# #   "title" : "标题",
-# #   "image" :"图片",
-# #   "info" : "介绍",
-# #   "relase_date": "YYYY-MM-DD",
-# #   "time" : "hh:mm:ss",
-# #   "film_id" : "电影id",
-# #   "mark": "评分",
-# #   "status" : "ok"
-# # }
-# # status存在以下几种可能
-# #     ok：正常
-# #     unknown:未知电影
-# #     error：未知错误
-
-# 11
 # 获取特定电影 参数id
 def get_film(request):
     if request.method == 'GET':
-        film_id = request.GET.get('film_id') # 000
-        the_film = models.Film.objects.filter(id=film_id, active=True)
+        content = {'status': ''}
 
-        if the_film:
-            the_film = the_film[0]
+        try:
+            film_id = int(request.GET.get('film_id'))
+        except:
+            film_id = 0
+        if not film_id:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = models.Film.objects.filter(id=film_id, active=True)
+        if not film:
+            content['status'] = 'film_error'
+            return response_error(content)
+        film = film[0]
 
-            content = {'title': the_film.name,
-                       'image': the_film.head_image.url,
-                       'info': the_film.info,
-                       'film_id': the_film.id,
-                       'mark': the_film.score,
-                       'relase_date': str(the_film.on_time.strftime('%Y-%m-%d')),
-                       'time': str(the_film.on_time.strftime('%H:%M:%S')),
-                       'marked_members': the_film.marked_members,
-                       'comment_members': the_film.commented_member,
-                       'status': 'ok',
-                       }
+        tags = ''
+        for tag in list(film.tag.all()):
+            tags += tag.tag + ' '
 
-            content = json.dumps(content)
+        content = {'film_id': film.id,
+                   'name': film.name,
+                   'info': film.info,
+                   'release_date': str(film.on_time.strftime('%Y-%m-%d')),
+                   'time': str(film.on_time.strftime('%H:%M:%S')),
+                   'tag': str(tags[:-1]),
+                   'image': film.head_image.url,
+                   'mark': film.score,
+                   'marked_members': film.marked_members,
+                   'comment_members': film.commented_member,
+                   'status': 'success',
+                   }
 
-            return HttpResponse(content,
-                                content_type='application/json;charset = utf-8',
-                                status='200',
-                                reason='success',
-                                charset='utf-8')
-        else:
-            # 返回错误信息
-            # 找不到指定新闻 status
-            content = {'status': 'unknown'}
-
-            content = json.dumps(content)
-
-            return HttpResponse(content,
-                                content_type='application/json;charset = utf-8',
-                                status='404',
-                                reason='Not_Found',
-                                charset='utf-8')
-
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
@@ -156,7 +126,7 @@ def get_on_four_movies_simple(request):
 
         num = len(on_movies)
 
-        content = {'num': num, 'list': [], 'status': 'ok'}
+        content = {'num': num, 'list': [], 'status': 'success'}
 
         for one in on_movies:
             content['list'].append({
@@ -166,13 +136,7 @@ def get_on_four_movies_simple(request):
                 'picture': one.film.head_image.url,
             })
 
-        content = json.dumps(content)
-
-        return HttpResponse(content,
-                            content_type='application/json;charset = utf-8',
-                            status='200',
-                            reason='success',
-                            charset='utf-8')
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
@@ -183,70 +147,76 @@ def get_on_four_movies_detailed(request):
 
         num = len(on_movies)
 
-        content = {'num': num, 'list': [], 'status': 'ok'}
+        content = {'num': num, 'list': [], 'status': 'success'}
 
         for one in on_movies:
+
+            tags = ''
+            for tag in list(one.film.tag.all()):
+                tags += tag.tag + ' '
+
             content['list'].append({
                 'pub_time': str(one.film.on_time.strftime('%m-%d')),
                 'film_name': one.film.name,
                 'info': one.film.info,
                 'picture': one.film.head_image.url,
+                'tag': str(tags[:-1]),
             })
 
-        content = json.dumps(content)
-
-        return HttpResponse(content,
-                            content_type='application/json;charset = utf-8',
-                            status='200',
-                            reason='success',
-                            charset='utf-8')
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
 def get_on_movie_list(request):
     if request.method == 'GET':
-        on_movies = models.OnMovie.objects.all()
+        on_movies = models.ComingMovie.objects.filter(film__active=True).order_by('-film__on_time')
 
         num = len(on_movies)
-        content = {'num': num, 'list': [], 'status': 'ok'}
+        content = {'total_num': num, 'list': [], 'status': 'success'}
+
         for one in on_movies:
+
+            tags = ''
+            for tag in list(one.film.tag.all()):
+                tags += tag.tag + ' '
+
             content['list'].append({
-                'title': one.film.name,
                 'film_id': one.film.id,
-                'image': one.film.head_image.url,
+                'name': one.film.name,
                 'info': one.film.info,
-                'release_date': str(one.film.on_time.strftime('%H:%M:%S')),
+                'release_date': str(one.film.on_time.strftime('%Y-%m-%d')),
+                'tag': str(tags[:-1]),
+                'image': one.film.head_image.url,
                 'mark': one.film.score,
                 'marked_members': one.film.marked_members,
                 'commented_members': one.film.commented_member,
             })
 
-        content = json.dumps(content)
-
-        return HttpResponse(content,
-                            content_type='application/json;charset = utf-8',
-                            status='200',
-                            reason='success',
-                            charset='utf-8')
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
 def get_coming_movie(request):
     if request.method == 'GET':
-        on_movies = models.ComingMovie.objects.filter(film__active=True)
+        coming_movies = models.ComingMovie.objects.filter(film__active=True).order_by('film__on_time')
 
-        num = len(on_movies)
-        content = {'num': num, 'list': [], 'status': 'success'}
+        num = len(coming_movies)
+        content = {'total_num': num, 'list': [], 'status': 'success'}
 
-        for one in on_movies:
+        for one in coming_movies:
+            tags = ''
+            for tag in list(one.film.tag.all()):
+                tags += tag.tag + ' '
+
             content['list'].append({
-                'title': one.film.name,
                 'film_id': one.film.id,
-                'image': one.film.head_image.url,
+                'name': one.film.name,
                 'info': one.film.info,
-                'release_date': str(one.film.on_time.strftime('%H:%M:%S')),
+                'release_date': str(one.film.on_time.strftime('%Y-%m-%d')),
+                'tag': str(tags[:-1]),
+                'image': one.film.head_image.url,
                 'mark': one.film.score,
                 'marked_members': one.film.marked_members,
                 'commented_members': one.film.commented_member,
@@ -284,7 +254,7 @@ def get_film_review_list(request):
 
         paginator = Paginator(all_review_list, num)
 
-        max_page_num = paginator.count
+        max_page_num = paginator.num_pages
         if page_num > max_page_num:
             page_num = max_page_num
         if page_num < 1:
@@ -294,6 +264,7 @@ def get_film_review_list(request):
         content['on_page'] = page_num
         content['num_in_page'] = len(page_of_list)
         content['num'] = num
+        content['max_page'] = max_page_num
 
         for one in page_of_list:
             content['list'].append({
@@ -440,7 +411,7 @@ def get_short_comment(request):
 
         paginator = Paginator(all_comments_list, num)
 
-        max_page_num = paginator.count
+        max_page_num = paginator.num_pages
         if page_num > max_page_num:
             page_num = max_page_num
         if page_num < 1:
@@ -451,6 +422,7 @@ def get_short_comment(request):
         content['num_in_page'] = len(page_of_list)
         content['fim_id'] = film_id
         content['num'] = num
+        content['max_page'] = max_page_num
 
         for one in page_of_list:
             content['list'].append({
@@ -511,7 +483,7 @@ def get_review_comment(request):
 
         paginator = Paginator(all_comments_list, num)
 
-        max_page_num = paginator.count
+        max_page_num = paginator.num_pages
         if page_num > max_page_num:
             page_num = max_page_num
         if page_num < 1:
@@ -522,6 +494,7 @@ def get_review_comment(request):
         content['num_in_page'] = len(page_of_list)
         content['review_id'] = review_id
         content['num'] = num
+        content['max_page'] = max_page_num
         for one in page_of_list:
             content['list'].append({
                 'author_name': one.author.nickname,
@@ -824,11 +797,12 @@ def search(request):
 
             paginator = Paginator(films_list, num)
 
-            max_page_num = paginator.count
+            max_page_num = paginator.num_pages
             if page_num > max_page_num:
                 page_num = max_page_num
             if page_num < 1:
                 page_num = 1
+            content['max_page'] = max_page_num
 
             page_of_list = paginator.page(page_num)
 
