@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from mtime_itstudio.general import check_verify_img, check_verify_email
-from .account_user import to_register, sign_password_md5, get_json_dirt, check_dirt_args_valid, to_login, check_password_verify,check_user_id_verify, check_email_verify
+from .account_user import to_register, sign_password_md5, get_json_dirt_safe, check_dirt_args_valid, to_login, \
+    check_password_verify,check_user_id_verify, check_email_verify, check_nickname_verify
 from news.models import NewsComment
 from film.models import FilmReviewComment
 from .models import User
 import json
 import datetime
 import logging
-import pickle
+
 
 logger = logging.getLogger('account.view')
 
@@ -48,7 +49,7 @@ def i_register(request):
                 logger.info('POST数据完整')
                 # 检查验证码是否正确
                 # 此处需要更换为email格式的验证码
-                if True or check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
+                if not check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
                     logger.debug('验证码检查通过')
                     # 检查各项是否为空
                     if not post_body_json['user_id']:
@@ -64,7 +65,7 @@ def i_register(request):
                         logger.info('空昵称')
                         return HttpResponse("{\"result\":4}", status=400)
 
-                    # 用户名密码合法性检查
+                    # 用户名密码用户名等数据合法性检查
                     if not check_user_id_verify(post_body_json['user_id']):
                         logger.info('用户名不合法')
                         return HttpResponse("{\"result\":7}", status=403)
@@ -74,6 +75,9 @@ def i_register(request):
                     if not check_email_verify(post_body_json['email']):
                         logger.info('邮箱格式不合法')
                         return HttpResponse("{\"result\":10}", status=400)
+                    if not check_nickname_verify(post_body_json['user_name']):
+                        logger.info('昵称不合法')
+                        return HttpResponse("{\"result\":10}", status=403)
 
                     # 写入数据库
                     logger.info('将注册信息写入数据库')
@@ -93,7 +97,7 @@ def i_register(request):
                     else:
                         # 注册失败返回状态码
                         logger.error('注册失败返回状态码')
-                        return HttpResponse("{\"result\":" + str(result) + "}}", status=500)
+                        return HttpResponse("{\"result\":" + str(result) + "}}", status=406)
 
                 else:
                     # 验证码错误，返回状态码
@@ -110,6 +114,7 @@ def i_register(request):
     except Exception:
         logger.error('出现未知错误')
         return HttpResponse("{\"result\":6}", status=500)
+
 
 # 登陆接口函数
 # 2：无效的用户索引
@@ -219,7 +224,7 @@ def i_forgot_password(request, user_id):
     try:
         if request.method == 'POST':
             args_list = ('verify_id', 'verfiy_code', 'new_password')
-            post_body_json = get_json_dirt(request.body, args_list)
+            post_body_json = get_json_dirt_safe(request.body, args_list)
             check_problem = check_dirt_args_valid(post_body_json, args_list)
             if not check_problem:
                 if True or check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
@@ -254,7 +259,7 @@ def i_change_password(request, user_id):
             logger.info('已找到用户')
         args_list = ["old_password", "new_password", "verify_id", "verify_code"]
         # 安全解析json
-        post_body = get_json_dirt(request.body, args_list)
+        post_body = get_json_dirt_safe(request.body, args_list)
         logger.debug('json已解析')
         # 检查元素合法
         check_problem = check_dirt_args_valid(post_body, args_list)
@@ -299,14 +304,50 @@ def i_upload_head_img(request, filename):
                     # 成功返回0
                     return HttpResponse("{\"status\":0}", status=200)
                 else:
-                    return HttpResponse("{\"status\":3}", status=200)
+                    return HttpResponse("{\"status\":3}", status=401)
             else:
-                return HttpResponse("{\"status\":3}", status=200)
+                return HttpResponse("{\"status\":3}", status=401)
         else:
             logger.info('收到非post请求')
             return HttpResponse(status=404)
     except Exception:
         logger.error('出现未知错误')
+        return HttpResponse("{\"status\":6}", status=500)
+
+
+def i_change_nickname(request):
+    try:
+        if request.method == 'POST':
+            # 检查用户是否登录
+            logger.debug('收到post请求')
+            if 'user_id' in request.session:
+                post_body = get_json_dirt_safe(request.body, ["new_nick"])
+                if check_nickname_verify(post_body['new_nick']):
+                    user = User.objects.filter(username=request.session['user_id'])
+                    if user:
+                        user = user[0]
+                        try:
+                            user.nickname = post_body['new_nick']
+                            user.save()
+                            logger.info('更新昵称成功')
+                            return HttpResponse("{\"status\":0}", status=200)
+                        except Exception:
+                            logger.error('新昵称写入数据库失败')
+                            return HttpResponse("{\"status\":6}", status=500)
+                    else:
+                        logger.info('未登录')
+                        return HttpResponse("{\"status\":3}", status=401)
+                else:
+                    logger.info('昵称不合法')
+                    return HttpResponse("{\"status\":2}", status=406)
+            else:
+                logger.info('未登录')
+                return HttpResponse("{\"status\":3}", status=401)
+        else:
+            logger.info('收到非POST请求')
+            return HttpResponse(status=404)
+    except Exception:
+        logger.error("捕获到未知错误")
         return HttpResponse("{\"status\":6}", status=500)
 
 
