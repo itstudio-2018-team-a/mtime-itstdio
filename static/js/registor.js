@@ -11,7 +11,7 @@ let submit = document.getElementById("submit");
 const confirm_password = "confirm_password";
 const ensure_code = "ensure_code";
 const ServerURL = function () {
-    let __URL =  "http://39.96.208.176";  //在ajax属性内拼接
+    let __URL =  "http://106.13.106.1";  //在ajax属性内拼接
     return ()=>{
         return __URL;
     }
@@ -161,6 +161,8 @@ function inputBlurHandler(event) {
                 }
             }
         }
+        // tips.innerText = "*" + message;
+        // tips.style.color = "red";
     }else{
         inputStatus.setStatus(target.name, 1);
         target.style.borderColor = "green";
@@ -173,6 +175,7 @@ function inputBlurHandler(event) {
                 }
             }
         }
+        // tips.innerText = "";
     }
 }
 registerForm.addEventListener("focus", inputFocusHandler, true);
@@ -230,7 +233,8 @@ function requestVerifyCodeHandler() {
     let successHandler = (json)=>{
         verifyCode = json;
         console.log(verifyCode);
-        return getRequest((ServerURL())() + Url_Options.VERIFY_PICTURE + "\\" + verifyCode["id"], "application/x-www-form-urlencoded", "blob", "GET").then((blob)=>{
+        // return getRequest((ServerURL())() + Url_Options.VERIFY_PICTURE + "\\" + verifyCode["id"], "application/x-www-form-urlencoded", "blob", "GET");
+        return getRequest("http://127.0.0.1:8080/webContent/dist/cover_1.png", "application/x-www-form-urlencoded", "blob", "GET").then((blob)=>{
             verifyImgHandler(blob);
         });
     };
@@ -238,6 +242,7 @@ function requestVerifyCodeHandler() {
         alert(error.message);
     };
     let verifyImgHandler = (blob)=>{
+        console.log(blob);
         verifyPic.onload = function () {
             window.URL.revokeObjectURL(verifyPic.src);
             return new Promise(((resolve, reject) => {
@@ -246,7 +251,6 @@ function requestVerifyCodeHandler() {
                     if(countDown === 0){
                         requestVerifyPicButton.innerText = "获取验证码";
                         clearInterval(click);
-                        requestVerifyPicButton.removeAttribute("disabled");
                     }else{
                         requestVerifyPicButton.disabled = "disabled";
                         requestVerifyPicButton.innerText = countDown + " S";
@@ -259,7 +263,8 @@ function requestVerifyCodeHandler() {
         verifyPic.src = window.URL.createObjectURL(blob);
     };
     //getRequest((ServerURL())() + Url_Options.VERIFY_CODE, "application/x-www-form-urlencoded", "json", "GET").then((json)=>{
-    getRequest((ServerURL())() + Url_Options.VERIFY_CODE, "application/x-www-form-urlencoded", "json", "GET").then((json)=>{
+    //getRequest((ServerURL())() + Url_Options.VERIFY_CODE, "application/x-www-form-urlencoded", "json", "GET").then((json)=>{
+    getRequest("demo.json", "application/x-www-form-urlencoded", "json", "GET").then((json)=>{
         successHandler(json);
     }, (error)=>{
         failHandler(error);
@@ -339,7 +344,7 @@ let postRegisterForm = function () {
             "6": "未知错误",
             "7": "无效的用户ID",
             "8": "注册数据不完整",
-            "9": "json格式错误"
+            "9": "josn格式错误"
         };
         if(String(result["result"]) === "0"){
             alert(resultTypes["0"]);

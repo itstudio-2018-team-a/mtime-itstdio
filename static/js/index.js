@@ -54,7 +54,6 @@ function getRequest(url, contentType, responseType, method, data){
         xmlHttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 if (this.status === 200) {
-                    console.log(this.response);
                     resolve(this.response);
                 } else {
                     reject(new Error("请求失败"));
@@ -417,36 +416,35 @@ const UserServerURL = function () {
  */
 let username = document.getElementById("username");
 let userPortrait = document.getElementById("user_portrait");
-let pre_username = document.getElementById("input_username");
-let register = document.getElementsByClassName("register")[1];
+let register = document.getElementById("register");
+let logIn = document.getElementById("logIn");
 window.onload = (function checkIsLogIn() {
-    // if(!getCookie("user_id")){
-    if(0){
-
-    }else{
+    if(getCookie("user_id")){
+        console.log("1");
         let user_id = getCookie("user_id");
         getRequest(UserServerURL() + "\\" + user_id, "json", "application/x-www-form-urlencoded", "GET").then(
             (json)=>{
                 if(json["status"] === "unknow_user"){
-                    alert("找不到用户");
+                    console.log("找不到用户");
                 }else if(json["status"] === "ok") {
                     console.log(json);
                     user = getUserInfo(json);
                     console.log(user);
+                    let usernameSpan = username.getElementsByTagName("span")[0];
+                    let log = document.getElementsByClassName("log")[0];
+                    log.href = "PersonalPage.html";
+                    usernameSpan.innerText = user["username"];
+                    username.style.display = "inline";
+                    userPortrait.src = user["head"];
+                    register.style.display = "none";
+                    logIn.style.display = "none";
                 }else{
-                    alert("未知错误");
+                    console.log("未知错误");
                 }
             },
             (error)=>{
-                alert(error.message);
+                console.log(error.message);
             }
         )
     }
-    user = (getUserInfo())();
-    console.log(user);
-    username.innerText = user["username"];
-    pre_username.value = user["username"];
-    userPortrait = user["head"];
-    userPortrait.href = "PersonalPage.html";
-    register.style.visibility = "hidden";
 });
