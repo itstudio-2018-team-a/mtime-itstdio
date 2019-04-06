@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>logIn</title>
-    <link rel="stylesheet" href="../src/css/logIn-css..css">
+    <link rel="stylesheet" href="{% static 'css/logIn-css.css' %}">
 </head>
 <body>
     <div id="header">
@@ -102,5 +103,5 @@
     </div>
 </div>
 </body>
-<script src="../src/js/logIn.js"></script>
+<script src="{% static 'js/logIn.js' %}"></script>
 </html>

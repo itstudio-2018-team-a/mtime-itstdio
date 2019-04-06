@@ -11,7 +11,7 @@ let submit = document.getElementById("submit");
 const confirm_password = "confirm_password";
 const ensure_code = "ensure_code";
 const ServerURL = function () {
-    let __URL =  "http://106.13.106.1";  //在ajax属性内拼接
+    let __URL =  "http://39.96.208.176";  //在ajax属性内拼接
     return ()=>{
         return __URL;
     }

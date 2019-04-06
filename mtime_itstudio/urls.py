@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from .general import i_get_email_verify_code
+from .general import return_index
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -26,7 +27,10 @@ urlpatterns = [
     url(r'^account/', include('account.urls', namespace='Account')),
     url(r'^news/', include('news.urls', namespace='news')),
     url(r'^film/', include('film.urls', namespace='film')),
-    url(r'i/email_verify_code', i_get_email_verify_code)
+    url(r'i/email_verify_code', i_get_email_verify_code),
+
+    url(r'^index', return_index),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += static(settings.STATIC_URL)

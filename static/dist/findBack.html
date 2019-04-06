@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>register</title>
-    <link rel="stylesheet" href="../src/css/register..css">
+    <title>find back your password</title>
+    <link rel="stylesheet" href="../css/findBack-css..css">
 </head>
 <body>
 <div id="header">
     <div class="navi clearfix">
         <div class="container">
-            <a href="#" class="logo clearfix">
+            <a href="index.html" class="logo clearfix">
                 <img src="../templates/logo.png" alt="">
             </a>
             <div class="log_register clearfix">
@@ -45,44 +45,30 @@
         </div>
         <div class="login">
             <div class="title">
-                <span>注册时光网</span>
+                <span>找回密码</span>
             </div>
-            <form action="" id="register">
-                <div class="usr_name sel">
-                    <input type="text" class="input" placeholder="用户名/邮箱" name="username" id="username">
-                    <p class="tips">允许使用 数字+字母+下划线 长度6-16字符</p>
-                </div>
-                <div class="nickname sel">
-                    <input type="text" class="input" placeholder="昵称" name="nickname" id="nickname">
-                    <p class="tips">允许使用 数字+字母+下划线 长度1-20字符</p>
-                </div>
-                <div class="psw sel">
-                    <input type="password" class="input" placeholder="密码" name="password" id="password">
-                    <p class="tips">允许使用 数字+字母+特殊字符 长度6-16字符</p>
-                </div>
-                <div class="confirm_psw sel">
-                    <input type="text" class="input" placeholder="确认密码" id="confirm_password" name="confirm_password">
+            <form action="" id="findBackPassword">
+                <div class="email sel">
+                    <input type="text" class="input" placeholder="邮箱" name="email" id="email">
                     <p class="tips"></p>
                 </div>
-                <div class="email sel">
-                    <input type="text" class="input" placeholder="电子邮箱" name="email" id="email">
-                    <p class="tips"> </p>
+                <div class="usr_name sel">
+                    <input type="password" class="input" placeholder="新密码" name="password" id="password">
+                    <p class="tips"></p>
+                </div>
+                <div class="psw sel">
+                    <input type="password" class="input" placeholder="确认密码" name="confirm_password">
+                    <p class="tips"></p>
                 </div>
                 <div class="confirm sel">
-                    <input type="text" class="input" placeholder="验证码" name="verify_code" id="verify_code">
+                    <input type="text" class="input" placeholder="验证码" name="verify_code" id="ensure_code">
                     <span id="request_verify_img_button" style="position: absolute;top: 12px;right: 0;font-size: 12px;color: #5b88b4;cursor: pointer;">发送验证码</span>
-                    <img src="" alt="" width="50px" id="verify_img">
                     <p class="tips"> </p>
                 </div>
-                <button type="button" class="submit sel" id="submit">
-                    <span>注册</span>
-                </button>
+                <div class="submit sel" id="submit">
+                    <span>重设密码</span>
+                </div>
             </form>
-            <div class="register_find_back">
-                <a href="logIn.html" class="">
-                    <span class="login">已有账号？登陆></span>
-                </a>
-            </div>
         </div>
     </div>
 </div>
@@ -121,5 +107,5 @@
     </div>
 </div>
 </body>
-<script src="../src/js/registor.js"></script>
+<script src="../js/findback.js"></script>
 </html>

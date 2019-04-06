@@ -56,7 +56,7 @@ let getUserInfo = function (json) {
  * @constructor
  */
 const UserServerURL = function () {
-    let __URL =  "http://106.13.106.1\\account\\i\\user\\info";  //在ajax属性内拼接
+    let __URL =  "http://39.96.208.176\\account\\i\\user\\info";  //在ajax属性内拼接
     // let __URL = "ellipse.png";
     return ()=>{
         return __URL;
@@ -111,7 +111,7 @@ let passwordSubmit = document.getElementById("password_submit");
  * @constructor
  */
 const ServerURL = function () {
-    let __URL =  "http://106.13.106.1";  //在ajax属性内拼接
+    let __URL =  "http://39.96.208.176";  //在ajax属性内拼接
     return ()=>{
         return __URL;
     }

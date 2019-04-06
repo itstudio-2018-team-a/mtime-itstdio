@@ -7,6 +7,7 @@ import random
 import time
 import _thread
 import logging
+from django.shortcuts import render
 
 logger = logging.getLogger('account.general')
 
@@ -79,3 +80,9 @@ def i_get_email_verify_code(request):
 
     else:
         return HttpResponse("{\"status\":\"invalid_email\"}")
+
+
+def return_index(request):
+    return render(request, 'dist/index.html')
+
+
