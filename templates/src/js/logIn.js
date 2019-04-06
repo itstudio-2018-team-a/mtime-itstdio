@@ -45,7 +45,7 @@ function getCookie(c_name) {
  * 9：json格式错误
  * */
 const SERVER_URL = ()=>{
-    let __URL = "http://106.13.106.1";
+    let __URL = "http://39.96.208.176";
     return ()=>{
         return __URL;
     }
@@ -332,7 +332,7 @@ let getUserInfo = function (json) {
  * @constructor
  */
 const UserServerURL = function () {
-    let __URL =  "http://106.13.106.1\\account\\i\\user\\info";  //在ajax属性内拼接
+    let __URL =  "http://39.96.208.176\\account\\i\\user\\info";  //在ajax属性内拼接
     // let __URL = "ellipse.png";
     return ()=>{
         return __URL;
