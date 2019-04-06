@@ -54,6 +54,7 @@ function getRequest(url, contentType, responseType, method, data){
         xmlHttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 if (this.status === 200) {
+                    console.log(this.response);
                     resolve(this.response);
                 } else {
                     reject(new Error("请求失败"));
@@ -280,7 +281,8 @@ function requestHotPot(){
                 let element = newsList[i];
                 element.getElementsByClassName("news_info")[0].getElementsByTagName("span")[0].innerText = list[i]["title"];
                 element.getElementsByClassName("news_info")[1].getElementsByTagName("span")[0].innerText = list[i]["title"];
-                // element.getElementsByClassName("detail")[0].getElementsByTagName("span")[0].innerText = list[i]
+                let content = list[i]["content"].split(">")[1].split("<")[0];
+                element.getElementsByClassName("detail")[0].getElementsByTagName("span")[0].innerText = limitWords(content, 20);
                 element.getElementsByTagName("img").src = ((ServerURL())() + list[i]["picture"]);
             }
         }else{
