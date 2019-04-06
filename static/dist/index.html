@@ -1,16 +1,17 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
-    <link rel="stylesheet" href="../src/css/Index-css.css">
+    <link rel="stylesheet" href="{% static 'css/Index-css.css' %}">
 </head>
 <body>
     <div id="header">
         <div class="navi clearfix">
             <div class="container">
                 <a href="index.html" class="logo clearfix">
-                    <img src="../templates/logo.png" alt="">
+                    <img src="{% static 'templates/logo.png' %}" alt="">
                 </a>
                 <div class="log_register clearfix">
                     <a href="logIn.html" class="log">
@@ -607,6 +608,6 @@
         </div>
     </div>
 </body>
-<script src="../src/js/jquery-3.2.1.min.js"></script>
-<script src="../src/js/index.js"></script>
+<script src="../js/jquery-3.2.1.min.js"></script>
+<script src="../js/index.js"></script>
 </html>
