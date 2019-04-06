@@ -6,10 +6,12 @@ class User(models.Model):
     username = models.CharField(max_length=16, verbose_name=u'用户名', unique=True, db_index=True)
     password = models.CharField(max_length=20, verbose_name=u'密码')
     nickname = models.CharField(max_length=20, verbose_name=u'昵称')
-    head_image = models.ImageField(verbose_name=u'头像', upload_to='upload/%Y/%m')
+    head_image = models.ImageField(verbose_name=u'头像', default='default/default_head_img.jpg', upload_to='upload/%Y/%m')
     email = models.EmailField(verbose_name=u'邮箱')
 
     active = models.BooleanField(verbose_name=u'状态', default=False)
+
+    register_time = models.DateTimeField(verbose_name=u'注册时间', auto_now_add=True)
 
     class Meta:
 

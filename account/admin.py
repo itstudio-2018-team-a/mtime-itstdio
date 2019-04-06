@@ -59,6 +59,7 @@ class VerificationCodeAdmin(admin.ModelAdmin):
         return super().save_model(request, obj, form, change)
 
 
+
 @admin.register(models.BlackList)
 class BlackListAdmin(admin.ModelAdmin):
     list_display = ('user', 'reason', 'banned_time', 'lasting_time')

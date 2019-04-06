@@ -147,3 +147,45 @@ CKEDITOR_UPLOAD_PATH = 'upload/'
 #     }
 verify_email = {}
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(asctime)s][%(levelname)s][%(module)s][%(process)d][%(thread)d] [%(message)s]'
+        },
+        'simple': {
+            'format': '[%(asctime)s][%(levelname)s][%(thread)s][%(name)s %(funcName)s %(lineno)d] %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+        },
+        'account': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+
+        },
+    }
+}
+
+SESSION_COOKIE_AGE = 86400
+
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_HOST_USER = 'itstudiomtimea@163.com'
+EMAIL_HOST_PASSWORD = 'itstudio1234'

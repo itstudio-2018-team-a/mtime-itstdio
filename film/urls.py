@@ -18,10 +18,70 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^i/')
+    # 电影列表 GET
+    # required: null
+    # selected: page=?(default=1) num=?(default=10)
+    url(r'^i/film_list/', views.get_film_list),
+
+    # 电影内容 GET
+    # required: film_id=?
+    # selected: null
+    url(r'^i/film/', views.get_film),
+
+    # 正在上映的电影 GET
+    # required: null
+    # selected: null
+    url(r'^i/ticketing_film/', views.get_on_movie_list),
+
+    # 即将上映的电影 GET
+    # required: null
+    # selected: null
+    url(r'^i/coming_film/', views.get_coming_movie),
+
+    # 影评列表 GET
+    # required: null
+    # selected: page=?(default=1) num=?(default=10)
+    url(r'^i/film_review_list/', views.get_film_review_list),
+
+    # 影评内容 GET
+    # required: review_id=?
+    # selected: null
+    url(r'^i/film_review/$', views.get_review),
+
+    # 热门影评 GET
+    # required: null
+    # selected: null
+    url('^i/hot_review_list/', views.get_hot_review),
+
+    # 短评 GET
+    # required: film_id=?
+    # selected: page=?(default=1) num=?(default=10)
+    url(r'^i/short_comment_list/', views.get_short_comment),
+
+    #  影评评论 GET
+    # required: review_id=?
+    # selected: page=?(default=1) num=?(default=10)
+    url(r'^i/film_review_comment/', views.get_review_comment),
+
+
+    url(r'^i/new_short_comment/', views.write_short_comment),
+    url(r'^i/delete_short_comment/', views.delete_short_comment),
+
+    url(r'^i/new_review/', views.write_review),
+    url(r'^i/delete_review/', views.delete_review),
+
+
+    url(r'^i/simple_on_films/', views.get_on_four_movies_simple),
+    url(r'^i/detailed_on_films', views.get_on_four_movies_detailed),
+
+    url(r'^search/', views.search),
+
+    url(r'^i/mark/', views.mark),
+    url(r'^i/confirm_mark/$', views.mark_authority),
+
 ]
 
 

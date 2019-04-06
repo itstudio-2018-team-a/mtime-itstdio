@@ -2,8 +2,26 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+    # 今日热点列表（最多10个） GET
+    # required: null
+    # selected: null
     url(r'^i/hotpot_list/', views.get_hotpot_list),
-    url(r'^i/get_all_new/', views.get_all_news),
+
+    # 全部新闻列表 GET
+    # required: null
+    # selected: page=?(default=1) num=?(default=10)
+    url(r'^i/news_list/', views.get_all_news),
+
+    # 新闻内容 GET
+    # required: news_id=?
+    # selected: null
     url(r'^i/news/$', views.get_news),
-    # url(r'^comment/i/')
+
+    # 新闻评论列表
+    # required: news_id=?
+    # selected: page=?(default=1) num=?(default=10)
+    url(r'^i/comment_list/', views.get_commit_list),
+
+    url(r'^i/new_comment/', views.commit_news),
+    url(r'^i/delete/comment/', views.delete_comment),
 ]
