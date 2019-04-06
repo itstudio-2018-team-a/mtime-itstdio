@@ -420,7 +420,7 @@ def get_short_comment(request):
         page_of_list = paginator.page(page_num).object_list
         content['on_page'] = page_num
         content['num_in_page'] = len(page_of_list)
-        content['fim_id'] = film_id
+        content['film_id'] = film_id
         content['num'] = num
         content['max_page'] = max_page_num
 

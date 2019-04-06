@@ -8,26 +8,29 @@ from django.utils import timezone
 from . import models
 from account import models as account_models
 
-# {
-#   "num": "新闻数量(int)",
-#   "list":[{
-#       "title": "文章标题",
-#       "picture": "缩略图url",
-#       "pub_time": "YYYY-MM-DD hh:mm:ss",
-#       "new_id": "新闻id(int)"
-#   }],
-#   "status": "ok"
-# }
-# status存在几种可能情况
-# ok；成功
-# error：出错
-#     此时可能不存在num和list元素
+
+def response_success(content):
+    content = json.dumps(content)
+    return HttpResponse(content,
+                        content_type='application/json;charset = utf-8',
+                        status='200',
+                        reason='OK',
+                        charset='utf-8')
 
 
-# 11
+def response_error(content):
+    content = json.dumps(content)
+    return HttpResponse(content,
+                        content_type='application/json;charset = utf-8',
+                        status='400',
+                        reason='Bad Request',
+                        charset='utf-8')
+
+
 # 获取热点新闻  今日热点
 def get_hotpot_list(request):
     if request.method == 'GET':
+
         # # 获取现在的时间 今日
         # now = timezone.now()
         #
@@ -39,7 +42,7 @@ def get_hotpot_list(request):
 
         hot_news = models.News.objects.filter(active=True).order_by('-hits', '-create_time')[:10]
         num = len(hot_news)
-        content = {'num': num, 'list': [], 'status': 'ok'}
+        content = {'num': num, 'list': [], 'status': 'success'}
         for one in hot_news:
             content['list'].append({
                 'news_id': one.id,
@@ -50,230 +53,195 @@ def get_hotpot_list(request):
                 'update_time': str(one.update_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'picture': one.picture.url,
             })
-        print(content)
 
-        content = json.dumps(content)
-
-        return HttpResponse(content,
-                            content_type='application/json;charset = utf-8',
-                            status='200',
-                            reason='success',
-                            charset='utf-8')
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
-# 11
 # 获取全部新闻列表
 def get_all_news(request):
     if request.method == 'GET':
-        all_news_list = models.News.objects.filter(active=True).order_by('-create_time')
+        content = {'status': '', 'list': [], 'total_num': 0}
 
-        # 分页器 每页 10 个新闻(default=10)
-        num = int(request.GET.get('num', default='10'))
+        try:
+            num = int(request.GET.get('num', default='10'))
+        except:
+            num = -1
+        if num == -1:
+            content['status'] = 'num_error'
+            return response_error(content)
+        content['num'] = num
+
+        try:
+            page_num = int(request.GET.get('page', default='1'))
+        except:
+            page_num = -1
+        if page_num == -1:
+            content['status'] = 'page_error'
+            return response_error(content)
+
+        all_news_list = models.News.objects.filter(active=True).order_by('-create_time')
+        total_num = len(all_news_list)
+        content['total_num'] = total_num
+
         paginator = Paginator(all_news_list, num)
 
-        page_num = int(request.GET.get('page', default='1'))
-
-        max_page_num = paginator.count
+        max_page_num = paginator.num_pages
         if page_num > max_page_num:
             page_num = max_page_num
         if page_num < 1:
             page_num = 1
 
-        page_of_list = paginator.page(page_num)
-        total_num = len(all_news_list)
-        content = {'list': [], 'total_num': total_num, 'num': num, 'status': 'ok'}
+        page_of_list = paginator.page(page_num).object_list
+        content['on_page'] = page_num
+        content['num_in_page'] = len(page_of_list)
+        content['num'] = num
+        content['max_page'] = max_page_num
 
-        for one in page_of_list.object_list:
+        for one in page_of_list:
             content['list'].append({
                 'news_id': one.id,
                 'title': one.title,
                 'content': one.content,
-                # create_time
+
                 'pub_time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'update_time': str(one.update_time.strftime('%Y-%m-%d %H:%M:%S')),
                 'picture': one.picture.url,
             })
 
-        content = json.dumps(content)
+        content['status'] = 'success'
 
-        return HttpResponse(content,
-                            content_type='application/json;charset = utf-8',
-                            status='200',
-                            reason='success',
-                            charset='utf-8')
-
+        return response_success(content)
     else:
         HttpResponse(status=404)
 
-# {
-#   "title": "新闻标题",
-#   "body":"新闻内容(html)",
-#   "pub_time": "YYYY-MM-DD hh:mm:ss",
-#   "comment_num":"评论数量",
-#   "status": "ok"
-# }
-#
-#          status可能存在以下几种情况
-# #             ok：正常
-# #             unknow：找不到指定新闻
-# #             error:未知错误
 
-
-# 11
 # 获取特定新闻 参数id
 def get_news(request):
     if request.method == 'GET':
-        news_id = request.GET.get('news_id') # 000
-        the_news = models.News.objects.filter(id=news_id, active=True)
+        content = {'status': ''}
 
-        if the_news:
-            the_news = the_news[0]
+        try:
+            news_id = int(request.GET.get('news_id'))
+        except:
+            news_id = 0
+        if not news_id:
+            content['status'] = 'news_error'
+            return response_error(content)
+        news = models.News.objects.filter(id=news_id, active=True)
+        if not news:
+            content['status'] = 'news_error'
+            return response_error(content)
+        news = news[0]
 
-            content = {'title': the_news.title,
-                       'body': the_news.content,
-                       'news_id': the_news.id,
+        content = {'title': news.title,
+                   'body': news.content,
+                   'news_id': news.id,
+                   'pub_time': str(news.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+                   'update_time': str(news.update_time.strftime('%Y-%m-%d %H:%M:%S')),
+                   'comment_num': news.commented_members,
+                   'picture': news.picture.url,
 
-                       # create_time
-                       'pub_time': str(the_news.create_time.strftime('%Y-%m-%d %H:%M:%S')),
-                       'update_time': str(the_news.update_time.strftime('%Y-%m-%d %H:%M:%S')),
-                       'comment_num': the_news.commented_members,
-                       'picture': the_news.picture.url,
+                   'status': 'success',
+                   }
 
-                       'status': 'ok',
-                       }
-
-            content = json.dumps(content)
-
-            return HttpResponse(content,
-                                content_type='application/json;charset = utf-8',
-                                status='200',
-                                reason='success',
-                                charset='utf-8')
-
-        else:
-            # 返回错误信息
-            # 找不到指定新闻 status
-            content = {'status': 'unknow'}
-
-            content = json.dumps(content)
-
-            return HttpResponse(content,
-                                content_type='application/json;charset = utf-8',
-                                status='404',
-                                reason='Not_Found',
-                                charset='utf-8')
+        return response_success(content)
     else:
         return HttpResponse(status=404)
-
-
-# {
-#   "num": "数量(int)",
-#   "list": [{
-#       "content": "评论内容",
-#       "author_id": "作者id",
-#       "author_name": "作者昵称",
-#       "author_head": "作者头像url",
-#       "time": "YYYY-MM-DD hh:mm:ss"
-#   }],
-#   "status": "ok"
-# }
-# status包含以下几种情况
-# ok：正常
-# null:新闻没有评论
-# permission_dead:没有权限
-# error:未知错误
 
 
 # 11
 # 获取评论列表 特定新闻
 def get_commit_list(request):
     if request.method == 'GET':
+        content = {'status': '', 'list': [], 'total_num': 0}
+
         try:
             news_id = int(request.GET.get('news_id', default='0'))
-        except ValueError:
+        except :
             news_id = 0
+        if not news_id:
+            content['status'] = 'news_error'
+            return response_error(content)
+        news = models.News.objects.filter(id=news_id, active=True)
+        if not news_id:
+            content['status'] = 'news_error'
+            return response_error(content)
+        news = news[0]
 
-        content = {'list': []}
-        if news_id:
-            news = models.News.objects.filter(id=news_id)[0]
-            if news:
-                all_comments_list = models.NewsComment.objects.filter(news=news).order_by('-create_time')
+        try:
+            num = int(request.GET.get('num', default='10'))
+        except:
+            num = -1
+        if num == -1:
+            content['status'] = 'num_error'
+            return response_error(content)
+        content['num'] = num
 
-                total_num = len(all_comments_list)
-                content['total_num'] = total_num
-                num = request.GET.get('num', default=10)
-                paginator = Paginator(all_comments_list, num)
-                content['num'] = num
+        try:
+            page_num = int(request.GET.get('page', default='1'))
+        except:
+            page_num = -1
+        if page_num == -1:
+            content['status'] = 'page_error'
+            return response_error(content)
 
-                page_num = int(request.GET.get('page', default='1'))
+        all_comments_list = models.NewsComment.objects.filter(news=news).order_by('-create_time')
+        total_num = len(all_comments_list)
+        content['total_num'] = total_num
 
-                max_page_num = paginator.count
-                if page_num > max_page_num:
-                    page_num = max_page_num
-                if page_num < 1:
-                    page_num = 1
+        paginator = Paginator(all_comments_list, num)
 
-                page_of_list = paginator.page(page_num).object_list
-                for one in page_of_list:
-                    content['list'].append({
-                        'comment_id': one.id,
-                        'content': one.content,
-                        'author_id': one.author.id,
-                        'author_name': one.author.username,
-                        'author_head': one.author.head_image.url,
-                        'time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
-                    })
-                content['status'] = 'ok'
+        max_page_num = paginator.num_pages
+        if page_num > max_page_num:
+            page_num = max_page_num
+        if page_num < 1:
+            page_num = 1
 
-                content = json.dumps(content)
+        page_of_list = paginator.page(page_num).object_list
+        content['on_page'] = page_num
+        content['num_in_page'] = len(page_of_list)
+        content['news_id'] = news_id
+        content['num'] = num
+        content['max_page'] = max_page_num
 
-                return HttpResponse(content,
-                                    content_type='application/json;charset = utf-8',
-                                    status='200',
-                                    reason='success',
-                                    charset='utf-8')
+        for one in page_of_list:
+            content['list'].append({
+                'comment_id': one.id,
+                'content': one.content,
+                'author_id': one.author.id,
+                'author_name': one.author.username,
+                'author_head': one.author.head_image.url,
+                'author_nickname': one.author.nickname,
+                'time': str(one.create_time.strftime('%Y-%m-%d %H:%M:%S')),
+            })
 
-            else:
-                # 此新闻不存在
-                content['num'] = 0
-                content['status'] = 'error'
+        content['status'] = 'success'
 
-                content = json.dumps(content)
-
-                return HttpResponse(content,
-                                    content_type='application/json;charset = utf-8',
-                                    status='404',
-                                    reason='Not_Found',
-                                    charset='utf-8')
-        else:
-            content['num'] = 0
-            content['status'] = 'error'
-
-            content = json.dumps(content)
-
-            return HttpResponse(content,
-                                content_type='application/json;charset = utf-8',
-                                status='404',
-                                reason='Not_Found',
-                                charset='utf-8')
+        return response_success(content)
 
     else:
         return HttpResponse(status=404)
 
 
-# 00000000000000000
 # 进行评论
 def commit_news(request):
-
     if request.method == 'POST':
+        content = {'status': ''}
 
-        cookie = request.COOKIES
-
-        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        user = account_models.User.objects.filter(id=1)[0]
+        try:
+            user_id = int(request.session['user_id'])
+        except:
+            user_id = 0
+        if not user_id:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = account_models.User.objects.filter(id=user_id)
+        if not user:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = user[0]
 
         try:
             json_data = json.loads(request.body)
@@ -281,67 +249,66 @@ def commit_news(request):
             json_data = {}
         except Exception:
             json_data = {}
+        if not json_data:
+            content['status'] = 'json_error'
+            return response_error(content)
 
-        if json_data:
+        try:
+            news_id = int(json_data['news_id'])
+        except:
+            news_id = 0
+        if not news_id:
+            content['status'] = 'news_error'
+            return response_error(content)
+        news = models.News.objects.filter(id=news_id, active=True)
+        if not news:
+            content['status'] = 'news_error'
+            return response_error(content)
+        news = news[0]
 
-            news = models.News.objects.filter(id=json_data['news_id'], active=True)
-            if news:
+        comment = models.NewsComment.objects.filter(news=news, author=user)
+        if comment:
+            content['status'] = 'commented'
+            return response_error(content)
 
-                news = news[0]
+        try:
+            information = str(json_data['content'])
+        except:
+            information = ''
+        if not information:
+            content['status'] = 'content_error'
+            return response_error(content)
 
-                content = {}
-                comment = models.NewsComment.objects.filter(news=news, author=user)
+        comment = models.NewsComment(author=user,
+                                     news=news,
+                                     content=information)
+        comment.save()
+        news.commented_members += 1
+        news.save()
 
-                # 000 0 0 0 00 0 0 00000000000000
-                # if not comment:
+        content['status'] = 'success'
 
-                s = True
-                if s:
-                    if json_data['content']:
-                        comment = models.NewsComment(author=user, news=news, content=json_data['content']).save()
-                        news.commented_members += 1
-                        news.save()
-
-                        content['status'] = 'success'
-
-                        content = json.dumps(content)
-                        return HttpResponse(content,
-                                            content_type='application/json;charset = utf-8',
-                                            status='200',
-                                            reason='success',
-                                            charset='utf-8')
-                    else:
-                        content['status'] = 'No_content'
-
-                        content = json.dumps(content)
-                        return HttpResponse(content,
-                                            content_type='application/json;charset = utf-8',
-                                            status='404',
-                                            reason='No_content',
-                                            charset='utf-8')
-                else:
-                    content['status'] = 'Commented'
-                    content = json.dumps(content)
-                    return HttpResponse(content,
-                                        content_type='application/json;charset = utf-8',
-                                        status='404',
-                                        reason='Commented',
-                                        charset='utf-8')
-
-        return HttpResponse(status=404)
-
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
 
-# 0
 def delete_comment(request):
     if request.method == 'POST':
-        cookie = request.COOKIES
+        content = {'status': ''}
 
-        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-        user = account_models.User.objects.filter(id=1)[0]
+        try:
+            user_id = int(request.session['user_id'])
+        except:
+            user_id = 0
+        if not user_id:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = account_models.User.objects.filter(id=user_id)
+        if not user:
+            content['status'] = 'user_error'
+            return response_error(content)
+        user = user[0]
 
         try:
             json_data = json.loads(request.body)
@@ -349,47 +316,33 @@ def delete_comment(request):
             json_data = {}
         except Exception:
             json_data = {}
+        if not json_data:
+            content['status'] = 'json_error'
+            return response_error(content)
 
-        if json_data:
+        try:
+            comment_id = json_data['comment_id']
+        except:
+            comment_id = 0
+        if not comment_id:
+            content['status'] = 'comment_error'
+            return response_error(content)
+        comment = models.NewsComment.objects.filter(id=comment_id, active=True)
+        if not comment:
+            content['status'] = 'comment_error'
+            return response_error(content)
+        comment = comment[0]
 
-            try:
-                comment_id = json_data['comment_id']
-            except:
-                comment_id = 0
+        if comment.author != user:
+            content['status'] = 'deny'
+            return response_error(content)
 
-            if comment_id:
-                comment = models.NewsComment.objects.filter(id=comment_id, active=True)
-                if comment:
-                    comment = comment[0]
-                    if comment.author == user:
-                        comment.active = False
-                        comment.news.commented_members -= 1
-                        comment.news.save()
-                        comment.delete()
-                        content = {'status': 'success'}
+        comment.news.commented_members -= 1
+        comment.news.save()
+        comment.delete()
+        content = {'status': 'success'}
 
-                        content = json.dumps(content)
-                        return HttpResponse(content,
-                                            content_type='application/json;charset = utf-8',
-                                            status='200',
-                                            reason='success',
-                                            charset='utf-8')
-
-                    else:
-                        content = {'status': 'deny'}
-                        content = json.dumps(content)
-                        return HttpResponse(content, status=404)
-
-                else:
-                    content = {'status': 'invalid'}
-                    content = json.dumps(content)
-                    return HttpResponse(content, status=404)
-            else:
-                content = {'status': 'null'}
-                content = json.dumps(content)
-                return HttpResponse(content, status=404)
-        else:
-            return HttpResponse(status=404)
+        return response_success(content)
     else:
         return HttpResponse(status=404)
 
