@@ -13,9 +13,9 @@ const ServerURL = function () {
 const Url_Options = {
     USER_INFORMATION: "account\\i\\user\\info",
     SEARCH: "\\i\\search",
-    HOT_POT:"\\news\\i\\hotpot_list\\",
-    FILM_LIST: "\\film\\i\\film_list\\",
-    HOT_REVIEW_LIST: "\\film\\i\\hot_review_list\\"
+    HOT_POT:"\\news\\i\\hotpot_list",
+    FILM_LIST: "\\film\\i\\film_list",
+    HOT_REVIEW_LIST: "\\film\\i\\hot_review_list"
 };
 
 /***
