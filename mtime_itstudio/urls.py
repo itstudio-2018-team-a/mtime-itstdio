@@ -43,9 +43,9 @@ urlpatterns = [
     url(r'^find_back', return_find_back),
 
     url(r'^templates/(.+)', templates_redirect),
-    url(r'^js/(.+)', templates_redirect),
-    url(r'^css/(.+)', templates_redirect),
-    url(r'^dist/(.+)', templates_redirect),
+    url(r'^js/(.+)', js_redirect),
+    url(r'^css/(.+)', css_redirect),
+    url(r'^dist/(.+)', dist_redirect),
 
 ]
 
