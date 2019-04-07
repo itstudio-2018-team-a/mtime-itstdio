@@ -98,7 +98,7 @@ def check_password_verify(password):
 
 def check_user_id_verify(user_id):
     if 5 < len(user_id) < 17:
-        if re.match(r'^\w+$', user_id):
+        if re.match(r'^[A-Za-z1-9_]+$', user_id):
             return True
         else:
             return False
