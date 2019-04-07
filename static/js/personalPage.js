@@ -62,7 +62,7 @@ let userPortrait = document.getElementById("user_portrait");
 let pre_username = document.getElementById("input_username");
 function changeUserInfo(json) {
     user = getUserInfo(json);
-    console.log(user);
+    console.log(user());
     username.innerText = user["username"];
     pre_username.value = user["username"];
     userPortrait.src = user["head"];
