@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^login', views.i_login),
     url(r'^changepasswd/(.+)', views.i_change_password),
     url(r'^foget_passwd', views.i_forgot_password),
-    url(r'upload_head/(.+)', views.i_upload_head_img),
+    url(r'^upload_head/(.+)', views.i_upload_head_img),
+    url(r'^change_nick', views.i_change_nickname)
 ]
 
