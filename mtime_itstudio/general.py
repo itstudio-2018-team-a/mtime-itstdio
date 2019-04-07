@@ -1,13 +1,13 @@
 from .settings import verify_img, verify_email
 from django.core.mail import send_mail
 from django.core.cache import cache
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from account.account_user import check_email_verify
 import random
 import time
 import _thread
 import logging
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 logger = logging.getLogger('general')
 
@@ -89,5 +89,21 @@ def i_get_email_verify_code(request):
 
 def return_index(request):
     return render(request, 'dist/index.html')
+
+
+def templates_redirect(requset, left_url):
+    return redirect('/static/templates/'+left_url)
+
+
+def js_redirect(requset, left_url):
+    return redirect('/static/js/'+left_url)
+
+
+def css_redirect(requset, left_url):
+    return redirect('/static/css/'+left_url)
+
+
+def dist_redirect(requset, left_url):
+    return redirect('/static/dist/'+left_url)
 
 

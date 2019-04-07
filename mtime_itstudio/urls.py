@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from .general import i_get_email_verify_code
-from .general import return_index
+from .general import return_index, css_redirect, templates_redirect, js_redirect, dist_redirect
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -30,6 +30,10 @@ urlpatterns = [
     url(r'i/email_verify_code', i_get_email_verify_code),
 
     url(r'^index', return_index),
+    url(r'^templates/(.+)', templates_redirect),
+    url(r'^js/(.+)', templates_redirect),
+    url(r'^css/(.+)', templates_redirect),
+    url(r'^dist/(.+)', templates_redirect),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
