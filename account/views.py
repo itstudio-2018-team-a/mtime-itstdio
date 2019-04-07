@@ -363,7 +363,7 @@ def i_get_user_info(request, user_id):
             user = user[0]
             data = {"user_id": user.username,
                     "username": user.nickname,
-                    'head':"",
+                    'head': user.head_image.url,
                     "email": user.username,
                     'status':'ok'}
             return HttpResponse(json.dumps(data))
