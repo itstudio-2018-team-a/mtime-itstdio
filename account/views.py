@@ -365,8 +365,8 @@ def i_get_user_info(request, user_id):
             data = {"user_id": user.username,
                     "username": user.nickname,
                     'head': user.head_image.url,
-                    "email": user.username,
-                    'status':'ok'}
+                    "email": user.email,
+                    'status': 'ok'}
             logger.debug("返回用户数据成功")
             return HttpResponse(json.dumps(data))
         else:
