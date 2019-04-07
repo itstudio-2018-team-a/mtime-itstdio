@@ -49,7 +49,7 @@ def i_register(request):
                 logger.info('POST数据完整')
                 # 检查验证码是否正确
                 # 此处需要更换为email格式的验证码
-                if True and not check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
+                if True or not check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
                     logger.debug('验证码检查通过')
                     # 检查各项是否为空
                     if not post_body_json['user_id']:
