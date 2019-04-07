@@ -113,8 +113,10 @@ def check_email_verify(email):
 def check_nickname_verify(nickname):
     try:
         if 0 < len(nickname) < 21:
-            if re.match(r'^w+$', nickname):
+            if re.match(r'^\w+$', nickname):
                 return True
+            else:
+                return False
         else:
             return False
     except Exception:
