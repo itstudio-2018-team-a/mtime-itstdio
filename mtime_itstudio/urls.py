@@ -27,7 +27,8 @@ from .general import return_find_back
 
 from .general import return_index, css_redirect, templates_redirect, js_redirect, dist_redirect, redirect_index
 
-
+from .general import return_movie
+from .general import return_news_page
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
@@ -50,6 +51,10 @@ urlpatterns = [
     url(r'^js/(.+)', js_redirect),
     url(r'^css/(.+)', css_redirect),
     url(r'^dist/(.+)', dist_redirect),
+
+    url(r'^movie', return_movie),
+    url(r'^news', return_news_page),
+
 
     url(r'^$', return_index)
 

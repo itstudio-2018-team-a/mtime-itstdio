@@ -126,3 +126,18 @@ def dist_redirect(requset, left_url):
     return redirect('/static/dist/'+left_url)
 
 
+def return_list(request):
+    return render(request, 'dist/list.html')
+
+
+def return_news_page(request):
+    return render(request, 'dist/newsPage.html')
+
+
+def return_commentList(request):
+    return render(request, 'dist/commentList.html')
+
+
+def return_movie(request):
+    return render(request, 'dist/moviePage.html')
+
