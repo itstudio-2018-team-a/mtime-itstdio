@@ -86,7 +86,7 @@ function checkIsLogIn() {
         return null;
     }else{
         let successHandler = ()=>{
-            if(arguments[0]["status"] === "unknow_user"){
+            if(arguments[0]["status"] === "unknown_user"){
                 alert("找不到用户");
                 window.location.href = "logIn.html";
             }else if(arguments[0]["status"] === "ok") {
