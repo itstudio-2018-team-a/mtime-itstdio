@@ -60,9 +60,9 @@ const UserServerURL = function () {
 let username = document.getElementById("username");
 let userPortrait = document.getElementById("user_portrait");
 let pre_username = document.getElementById("input_username");
-function changeUserInfo() {
-    user = getUserInfo(arguments[0]);
-    console.log(user);
+function changeUserInfo(json) {
+    user = getUserInfo(json);
+    console.log(user());
     username.innerText = user["username"];
     pre_username.value = user["username"];
     userPortrait.src = user["head"];
@@ -85,12 +85,12 @@ function checkIsLogIn() {
         // window.location.href = "logIn.html";
         return null;
     }else{
-        let successHandler = ()=>{
-            if(arguments[0]["status"] === "unknow_user"){
+        let successHandler = (json)=>{
+            if(json["status"] === "unknown_user"){
                 alert("找不到用户");
                 window.location.href = "logIn.html";
-            }else if(arguments[0]["status"] === "ok") {
-                changeUserInfo(arguments[0]);
+            }else if(json["status"] === "ok") {
+                changeUserInfo(json);
             }else{
                 alert("未知错误");
             }

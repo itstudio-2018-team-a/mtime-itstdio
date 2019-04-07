@@ -49,7 +49,7 @@ def i_register(request):
                 logger.info('POST数据完整')
                 # 检查验证码是否正确
                 # 此处需要更换为email格式的验证码
-                if True and not check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
+                if True or not check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
                     logger.debug('验证码检查通过')
                     # 检查各项是否为空
                     if not post_body_json['user_id']:
@@ -360,12 +360,14 @@ def i_get_user_info(request, user_id):
         logger.info('收到GET请求')
         user = User.objects.filter(username=user_id)        # 从数据库中检索用户
         if user:        # 检查用户是否存在
+            logger.info('用户存在')
             user = user[0]
             data = {"user_id": user.username,
                     "username": user.nickname,
-                    'head':"",
-                    "email": user.username,
-                    'status':'ok'}
+                    'head': user.head_image.url,
+                    "email": user.email,
+                    'status': 'ok'}
+            logger.debug("返回用户数据成功")
             return HttpResponse(json.dumps(data))
         else:
             logger.info('位置用户'+user_id)

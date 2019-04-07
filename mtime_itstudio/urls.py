@@ -39,12 +39,14 @@ urlpatterns = [
 
 
     url(r'^index/$', return_index),
+    url(r'^index\.html$', return_index),
     url(r'^index/(.+)', redirect_index),
     url(r'^logIn', return_login),
     url(r'^login', return_login),
     url(r'^register', return_register),
 
     url(r'^personal_page', return_personal_page),
+    url(r'^PersonalPage', return_personal_page),
     url(r'^find_back', return_find_back),
 
     url(r'^templates/(.+)', templates_redirect),
