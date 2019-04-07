@@ -85,11 +85,11 @@ function checkIsLogIn() {
         // window.location.href = "logIn.html";
         return null;
     }else{
-        let successHandler = ()=>{
-            if(arguments[0]["status"] === "unknown_user"){
+        let successHandler = (json)=>{
+            if(json["status"] === "unknown_user"){
                 alert("找不到用户");
                 window.location.href = "logIn.html";
-            }else if(arguments[0]["status"] === "ok") {
+            }else if(json["status"] === "ok") {
                 changeUserInfo(arguments[0]);
             }else{
                 alert("未知错误");
