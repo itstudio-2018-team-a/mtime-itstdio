@@ -70,7 +70,7 @@ function changeUserInfo() {
 }
 function requestForUserInfo(successHandler, failHandler) {
     let user_id = getCookie("user_id");
-    getRequest(UserServerURL() + "\\" + user_id, "json", "application/x-www-form-urlencoded", "GET").then(
+    getRequest((UserServerURL())() + "\\" + user_id, "json", "application/x-www-form-urlencoded", "GET").then(
         (json)=>{
             successHandler(json);
         },
