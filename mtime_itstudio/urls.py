@@ -25,7 +25,7 @@ from .general import return_login
 from .general import return_personal_page
 from .general import return_find_back
 
-from .general import return_index, css_redirect, templates_redirect, js_redirect, dist_redirect
+from .general import return_index, css_redirect, templates_redirect, js_redirect, dist_redirect, redirect_index
 
 
 urlpatterns = [
@@ -36,8 +36,9 @@ urlpatterns = [
     url(r'^film/', include('film.urls', namespace='film')),
     url(r'i/email_verify_code', i_get_email_verify_code),
 
-    url(r'^index/', return_index),
-    url(r'^login.', return_login),
+    url(r'^index/$', return_index),
+    url(r'^index/(.+)', redirect_index),
+    url(r'^login/', return_login),
     url(r'^register/', return_register),
     url(r'^personal_page', return_personal_page),
     url(r'^find_back', return_find_back),
@@ -46,6 +47,8 @@ urlpatterns = [
     url(r'^js/(.+)', js_redirect),
     url(r'^css/(.+)', css_redirect),
     url(r'^dist/(.+)', dist_redirect),
+
+    url(r'^$', return_index)
 
 ]
 
