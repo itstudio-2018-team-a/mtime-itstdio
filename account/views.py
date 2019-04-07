@@ -360,12 +360,14 @@ def i_get_user_info(request, user_id):
         logger.info('收到GET请求')
         user = User.objects.filter(username=user_id)        # 从数据库中检索用户
         if user:        # 检查用户是否存在
+            logger.info('用户存在')
             user = user[0]
             data = {"user_id": user.username,
                     "username": user.nickname,
                     'head': user.head_image.url,
                     "email": user.username,
                     'status':'ok'}
+            logger.debug("返回用户数据成功")
             return HttpResponse(json.dumps(data))
         else:
             logger.info('位置用户'+user_id)
