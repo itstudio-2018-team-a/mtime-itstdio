@@ -4,23 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
-    <link rel="stylesheet" href="{% static 'css/Index-css.css' %}">
+    <link rel="stylesheet" href="../css/Index-css.css">
 </head>
 <body>
     <div id="header">
         <div class="navi clearfix">
             <div class="container">
                 <a href="index.html" class="logo clearfix">
-                    <img src="{% static 'templates/logo.png' %}" alt="">
+                    <img src="../templates/logo.png" alt="">
                 </a>
                 <div class="log_register clearfix">
                     <a href="logIn.html" class="log">
                         <div class="head_portrait">
-                            <div><img src="{% static 'templates/ellipse.png' %}" alt="" class="ellipse" id="user_portrait"></div>
+                            <div><img src="../templates/ellipse.png" alt="" class="ellipse" id="user_portrait"></div>
                         </div>
                     </a>
-                    <a href="logIn.html" class="register">
+                    <a href="logIn.html" class="register" id="logIn">
                         <span class="login_in navi_font">登陆</span>
+                    </a>
+                    <a href="PersonalPage.html" class="register" style="display: none" id="username">
+                        <span class="login_in navi_font"></span>
                     </a>
                     <a href="register.html" class="register" id="register">
                         <span class="shadow navi_font">注册</span>
@@ -426,54 +429,54 @@
             </div>
             <div class="cutLine"></div>
             <div class="news_today hot_videos clearfix" id="news_today">
-                <div class="movie_container clearfix">
-                    <div class="news">
-                        <img src="../templates/img_1.png" alt="" class="cover">
+                <div class="movie_container clearfix" id="movie_container">
+                    <div class="news" id="left_edge">
+                        <img src="../templates/img_1.png" alt="" class="cover" id="left_edge_img">
                         <div class="news_info news_title">
                             <span>《波西米亚狂想曲》
                                 曝内地版特别海报</span>
                         </div>
-                        <div class="left_edge">
-                            <div class="news_info"><span>《波西米亚狂想曲》曝内地版特别海报</span></div>
-                            <div class="detail"><span>奥斯卡影帝拉米马雷克霸气外露 3.22上映</span></div>
-                            <div class="details more_button"><span>了解更多</span></div>
-                        </div>
+                        <!--<div class="left_edge">-->
+                            <!--<div class="news_info"><span>《波西米亚狂想曲》曝内地版特别海报</span></div>-->
+                            <!--<div class="detail"><span>奥斯卡影帝拉米马雷克霸气外露 3.22上映</span></div>-->
+                            <!--<div class="details more_button"><span>了解更多</span></div>-->
+                        <!--</div>-->
                     </div>
-                    <div class="news middle_left">
-                        <img src="../templates/img_2.png" alt="" class="cover">
+                    <div class="news middle_left" id="middle_left">
+                        <img src="../templates/img_2.png" alt="" class="cover" id="middle_left_img">
                         <div class="news_info news_title">
                             <span>《波西米亚狂想曲》
                                 曝内地版特别海报</span>
                         </div>
-                        <div class="news_cover">
-                            <div class="news_info"><span>《波西米亚狂想曲》曝内地版特别海报</span></div>
-                            <div class="detail"><span>奥斯卡影帝拉米马雷克霸气外露 3.22上映</span></div>
-                            <div class="details more_button"><span>了解更多</span></div>
-                        </div>
+                        <!--<div class="news_cover">-->
+                            <!--<div class="news_info"><span>《波西米亚狂想曲》曝内地版特别海报</span></div>-->
+                            <!--<div class="detail"><span>奥斯卡影帝拉米马雷克霸气外露 3.22上映</span></div>-->
+                            <!--<div class="details more_button"><span>了解更多</span></div>-->
+                        <!--</div>-->
                     </div>
-                    <div class="news middle_right">
-                        <img src="../templates/img_3.png" alt="" class="cover">
+                    <div class="news middle_right" id="middle_right">
+                        <img src="../templates/img_3.png" alt="" class="cover" id="middle_right_img">
                         <div class="news_info news_title">
                             <span>《波西米亚狂想曲》
                                 曝内地版特别海报</span>
                         </div>
-                        <div class="news_cover">
-                            <div class="news_info"><span>《波西米亚狂想曲》曝内地版特别海报</span></div>
-                            <div class="detail"><span>奥斯卡影帝拉米马雷克霸气外露 3.22上映</span></div>
-                            <div class="details more_button"><span>了解更多</span></div>
-                        </div>
+                        <!--<div class="news_cover">-->
+                            <!--<div class="news_info"><span>《波西米亚狂想曲》曝内地版特别海报</span></div>-->
+                            <!--<div class="detail"><span>奥斯卡影帝拉米马雷克霸气外露 3.22上映</span></div>-->
+                            <!--<div class="details more_button"><span>了解更多</span></div>-->
+                        <!--</div>-->
                     </div>
-                    <div class="news">
-                        <img src="../templates/img_4.png" alt="" class="cover">
+                    <div class="news" id="right_edge">
+                        <img src="../templates/img_4.png" alt="" class="cover" id="right_edge_img">
                         <div class="news_info news_title">
                             <span>《波西米亚狂想曲》
                                 曝内地版特别海报</span>
                         </div>
-                        <div class="right_edge">
-                            <div class="news_info"><span>《波西米亚狂想曲》曝内地版特别海报</span></div>
-                            <div class="detail"><span>奥斯卡影帝拉米马雷克霸气外露 3.22上映</span></div>
-                            <div class="details more_button"><span>了解更多</span></div>
-                        </div>
+                        <!--<div class="right_edge">-->
+                            <!--<div class="news_info"><span>《波西米亚狂想曲》曝内地版特别海报</span></div>-->
+                            <!--<div class="detail"><span>奥斯卡影帝拉米马雷克霸气外露 3.22上映</span></div>-->
+                            <!--<div class="details more_button"><span>了解更多</span></div>-->
+                        <!--</div>-->
                     </div>
                 </div>
             </div>
@@ -610,4 +613,5 @@
 </body>
 <script src="../js/jquery-3.2.1.min.js"></script>
 <script src="../js/index.js"></script>
+<script src="../js/index-animate-css.js"></script>
 </html>

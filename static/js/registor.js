@@ -11,7 +11,7 @@ let submit = document.getElementById("submit");
 const confirm_password = "confirm_password";
 const ensure_code = "ensure_code";
 const ServerURL = function () {
-    let __URL =  "http://39.96.208.176";  //在ajax属性内拼接
+    let __URL =  "http://106.13.106.1";  //在ajax属性内拼接
     return ()=>{
         return __URL;
     }
@@ -152,14 +152,30 @@ function inputBlurHandler(event) {
     if(message){
         inputStatus.setStatus(target.name, 0);
         target.style.borderColor = "red";
-        let tips = target.parentNode.childNodes[3];
-        tips.innerText = "*" + message;
-        tips.style.color = "red";
+        let tips = target.parentNode.childNodes;
+        for(let element in tips){
+            if(tips.hasOwnProperty(element)){
+                if(tips[element].className === "tips"){
+                    tips[element].innerText = "*" + message;
+                    tips[element].style.color = "red";
+                }
+            }
+        }
+        // tips.innerText = "*" + message;
+        // tips.style.color = "red";
     }else{
         inputStatus.setStatus(target.name, 1);
         target.style.borderColor = "green";
-        let tips = target.parentNode.childNodes[3];
-        tips.innerText = "";
+        let tips = target.parentNode.childNodes;
+        for(let element in tips){
+            if(tips.hasOwnProperty(element)){
+                if(tips[element].className === "tips"){
+                    tips[element].innerText = " ";
+                    tips[element].style.color = "blue";
+                }
+            }
+        }
+        // tips.innerText = "";
     }
 }
 registerForm.addEventListener("focus", inputFocusHandler, true);
@@ -217,12 +233,16 @@ function requestVerifyCodeHandler() {
     let successHandler = (json)=>{
         verifyCode = json;
         console.log(verifyCode);
-        return getRequest((ServerURL())() + Url_Options.VERIFY_PICTURE + "\\" + verifyCode["id"], "application/x-www-form-urlencoded", "blob", "GET");
+        // return getRequest((ServerURL())() + Url_Options.VERIFY_PICTURE + "\\" + verifyCode["id"], "application/x-www-form-urlencoded", "blob", "GET");
+        return getRequest("http://127.0.0.1:8080/webContent/dist/cover_1.png", "application/x-www-form-urlencoded", "blob", "GET").then((blob)=>{
+            verifyImgHandler(blob);
+        });
     };
     let failHandler = (error)=>{
         alert(error.message);
     };
     let verifyImgHandler = (blob)=>{
+        console.log(blob);
         verifyPic.onload = function () {
             window.URL.revokeObjectURL(verifyPic.src);
             return new Promise(((resolve, reject) => {
@@ -231,7 +251,6 @@ function requestVerifyCodeHandler() {
                     if(countDown === 0){
                         requestVerifyPicButton.innerText = "获取验证码";
                         clearInterval(click);
-                        requestVerifyPicButton.removeAttribute("disabled");
                     }else{
                         requestVerifyPicButton.disabled = "disabled";
                         requestVerifyPicButton.innerText = countDown + " S";
@@ -243,15 +262,28 @@ function requestVerifyCodeHandler() {
         };
         verifyPic.src = window.URL.createObjectURL(blob);
     };
-    getRequest((ServerURL())() + Url_Options.VERIFY_CODE, "application/x-www-form-urlencoded", "json", "GET").then((json)=>{
+    //getRequest((ServerURL())() + Url_Options.VERIFY_CODE, "application/x-www-form-urlencoded", "json", "GET").then((json)=>{
+    //getRequest((ServerURL())() + Url_Options.VERIFY_CODE, "application/x-www-form-urlencoded", "json", "GET").then((json)=>{
+    getRequest("demo.json", "application/x-www-form-urlencoded", "json", "GET").then((json)=>{
         successHandler(json);
     }, (error)=>{
         failHandler(error);
-    }).then((blob)=>{
-        verifyImgHandler(blob);
     })
 }
-requestVerifyPicButton.addEventListener("click", requestVerifyCodeHandler);
+const throttle = (func, wait)=>{
+    let timer;
+    return ()=>{
+        if(timer){
+            return;
+        }
+        timer = setTimeout(()=>{
+            func();
+        }, wait, ()=>{
+            clearTimeout(timer);
+        });
+    };
+};
+requestVerifyPicButton.onclick = throttle(requestVerifyCodeHandler, 1000);
 /**
  *  表单序列化
  * */
@@ -331,98 +363,3 @@ let postRegisterForm = function () {
     })
 };
 submit.onclick = postRegisterForm;
-
-/***
- * 全局User
- */
-let user;
-
-/***
- * CookieUtils
- * @param c_name
- */
-function getCookie(c_name) {
-    if (document.cookie.length>0)
-    {
-        let c_start=document.cookie.indexOf(c_name + "=");
-        if (c_start!==-1)
-        {
-            c_start=c_start + c_name.length+1;
-            let c_end=document.cookie.indexOf(";",c_start);
-            if (c_end===-1) c_end=document.cookie.length;
-            return unescape(document.cookie.substring(c_start,c_end));
-        }
-    }
-    return "";
-}
-/***
- * 处理个人信息
- */
-let createUser = function () {
-    let user = {};
-    let types = ["user_id","username", "head","email"];
-    types.forEach(item, (item)=>{
-        user[item] = json[item];
-    });
-    //测试用
-    user = {"user_id": "1", "username": "newive", "head": "#","email": "738767136@qq.com"};
-    types.forEach(item, ()=>{
-        user[item] = json[item];
-    });
-    return user;
-};
-let getUserInfo = function (json) {
-    let user;
-    return function () {
-        return user || (user = createUser.apply(this, json));
-    }
-};
-/***
- * 取得请求用户信息的接口
- * @returns {function(): string}
- * @constructor
- */
-const UserServerURL = function () {
-    let __URL =  "http://39.96.208.176\\account\\i\\user\\info";  //在ajax属性内拼接
-    // let __URL = "ellipse.png";
-    return ()=>{
-        return __URL;
-    }
-};
-/***
- *
- * @type {HTMLElement}
- */
-let username = document.getElementById("username");
-let userPortrait = document.getElementById("user_portrait");
-let pre_username = document.getElementById("input_username");
-let register = document.getElementsByClassName("register")[1];
-window.onload = (function checkIsLogIn() {
-    if(!getCookie("user_id")){
-
-    }else{
-        let user_id = getCookie("user_id");
-        getRequest(UserServerURL() + "\\" + user_id, "json", "application/x-www-form-urlencoded", "GET").then(
-            (json)=>{
-                if(json["status"] === "unknow_user"){
-                    alert("找不到用户");
-                }else if(json["status"] === "ok") {
-                    user = getUserInfo(json);
-                    console.log(user);
-                }else{
-                    alert("未知错误");
-                }
-            },
-            (error)=>{
-                alert(error.message);
-            }
-        )
-    }
-    user = (getUserInfo())();
-    console.log(user);
-    username.innerText = user["username"];
-    pre_username.value = user["username"];
-    userPortrait = user["head"];
-    userPortrait.href = "PersonalPage.html";
-    register.style.visibility = "hidden";
-});

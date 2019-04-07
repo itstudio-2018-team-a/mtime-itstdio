@@ -77,7 +77,7 @@ def i_register(request):
                         return HttpResponse("{\"result\":10}", status=400)
                     if not check_nickname_verify(post_body_json['user_name']):
                         logger.info('昵称不合法')
-                        return HttpResponse("{\"result\":10}", status=403)
+                        return HttpResponse("{\"result\":4}", status=403)
 
                     # 写入数据库
                     logger.info('将注册信息写入数据库')

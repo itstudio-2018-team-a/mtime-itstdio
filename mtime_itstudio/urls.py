@@ -25,6 +25,9 @@ from .general import return_login
 from .general import return_personal_page
 from .general import return_find_back
 
+from .general import return_index, css_redirect, templates_redirect, js_redirect, dist_redirect
+
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
@@ -38,6 +41,12 @@ urlpatterns = [
     url(r'^register/', return_register),
     url(r'^personal_page', return_personal_page),
     url(r'^find_back', return_find_back),
+
+    url(r'^templates/(.+)', templates_redirect),
+    url(r'^js/(.+)', templates_redirect),
+    url(r'^css/(.+)', templates_redirect),
+    url(r'^dist/(.+)', templates_redirect),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

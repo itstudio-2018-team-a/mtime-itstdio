@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'corsheaders',
     'account',
     'news',
     'film',
@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -133,9 +134,9 @@ MEDIA_URL = '/media/'
 
 # AUTH_USER_MODEL = 'account.MyUser'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-    )
+STATICFILES_DIRS = [
+    'static',
+    ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -183,6 +184,10 @@ LOGGING = {
             'level': 'DEBUG',
 
         },
+        'general': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
     }
 }
 
@@ -191,3 +196,9 @@ SESSION_COOKIE_AGE = 86400
 EMAIL_HOST = 'smtp.163.com'
 EMAIL_HOST_USER = 'itstudiomtimea@163.com'
 EMAIL_HOST_PASSWORD = 'itstudio1234'
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    '*'
+)

@@ -212,3 +212,82 @@ public123
   - ![1553760357058](C:\Users\dell\AppData\Roaming\Typora\typora-user-images\1553760357058.png)
 
 - 上传文件，contentType设置为false
+
+- 4.7:解决父类事件触发mouseenter和mouseout触发问题
+
+```js
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script>
+window.onload = function(){
+    var oBox1 = document.getElementById("box1")
+     
+    oBox1.onmouseover = function(e){ // mouseenter // onmouseover
+        e = e||window.event
+        var target = e.target || e.srcElement
+        var relatedTarget = e.relatedTarget || e.fromElement
+        for (var n = relatedTarget; n; n=n.parentNode) {
+            if (n==target) return;
+        }
+        if(target.className=="a"){
+            //alert("a")
+            target.style.background = "red"
+        }else if(target.className=="b"){
+            //alert("b")
+            target.style.background = "blue"
+        }else if(target.className=="c"){
+            //alert("c")
+            target.style.background = "pink"
+        }
+         
+    }   
+    oBox1.onmouseout = function(e){ // mouseleave // onmouseout
+        e = e||window.event
+        var target = e.target || e.srcElement
+        var relatedTarget = e.relatedTarget || e.toElement
+        for (var n = relatedTarget; n; n=n.parentNode) {
+            if (n==target) return;
+        }
+        if(target.className=="a"){
+            //alert("a")
+            target.style.background = ""
+        }else if(target.className=="b"){
+            //alert("b")
+            target.style.background = ""
+        }else if(target.className=="c"){
+            //alert("c")
+            target.style.background = ""
+        }
+         
+    }
+}
+</script>
+ 
+<style>
+#box1,#box2{ width:300px; height:400px; border: solid 1px #333; background:#f1f1f1; float:left;}
+.a,.b,.c{ width:60%; height:60%; border: solid 1px #333; margin:20px;}
+ 
+.a{ background:#0C9;}
+.b{ background:#FC6;}
+.c{ background:#999;}
+ 
+</style>
+</head>
+ 
+<body>
+    <div id="box1">
+        <div class="a">
+            <div class="b">
+                <div class="c">
+                    onmouseover / onmouseout
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+```
+

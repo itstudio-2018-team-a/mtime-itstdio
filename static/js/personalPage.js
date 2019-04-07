@@ -3,17 +3,11 @@
  * 全局User
  */
 let user;
+
 /***
  * CookieUtils
- * @param name
- * @param value
- * @param expireDays
+ * @param c_name
  */
-function setCookie(name, value, expireDays) {
-    let exdate = new Date();
-    exdate.setDate(exdate.getDate() + expireDays);
-    document.cookie = name + "=" + (value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
-}
 function getCookie(c_name) {
     if (document.cookie.length>0)
     {
@@ -31,17 +25,14 @@ function getCookie(c_name) {
 /***
  * 处理个人信息
  */
-let createUser = function () {
+let createUser = function (json) {
     let user = {};
     let types = ["user_id","username", "head","email"];
-    types.forEach(item, (item)=>{
-        user[item] = json[item];
-    });
-    //测试用
-    user = {"user_id": "1", "username": "newive", "head": "#","email": "738767136@qq.com"};
-    types.forEach(item, ()=>{
-        user[item] = json[item];
-    });
+    for(let item in types){
+        if(types.hasOwnProperty(item)){
+            user[item] = json[item];
+        }
+    }
     return user;
 };
 let getUserInfo = function (json) {
@@ -56,7 +47,7 @@ let getUserInfo = function (json) {
  * @constructor
  */
 const UserServerURL = function () {
-    let __URL =  "http://39.96.208.176\\account\\i\\user\\info";  //在ajax属性内拼接
+    let __URL =  "http://106.13.106.1\\account\\i\\user\\info";  //在ajax属性内拼接
     // let __URL = "ellipse.png";
     return ()=>{
         return __URL;
@@ -69,36 +60,48 @@ const UserServerURL = function () {
 let username = document.getElementById("username");
 let userPortrait = document.getElementById("user_portrait");
 let pre_username = document.getElementById("input_username");
-
-window.onload = (function checkIsLogIn() {
-    if(!getCookie("user_id")){
-        alert("请登录");
-        window.location.href = "logIn.html";
-    }else{
-        let user_name = getCookie("user_name");
-        let user_id = getCookie("user_id");
-        getRequest(UserServerURL() + "\\" + user_id, "json", "application/x-www-form-urlencoded", "GET").then(
-            (json)=>{
-                if(json["status"] === "unknow_user"){
-                    alert("找不到用户");
-                }else if(json["status"] === "ok") {
-                    user = getUserInfo(json);
-                    console.log(user);
-                }else{
-                    alert("未知错误");
-                }
-            },
-            (error)=>{
-                alert(error.message);
-            }
-        )
-    }
-    user = (getUserInfo())();
+function changeUserInfo() {
+    user = getUserInfo(arguments[0]);
     console.log(user);
     username.innerText = user["username"];
     pre_username.value = user["username"];
-    userPortrait = user["head"];
-});
+    userPortrait.src = user["head"];
+    displayPortrait.src = user["head"];
+}
+function requestForUserInfo(successHandler, failHandler) {
+    let user_id = getCookie("user_id");
+    getRequest(UserServerURL() + "\\" + user_id, "json", "application/x-www-form-urlencoded", "GET").then(
+        (json)=>{
+            successHandler(json);
+        },
+        (error)=>{
+            failHandler(error);
+        }
+    )
+}
+function checkIsLogIn() {
+    if(!getCookie("user_id")){
+        alert("请登录");
+        // window.location.href = "logIn.html";
+        return null;
+    }else{
+        let successHandler = ()=>{
+            if(arguments[0]["status"] === "unknow_user"){
+                alert("找不到用户");
+                window.location.href = "logIn.html";
+            }else if(arguments[0]["status"] === "ok") {
+                changeUserInfo(arguments[0]);
+            }else{
+                alert("未知错误");
+            }
+        };
+        let failHandler = ()=>{
+            alert(arguments[0]["status"]);
+        };
+        requestForUserInfo(successHandler, failHandler);
+    }
+}
+window.onload = (checkIsLogIn);
 ////////////////
 
 let changeNickname = document.getElementById("change_nickname");
@@ -111,7 +114,7 @@ let passwordSubmit = document.getElementById("password_submit");
  * @constructor
  */
 const ServerURL = function () {
-    let __URL =  "http://39.96.208.176";  //在ajax属性内拼接
+    let __URL =  "http://106.13.106.1";  //在ajax属性内拼接
     return ()=>{
         return __URL;
     }
@@ -337,8 +340,11 @@ function getRequest(url, type, contentType, requestMethod, data) {
             if(this.readyState === 4){
                 if(this.status === 200){
                     resolve(this.response);
+                }else if(this.status === 404){
+                    reject(this.response);
                 }else{
-                    reject(new Error("请求错误"));
+                    console.log(this.response);
+                    alert("请求错误");
                 }
             }
         };
@@ -377,13 +383,12 @@ function requestChangeNickname() {
     }
     let nicknameJson = formSerialize(changeNickname);
     let successHandler = (json)=> {
-        /*
-            接口待完善
-         */
-        alert(json["result"]);
-        /*
-        修改input
-        */
+        if(json["result"] !== "0") {
+            alert(json["result"]);
+            pre_username.value = user["username"];
+        }else{
+            requestForUserInfo(changeUserInfo);
+        }
     };
     let failHandler = (error)=>{
         alert(error.message);
@@ -445,21 +450,34 @@ let portraitSelect = document.getElementById("select_portrait");    //选取img
 let displayPortrait = document.getElementById("display_portrait");   //img
 let portraitSubmit = document.getElementById("confirm_portrait");   //上传头像
 let uploadImgHandler = ()=>{
-    console.log(portraitSelect.files[0].name);
     if(!portraitSelect.files.length || portraitSelect.files.length === 0){
         alert("您的头像未更改");
         return null;
     }else{
+        let data = new FormData($("#portrait")[0]);
         let file = portraitSelect.files[0];
         let name = file.name;
-        console.log(file);
-        getRequest((ServerURL())() + Url_Options.UPLOAD_PORTRAIT + "\\" + name, "json", "application/", "POST", file).then((json)=>{
-            console.log(json["result"]);
-            if(json["result"] !== "成功"){
-                console.log("error");
+        $.ajax({
+            url: (ServerURL())() + Url_Options.UPLOAD_PORTRAIT + "\\" + name,
+            type: "POST",
+            data: data,
+            dataType: "json",
+            cache: false,
+            processData: false,
+            contentType: false
+        }).done((ret)=>{
+            console.log(ret);
+            if(ret["status"] !== "0"){
+                let types = {
+                    "2": "未找到对应的文件",
+                    "3": "未登录",
+                    "6": "未知错误"
+                };
+                alert(types[ret["status"]]);
+            }else{
+                alert("成功");
+                requestForUserInfo(changeUserInfo);
             }
-        }, (error)=>{
-            alert(error.message);
         });
     }
 };
@@ -483,3 +501,9 @@ function portraitImgChangeHandler() {
 }
 portraitSelect.addEventListener("change", portraitImgChangeHandler);
 portraitSubmit.onclick = uploadImgHandler;
+
+//回到顶部
+//置顶
+$(".toTop").click(function () {
+    $('html,body').animate({scrollTop: '0px'}, 300);
+});
