@@ -60,8 +60,8 @@ const UserServerURL = function () {
 let username = document.getElementById("username");
 let userPortrait = document.getElementById("user_portrait");
 let pre_username = document.getElementById("input_username");
-function changeUserInfo() {
-    user = getUserInfo(arguments[0]);
+function changeUserInfo(json) {
+    user = getUserInfo(json);
     console.log(user);
     username.innerText = user["username"];
     pre_username.value = user["username"];
@@ -90,7 +90,7 @@ function checkIsLogIn() {
                 alert("找不到用户");
                 window.location.href = "logIn.html";
             }else if(json["status"] === "ok") {
-                changeUserInfo(arguments[0]);
+                changeUserInfo(json);
             }else{
                 alert("未知错误");
             }
