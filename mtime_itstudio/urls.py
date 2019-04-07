@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'i/email_verify_code', i_get_email_verify_code),
 
     url(r'^index/$', return_index),
+    url(r'^index\.html$', return_index),
     url(r'^index/(.+)', redirect_index),
     url(r'^logIn', return_login),
     url(r'^login', return_login),
