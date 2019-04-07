@@ -22,8 +22,8 @@ const Url_Options = {
     REGISTER: "\\account\\i\\register"
 };
 const RegExpPattern = { //匹配模式
-    USERNAME_PATTERN: /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[_])[\da-zA-Z_]{6,16}$/,
-    PASSWORD_PATTERN: /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[_])[\da-zA-Z_]{6,16}$/,
+    USERNAME_PATTERN: /^[A-Za-z1-9_]+$/,
+    PASSWORD_PATTERN: /^[A-Za-z1-9_]+$/,
     NICKNAME_PATTERN: /^((?! !@#$%^&*()).)*$/,
     EMAIL_PATTERN: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
     CHINESE_PATTERN: /^[\u4e00-\u9fa5]*$/,
@@ -209,6 +209,7 @@ function getRequest(url, contentType, responseType, method, data){
                 if (this.status === 200) {
                     resolve(this.response);
                 } else {
+					console.log(this.response);
                     reject(new Error("请求失败"));
                 }
             }
