@@ -238,7 +238,7 @@ function requestDisplayingFilmList(){
                 })(), true);
             }
         }else{
-            alert(json["status"]);
+            console.log(json["status"]);
         }
     };
     let failHandler = function (error) {
