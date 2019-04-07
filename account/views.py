@@ -49,7 +49,7 @@ def i_register(request):
                 logger.info('POST数据完整')
                 # 检查验证码是否正确
                 # 此处需要更换为email格式的验证码
-                if not check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
+                if True and not check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
                     logger.debug('验证码检查通过')
                     # 检查各项是否为空
                     if not post_body_json['user_id']:
@@ -227,7 +227,7 @@ def i_forgot_password(request, user_id):
             post_body_json = get_json_dirt_safe(request.body, args_list)
             check_problem = check_dirt_args_valid(post_body_json, args_list)
             if not check_problem:
-                if True or check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
+                if not check_verify_email(post_body_json['verify_id'], post_body_json['verify_code']):
                     user = User.objects.filter(username=user_id)
                     user.password = sign_password_md5(post_body_json['new_password'])
                     user.save()
