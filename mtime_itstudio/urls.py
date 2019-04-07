@@ -20,6 +20,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .general import i_get_email_verify_code
 from .general import return_index
+from .general import return_register
+from .general import return_login
+from .general import return_personal_page
+from .general import return_find_back
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -29,7 +33,11 @@ urlpatterns = [
     url(r'^film/', include('film.urls', namespace='film')),
     url(r'i/email_verify_code', i_get_email_verify_code),
 
-    url(r'^index', return_index),
+    url(r'^index/', return_index),
+    url(r'^login.', return_login),
+    url(r'^register/', return_register),
+    url(r'^personal_page', return_personal_page),
+    url(r'^find_back', return_find_back),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

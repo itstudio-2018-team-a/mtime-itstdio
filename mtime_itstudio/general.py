@@ -86,3 +86,18 @@ def return_index(request):
     return render(request, 'dist/index.html')
 
 
+def return_login(request):
+    return render(request, 'dist/logIn.html')
+
+
+def return_register(request):
+    return render(request, 'dist/register.html')
+
+
+def return_personal_page(request):
+    return render(request, 'dist/PersonalPage.html')
+
+
+def return_find_back(request):
+    return render(request, 'dist/findBack.html')
+
