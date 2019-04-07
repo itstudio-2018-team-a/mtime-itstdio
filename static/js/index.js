@@ -2,7 +2,7 @@
  *  获取服务器URL
  * */
 const ServerURL = function () {
-    let __URL =  "http://39.96.208.176";  //在ajax属性内拼接
+    let __URL =  "http://106.13.106.1";  //在ajax属性内拼接
     return ()=>{
         return __URL;
     }
@@ -13,9 +13,9 @@ const ServerURL = function () {
 const Url_Options = {
     USER_INFORMATION: "account\\i\\user\\info",
     SEARCH: "\\i\\search",
-    HOT_POT:"\\news\\i\\hotpot_list\\",
-    FILM_LIST: "\\film\\i\\film_list\\",
-    HOT_REVIEW_LIST: "\\film\\i\\hot_review_list\\"
+    HOT_POT:"\\news\\i\\hotpot_list",
+    FILM_LIST: "\\film\\i\\film_list",
+    HOT_REVIEW_LIST: "\\film\\i\\hot_review_list"
 };
 
 /***
@@ -131,7 +131,7 @@ function requestForFilmList(){
      * 设置电影信息
      */
     let successHandler = function (json) {
-        if (json["status"] === "ok") {
+        if (json["status"] === "success") {
             let filmList = json["list"];
             let types = ["movie_name", "movie_time", "movie_description"];
             for (let i = 0; i < hotMovieList.length; i++) {
@@ -161,7 +161,7 @@ function requestForFilmList(){
      *
      */
     let failHandler = function (error) {
-        alert(error.message);
+        console.log(error.message);
     };
     for(let element in hotMovieList){
         if(hotMovieList.hasOwnProperty(element)){
@@ -214,7 +214,7 @@ function requestDisplayingFilmList(){
         "movie_content": "info"
     };
     let successHandler = function (json) {
-        if(json["status"] === "ok"){
+        if(json["status"] === "success"){
             let filmList = json["list"];
             let types = ["time", "title", "hot_degree", "movie_content"];
             for (let i = 0; i < display_movies.length; i++) {
@@ -238,7 +238,7 @@ function requestDisplayingFilmList(){
                 })(), true);
             }
         }else{
-            alert(json["status"]);
+            console.log(json["status"]);
         }
     };
     let failHandler = function (error) {
@@ -274,7 +274,7 @@ let newsList = document.getElementById("news_today").getElementsByClassName("new
 function requestHotPot(){
 
     let successHandler = function (json) {
-        if(json["status"] === "ok"){
+        if(json["status"] === "success"){
             let list = json["list"];
             for (let i = 0; i < newsList.length; i++) {
                 let element = newsList[i];
@@ -334,7 +334,7 @@ function requestHotComments() {
             hotCommentsList[i].getElementsByClassName("img_cover")[0].src = (ServerURL())() + (commentList[i])["image"];
             hotCommentsList[i].getElementsByClassName("info_container")[0].addEventListener("click", (()=>{
                 return ()=>{
-                    window.location.href = "http://www.baidu.com?user_id=" + commentList[i]["author_id"];
+                    window.location.href = "http://www.baidu.com?comment_id=" + commentList[i]["comment_id"];
                 }
             })(), true);
         }
@@ -404,7 +404,7 @@ let getUserInfo = function (json) {
  * @constructor
  */
 const UserServerURL = function () {
-    let __URL =  "http://39.96.208.176\\account\\i\\user\\info";  //在ajax属性内拼接
+    let __URL =  "http://106.13.106.1\\account\\i\\user\\info";  //在ajax属性内拼接
     // let __URL = "ellipse.png";
     return ()=>{
         return __URL;

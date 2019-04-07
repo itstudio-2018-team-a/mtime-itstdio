@@ -1,0 +1,519 @@
+nav#header{
+    height: 87px;width: 100%;
+    background-color:#192634;
+}
+div#poster{
+    height: 601px;
+    background-color: #131E22;
+}
+div#introduction{
+    height: 836px;width: 100%;
+    position: relative;
+}
+div#hotComment{
+    width:100%;
+    height:860px;
+    background-color: #F9F8F8;
+
+    
+}
+footer#footer{
+    width:100%;
+    height:236px;
+    background-color: #1C2D38;
+}
+
+// 第一部分：海报
+div#purchaseMessage{
+    float: left;
+    width:298px;
+    height:449px;
+    margin: 0px 0 0 21%;
+    position: relative;
+    top: 59px;
+    div#sell{
+        width:298px;
+        height:129px;
+        opacity:0.8;
+        background-color: black;
+        float: left;
+        position: absolute;
+        bottom: 0px;
+        div#today{
+            float: left;
+            width:120px;
+            height:39px;
+            margin: 17px 0px 15px 27px;
+            border-right:  solid 1px rgba(255,255,255,0.5);
+            font-size:14px;
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+            color:rgba(246,248,249,1);
+        }
+        div#price{
+            float: left;
+            width:88px;
+            height:33px;
+            margin: 10px 20px 15px 20px;
+            color:rgba(255,0,0,1);
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+        }
+        div#nowPurchase{
+            float: left;
+            width:185px;
+            height:39px;
+            margin-left:55px;
+            background-color:rgba(255,0,0,1);
+            border-radius:3px;
+            p{
+                width:96px;
+                height:24px;
+                margin: 0 auto;
+                font-size:24px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(246,244,244,1);
+            }
+        }
+    }
+
+}
+div#right{
+    width: 600px;
+    height: 560px;
+    float:right;
+    margin-right: 8%;
+    div#movieMessage{
+        width: 440px;
+        height: 300px;
+        margin-top: 129px;
+        font-family:MicrosoftYaHei;
+        font-weight:400;
+    }
+}
+
+// 第二部分：剧情信息，主演，评分
+div#otherMessage{
+    width: 1334px;
+    height: 394px;
+    position: relative;
+    top: -43px;left: 15%;
+    div#scenario{
+        // 剧情信息
+        float: left;
+        width:565px;
+        height:394px;
+        background:rgba(251,248,248,1);
+        border-radius:3px;
+        span{
+            width:70px;
+            height:30px;
+            position: relative;
+            top: 23px;left: 29px;
+            font-size:30px;
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+            color:rgba(17,17,17,1);
+        }
+        p{
+            width:450px;
+            height:215px;
+            margin-top: 59px;
+            margin-left: 53px;
+            font-size:22px;
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+            color:rgba(17,17,17,1);
+            text-indent: 24px;
+            line-height: 36px;
+        }
+        div{
+            float: right;
+            position: relative;
+            right: 32px;
+            bottom: -36px;
+            width:96px;
+            height:16px;
+            font-size:16px;
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+            color:rgba(120,175,221,1);
+            
+        }
+    }
+    div#backstage{
+        float: right;
+        width: 694px;
+        height: 394px;
+        div#star{
+            // 主演
+            width: 694px;
+            height: 205px;
+            span{
+                float: left;
+                width:60px;
+                height:30px;
+                position: relative;
+                top: 56px;
+                font-size:30px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(7,7,7,1);
+            }
+            div{
+                float: left;
+                height: 150px;
+                width: 158px;
+                text-align: center;
+                p{
+                    font-size:14px;
+                    font-family:MicrosoftYaHei;
+                    font-weight:400;
+                }
+            }
+            div#more{
+                float:right;
+                position: relative;
+                bottom: -24px;right: 12px;
+                width:84px;
+                height:15px;
+                font-size:14px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(120,175,221,1);
+            }
+        }
+        div#maker{
+            // 幕后制作
+            width: 694px;
+            height: 189px;
+            span{
+                width:130px;
+                height:30px;
+                position: relative;
+                top: 17px;left: 20px;
+                font-size:30px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(7,7,7,1);
+            }
+            p{
+                width:609px;
+                height:44px;
+                margin-top: 32px;
+                margin-left: 52px;
+                font-size:16px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(7,7,7,1);
+                line-height: 24px;
+            }
+            div{
+                float: right;
+                position: relative;
+                right: 12px;
+                bottom: -36px;
+                width:84px;
+                height:16px;
+                font-size:14px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(120,175,221,1);
+                
+            }
+        }
+    }
+}
+div#comment{
+    // 打分框
+    width:1333px;
+    height:302px;
+    background:rgba(251,248,248,1);
+    border-radius:3px;
+    position: relative;
+    left: 291px;top: 31px;
+    div#movieScore{
+        // 左侧
+        float: left;
+        height: 234px;
+        width: 636px;
+        position: relative;
+        top: 39px;left: 43px;
+        border-right: solid 1px rgba(5,5,5,0.1);
+        div#movieScoreShow{
+            // 蓝色打分图
+            float: left;
+            height: 220px;
+            width: 136px;
+            text-align: center;
+            div{
+                width:136px;
+                height:136px;
+                background:rgba(120,175,221,1);
+                border-radius:3px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(247,244,244,1);
+            }
+        }
+        div#conclusion{
+            // 电影属性值
+            float: left;
+            width: 354px;
+            height:222px ;
+            position: relative;
+            left: 64px;
+            div{
+                height: 36px;
+                width: 351px;
+                span{
+                    width:45px;
+                    height:22px;
+                    font-size:22px;
+                    font-family:MicrosoftYaHei;
+                    font-weight:400;
+                    color:rgba(27,27,27,1);
+
+                }
+            }
+            div#boxOffice{
+                // 票房
+                width:354px;
+                height:49px;
+                position: absolute;
+                bottom: 0px;
+                background:rgba(251,248,248,1);
+                border:1px solid rgba(5,5,5,0.1);
+                border-radius:3px;
+                text-align: center;
+                line-height: 49px;
+                p{
+                    width: 297px;
+                }
+                div{
+                    float: right;
+                    width: 56px;
+                    height: 49px;
+                    border-left:solid 1px rgba(5,5,5,0.1);
+                    position: relative;
+                    top: -48px;
+                }
+            }
+        }
+    }
+    div#yourComment{
+        //右边
+        float: left;
+        height: 250px;
+        width: 528px;
+        position: relative;
+        top: 40px;left: 118px;
+        span{
+            width:79px;
+            height:18px;
+            font-size:18px;
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+            color:rgba(19,19,19,1);
+            opacity:0.9;
+
+        }
+        div{
+            height: 78px;
+            width: 400px;
+            text-align: center;
+            span{
+                float: left;
+                width:70px;
+                height:32px;
+                position: relative;
+                top: 18px;
+                background:rgba(251,248,248,1);
+                border:1px solid rgba(5,5,5,0.5);
+                opacity: 0.5;
+                font-size:16px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                line-height: 32px;
+            }
+            ul{
+                position: relative;
+                top: 16px;left: 17px;
+                li{
+                    float: left;
+                    width:29px;
+                    height:27px;
+                    opacity:0.4;
+                    font-size: 28px;
+                }        
+            }
+        }
+        input{
+            //输入框
+            width:528px;
+            height:82px;
+        }
+        button{
+            width:117px;
+            height:29px;
+            margin-top: 21px;
+            background:rgba(120,175,221,1);
+            font-size:14px;
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+            color:rgba(243,245,246,1);
+        }
+    }
+}
+
+//第三部分：评论
+div#hotTitle{
+    //小标题
+    width:177px;
+    height:64px;
+    position: relative;
+    top: -29px;left: 291px;
+    background:rgba(120,175,221,1);
+    border-radius:3px;
+    font-size:30px;
+    font-family:MicrosoftYaHei;
+    font-weight:400;
+    color:rgba(252,252,252,1);
+    opacity:0.9;
+    text-align: center;
+    line-height: 64px;
+}
+
+div#commentPart{
+    height: 721px;
+    width: 1300px;
+    margin: 0 auto;
+    position: relative;
+    top: 25px;
+}
+    div#firstComment{
+        //第一个评论
+        width:1265px;
+        height:192px;
+        position: relative;
+        left: 35px;
+        background:rgba(243,241,241,1);
+        border-radius:3px;
+        div#personalComment{
+            width: 1254px;
+            height: 74px;
+            position: relative;
+            left: -35px;top:28px;
+            div#avatar{
+                float: left;
+            }
+            div#information{
+                float: left;
+                width: 1181px;
+                height: 74px;
+                span#name{
+                    float: left;
+                    width:132px;
+                    height:22px;
+                    position: relative;
+                    left: 23px;
+                    font-size:22px;
+                    font-family:MicrosoftYaHei;
+                    font-weight:400;
+                    color:rgba(14,14,14,1);
+
+                }
+                div#grade{
+                //评分
+                    float: left;
+                    position: relative;
+                    left: 45px;
+                    font-size: 18px;
+                    width:66px;
+                    height:19px;
+                }
+                div#time{
+                //发表时间
+                    width:146px;
+                    height:15px;
+                    font-size:18px;
+                    float: right;
+                    font-family:MicrosoftYaHei;
+                    font-weight:400;
+                    color:rgba(14,14,14,1);
+                    opacity:0.6;
+                }
+            }
+            div#allComment{
+                position: relative;
+                top: -19px;left: 23px;
+                font-size:18px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(14,14,14,1);
+                opacity:0.9;
+            }
+        }
+        div#reply{
+            //点赞回复
+            width: 200px;
+            height: 22px;
+            float: left;
+            position: absolute;
+            right: 47px;bottom: 31px;
+            div#nice{
+                height: 22px;
+                width: 72px;
+                float: left;
+                div#dianzan{
+                    float: left;
+                }
+                div#dianznaNumber{
+                    width:41px;
+                    height:15px;
+                    font-size:14px;
+                    font-family:MicrosoftYaHei;
+                    font-weight:400;
+                }
+            }
+            div#return{
+                float: left;
+                height: 22px;
+                width: 90px;
+                position: relative;
+                left: 24px;
+                div#huifu{
+                    float: left;
+                    width:36px;
+                    height:19px;
+                    font-size:18px;  
+                }
+                div#huifuNumber{
+                    float: left;
+                    width:44px;
+                    height:15px;
+                    font-size:14px;
+                    position: relative;
+                    top: 3px;
+                }
+            }
+        }
+    }
+    div.top1{
+        position: relative;
+        top: 42px;
+    }
+    div.top2{
+        position: relative;
+        top: 84px;
+    }
+
+div#moreComment{
+    width:162px;
+    height:18px;
+    font-size:18px;
+    color:rgba(98,140,199,1);
+    position: absolute;
+    bottom: 0;right: 0;
+}

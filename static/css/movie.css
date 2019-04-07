@@ -1,0 +1,453 @@
+nav#header {
+  height: 87px;
+  width: 100%;
+  background-color: #192634; }
+
+div#poster {
+  height: 601px;
+  background-color: #131E22; }
+
+div#introduction {
+  height: 836px;
+  width: 100%;
+  position: relative; }
+
+div#hotComment {
+  width: 100%;
+  height: 860px;
+  background-color: #F9F8F8; }
+
+footer#footer {
+  width: 100%;
+  height: 236px;
+  background-color: #1C2D38; }
+
+div#purchaseMessage {
+  float: left;
+  width: 298px;
+  height: 449px;
+  margin: 0px 0 0 21%;
+  position: relative;
+  top: 59px; }
+  div#purchaseMessage div#sell {
+    width: 298px;
+    height: 129px;
+    opacity: 0.8;
+    background-color: black;
+    float: left;
+    position: absolute;
+    bottom: 0px; }
+    div#purchaseMessage div#sell div#today {
+      float: left;
+      width: 120px;
+      height: 39px;
+      margin: 17px 0px 15px 27px;
+      border-right: solid 1px rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: #f6f8f9; }
+    div#purchaseMessage div#sell div#price {
+      float: left;
+      width: 88px;
+      height: 33px;
+      margin: 10px 20px 15px 20px;
+      color: red;
+      font-family: MicrosoftYaHei;
+      font-weight: 400; }
+    div#purchaseMessage div#sell div#nowPurchase {
+      float: left;
+      width: 185px;
+      height: 39px;
+      margin-left: 55px;
+      background-color: red;
+      border-radius: 3px; }
+      div#purchaseMessage div#sell div#nowPurchase p {
+        width: 96px;
+        height: 24px;
+        margin: 0 auto;
+        font-size: 24px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: #f6f4f4; }
+
+div#right {
+  width: 600px;
+  height: 560px;
+  float: right;
+  margin-right: 8%; }
+  div#right div#movieMessage {
+    width: 440px;
+    height: 300px;
+    margin-top: 129px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400; }
+
+div#otherMessage {
+  width: 1334px;
+  height: 394px;
+  position: relative;
+  top: -43px;
+  left: 15%; }
+  div#otherMessage div#scenario {
+    float: left;
+    width: 565px;
+    height: 394px;
+    background: #fbf8f8;
+    border-radius: 3px; }
+    div#otherMessage div#scenario span {
+      width: 70px;
+      height: 30px;
+      position: relative;
+      top: 23px;
+      left: 29px;
+      font-size: 30px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: #111111; }
+    div#otherMessage div#scenario p {
+      width: 450px;
+      height: 215px;
+      margin-top: 59px;
+      margin-left: 53px;
+      font-size: 22px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: #111111;
+      text-indent: 24px;
+      line-height: 36px; }
+    div#otherMessage div#scenario div {
+      float: right;
+      position: relative;
+      right: 32px;
+      bottom: -36px;
+      width: 96px;
+      height: 16px;
+      font-size: 16px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: #78afdd; }
+  div#otherMessage div#backstage {
+    float: right;
+    width: 694px;
+    height: 394px; }
+    div#otherMessage div#backstage div#star {
+      width: 694px;
+      height: 205px; }
+      div#otherMessage div#backstage div#star span {
+        float: left;
+        width: 60px;
+        height: 30px;
+        position: relative;
+        top: 56px;
+        font-size: 30px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: #070707; }
+      div#otherMessage div#backstage div#star div {
+        float: left;
+        height: 150px;
+        width: 158px;
+        text-align: center; }
+        div#otherMessage div#backstage div#star div p {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          font-weight: 400; }
+      div#otherMessage div#backstage div#star div#more {
+        float: right;
+        position: relative;
+        bottom: -24px;
+        right: 12px;
+        width: 84px;
+        height: 15px;
+        font-size: 14px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: #78afdd; }
+    div#otherMessage div#backstage div#maker {
+      width: 694px;
+      height: 189px; }
+      div#otherMessage div#backstage div#maker span {
+        width: 130px;
+        height: 30px;
+        position: relative;
+        top: 17px;
+        left: 20px;
+        font-size: 30px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: #070707; }
+      div#otherMessage div#backstage div#maker p {
+        width: 609px;
+        height: 44px;
+        margin-top: 32px;
+        margin-left: 52px;
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: #070707;
+        line-height: 24px; }
+      div#otherMessage div#backstage div#maker div {
+        float: right;
+        position: relative;
+        right: 12px;
+        bottom: -36px;
+        width: 84px;
+        height: 16px;
+        font-size: 14px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: #78afdd; }
+
+div#comment {
+  width: 1333px;
+  height: 302px;
+  background: #fbf8f8;
+  border-radius: 3px;
+  position: relative;
+  left: 291px;
+  top: 31px; }
+  div#comment div#movieScore {
+    float: left;
+    height: 234px;
+    width: 636px;
+    position: relative;
+    top: 39px;
+    left: 43px;
+    border-right: solid 1px rgba(5, 5, 5, 0.1); }
+    div#comment div#movieScore div#movieScoreShow {
+      float: left;
+      height: 220px;
+      width: 136px;
+      text-align: center; }
+      div#comment div#movieScore div#movieScoreShow div {
+        width: 136px;
+        height: 136px;
+        background: #78afdd;
+        border-radius: 3px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: #f7f4f4; }
+    div#comment div#movieScore div#conclusion {
+      float: left;
+      width: 354px;
+      height: 222px;
+      position: relative;
+      left: 64px; }
+      div#comment div#movieScore div#conclusion div {
+        height: 36px;
+        width: 351px; }
+        div#comment div#movieScore div#conclusion div span {
+          width: 45px;
+          height: 22px;
+          font-size: 22px;
+          font-family: MicrosoftYaHei;
+          font-weight: 400;
+          color: #1b1b1b; }
+      div#comment div#movieScore div#conclusion div#boxOffice {
+        width: 354px;
+        height: 49px;
+        position: absolute;
+        bottom: 0px;
+        background: #fbf8f8;
+        border: 1px solid rgba(5, 5, 5, 0.1);
+        border-radius: 3px;
+        text-align: center;
+        line-height: 49px; }
+        div#comment div#movieScore div#conclusion div#boxOffice p {
+          width: 297px; }
+        div#comment div#movieScore div#conclusion div#boxOffice div {
+          float: right;
+          width: 56px;
+          height: 49px;
+          border-left: solid 1px rgba(5, 5, 5, 0.1);
+          position: relative;
+          top: -48px; }
+  div#comment div#yourComment {
+    float: left;
+    height: 250px;
+    width: 528px;
+    position: relative;
+    top: 40px;
+    left: 118px; }
+    div#comment div#yourComment span {
+      width: 79px;
+      height: 18px;
+      font-size: 18px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: #131313;
+      opacity: 0.9; }
+    div#comment div#yourComment div {
+      height: 78px;
+      width: 400px;
+      text-align: center; }
+      div#comment div#yourComment div span {
+        float: left;
+        width: 70px;
+        height: 32px;
+        position: relative;
+        top: 18px;
+        background: #fbf8f8;
+        border: 1px solid rgba(5, 5, 5, 0.5);
+        opacity: 0.5;
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        line-height: 32px; }
+      div#comment div#yourComment div ul {
+        position: relative;
+        top: 16px;
+        left: 17px; }
+        div#comment div#yourComment div ul li {
+          float: left;
+          width: 29px;
+          height: 27px;
+          opacity: 0.4;
+          font-size: 28px; }
+    div#comment div#yourComment input {
+      width: 528px;
+      height: 82px; }
+    div#comment div#yourComment button {
+      width: 117px;
+      height: 29px;
+      margin-top: 21px;
+      background: #78afdd;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: #f3f5f6; }
+
+div#hotTitle {
+  width: 177px;
+  height: 64px;
+  position: relative;
+  top: -29px;
+  left: 291px;
+  background: #78afdd;
+  border-radius: 3px;
+  font-size: 30px;
+  font-family: MicrosoftYaHei;
+  font-weight: 400;
+  color: #fcfcfc;
+  opacity: 0.9;
+  text-align: center;
+  line-height: 64px; }
+
+div#commentPart {
+  height: 721px;
+  width: 1300px;
+  margin: 0 auto;
+  position: relative;
+  top: 25px; }
+
+div#firstComment {
+  width: 1265px;
+  height: 192px;
+  position: relative;
+  left: 35px;
+  background: #f3f1f1;
+  border-radius: 3px; }
+  div#firstComment div#personalComment {
+    width: 1254px;
+    height: 74px;
+    position: relative;
+    left: -35px;
+    top: 28px; }
+    div#firstComment div#personalComment div#avatar {
+      float: left; }
+    div#firstComment div#personalComment div#information {
+      float: left;
+      width: 1181px;
+      height: 74px; }
+      div#firstComment div#personalComment div#information span#name {
+        float: left;
+        width: 132px;
+        height: 22px;
+        position: relative;
+        left: 23px;
+        font-size: 22px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: #0e0e0e; }
+      div#firstComment div#personalComment div#information div#grade {
+        float: left;
+        position: relative;
+        left: 45px;
+        font-size: 18px;
+        width: 66px;
+        height: 19px; }
+      div#firstComment div#personalComment div#information div#time {
+        width: 146px;
+        height: 15px;
+        font-size: 18px;
+        float: right;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: #0e0e0e;
+        opacity: 0.6; }
+    div#firstComment div#personalComment div#allComment {
+      position: relative;
+      top: -19px;
+      left: 23px;
+      font-size: 18px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: #0e0e0e;
+      opacity: 0.9; }
+  div#firstComment div#reply {
+    width: 200px;
+    height: 22px;
+    float: left;
+    position: absolute;
+    right: 47px;
+    bottom: 31px; }
+    div#firstComment div#reply div#nice {
+      height: 22px;
+      width: 72px;
+      float: left; }
+      div#firstComment div#reply div#nice div#dianzan {
+        float: left; }
+      div#firstComment div#reply div#nice div#dianznaNumber {
+        width: 41px;
+        height: 15px;
+        font-size: 14px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400; }
+    div#firstComment div#reply div#return {
+      float: left;
+      height: 22px;
+      width: 90px;
+      position: relative;
+      left: 24px; }
+      div#firstComment div#reply div#return div#huifu {
+        float: left;
+        width: 36px;
+        height: 19px;
+        font-size: 18px; }
+      div#firstComment div#reply div#return div#huifuNumber {
+        float: left;
+        width: 44px;
+        height: 15px;
+        font-size: 14px;
+        position: relative;
+        top: 3px; }
+
+div.top1 {
+  position: relative;
+  top: 42px; }
+
+div.top2 {
+  position: relative;
+  top: 84px; }
+
+div#moreComment {
+  width: 162px;
+  height: 18px;
+  font-size: 18px;
+  color: #628cc7;
+  position: absolute;
+  bottom: 0;
+  right: 0; }
+
+/*# sourceMappingURL=movie.css.map */

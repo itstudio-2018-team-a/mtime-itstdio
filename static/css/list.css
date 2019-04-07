@@ -1,0 +1,184 @@
+div#header {
+  height: 87px;
+  width: 100%;
+  background-color: #142735; }
+
+div#search {
+  height: 87px;
+  width: 100%;
+  background-color: #1D303A; }
+
+div#banner {
+  height: 300px;
+  width: 100%;
+  background-color: #000000;
+  background-image: url(../templates/wp1817996.jpg);
+  background-repeat: no-repeat;
+  background-size: 1200px;
+  background-position: 0px;
+  position: relative;
+  color: white; }
+
+div#contain {
+  height: 1300px;
+  width: 100%;
+  background-color: #EBE9E9;
+  position: relative;
+  background-color: #E4E0E1; }
+
+div#footer {
+  height: 236px;
+  width: 100%;
+  background-color: #1C2D38; }
+
+div#searchBox {
+  width: 40%;
+  height: 40px;
+  background: #1c2e39;
+  border: 1px solid white;
+  opacity: 0.8;
+  border-radius: 20px;
+  margin: 0 auto;
+  position: relative;
+  top: 20px; }
+  div#searchBox input {
+    height: 40px;
+    width: 90%;
+    position: relative;
+    left: 20px;
+    background-color: #1D303A;
+    color: white; }
+  div#searchBox img {
+    float: right;
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    height: 28px;
+    width: 28px; }
+
+div#yourPlace {
+  float: right;
+  width: 112px;
+  height: 32px;
+  position: relative;
+  top: -20px;
+  right: 15%; }
+  div#yourPlace img {
+    height: 32px;
+    width: 32px;
+    filter: invert(100%); }
+  div#yourPlace span {
+    font-size: 28px;
+    color: white;
+    float: right; }
+
+div#bannerWord {
+  height: 196px;
+  width: 152px;
+  position: absolute;
+  bottom: 60px;
+  right: 20%;
+  font-family: MicrosoftYaHei;
+  font-weight: 400; }
+  div#bannerWord h2 {
+    font-size: 28px; }
+  div#bannerWord h3 {
+    padding-top: 24px;
+    font-size: 18px; }
+  div#bannerWord div#more {
+    width: 169px;
+    height: 34px;
+    background: #e92424;
+    border-radius: 5px;
+    position: relative;
+    top: 16px;
+    text-align: center;
+    line-height: 32px; }
+
+div#showing {
+  height: 561px;
+  width: 70%;
+  min-width: 665px;
+  margin: 0 auto;
+  position: relative;
+  top: 27px; }
+  div#showing div#s-title {
+    height: 24px;
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2) span;
+      border-bottom-font-size: 18px; }
+  div#showing div#showingList {
+    height: 492px;
+    width: 100%;
+    position: relative;
+    top: 27px; }
+    div#showing div#showingList div#s-firstLine {
+      height: 247px;
+      width: 100%; }
+      div#showing div#showingList div#s-firstLine div.s-firstCard {
+        height: 247px;
+        width: 125px; }
+        div#showing div#showingList div#s-firstLine div.s-firstCard img {
+          width: 124px;
+          height: 187px; }
+        div#showing div#showingList div#s-firstLine div.s-firstCard h3 {
+          height: 26px;
+          font-size: 16px; }
+        div#showing div#showingList div#s-firstLine div.s-firstCard p {
+          font-size: 10px; }
+  div#showing div#s-jump {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 220px;
+    height: 18px;
+    line-height: 22px;
+    text-align: center; }
+    div#showing div#s-jump div {
+      float: left; }
+      div#showing div#s-jump div ul {
+        float: left; }
+        div#showing div#s-jump div ul li {
+          float: left;
+          height: 24px;
+          width: 24px;
+          border: 1px solid white;
+          background: #eae8e8; }
+    div#showing div#s-jump input {
+      width: 18px;
+      height: 18px; }
+
+div#comming {
+  height: 561px;
+  width: 70%;
+  min-width: 665px;
+  margin: 0 auto;
+  position: relative;
+  top: 61px; }
+  div#comming div#c-title {
+    height: 24px;
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2); }
+  div#comming div#c-jump {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 220px;
+    height: 18px;
+    line-height: 22px;
+    text-align: center; }
+    div#comming div#c-jump div {
+      float: left; }
+      div#comming div#c-jump div ul {
+        float: left; }
+        div#comming div#c-jump div ul li {
+          float: left;
+          height: 24px;
+          width: 24px;
+          border: 1px solid white;
+          background: #eae8e8; }
+    div#comming div#c-jump input {
+      width: 18px;
+      height: 18px; }
+
+/*# sourceMappingURL=list.css.map */

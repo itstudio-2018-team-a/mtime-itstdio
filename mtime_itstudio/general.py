@@ -90,6 +90,9 @@ def i_get_email_verify_code(request):
 def return_index(request):
     return render(request, 'dist/index.html')
 
+def redirect_index(requset, left_url):
+    return redirect('/' + left_url)
+
 
 def return_login(request):
     return render(request, 'dist/logIn.html')
