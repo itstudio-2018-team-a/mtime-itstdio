@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>list</title>
+    <link rel="stylesheet" href="../css/list.css">
+</head>
+<style>
+    *{
+        padding: 0px;
+        margin: 0px;
+        list-style: none;
+        outline: medium;
+        border: none;
+    }
+</style>
+<body>
+    <div id="header"></div>
+    <div id="search">
+        <div id="searchBox">
+            <input type="text" onfocus="this.value=''" onblur="if(this.value==''){this.value='输入电影关键词'}">
+            <img src="../templates/iconfonticonfontsousuo1.png" alt="">
+        </div>
+        <div id="yourPlace">
+            <img src="../templates/04.png" alt="">
+            <span>青岛</span>
+        </div>
+    </div>
+    <div id="banner">
+        <div></div>
+        <div id="bannerWord">
+            <h2>星际穿越</h2>
+            <h3>科幻界的里程碑</h3>
+            <h3>3月20日震撼上映</h3>
+            <div id="more">了解更多</div>
+        </div>
+    </div>
+    <div id="contain">
+        <div id="showing">
+            <div id="s-title">
+                <span>正在热映</span>
+            </div>
+            <div id="showingList">
+                <div id="s-firstLine">
+                    <div class="s-firstCard">
+                        <div></div>
+                        <img src="../时光网/100903.64806042_270X405X4.jpg" alt="">
+                        <h3>惊奇队长</h3>
+                        <p>英语 2019<span>动作 /科幻</span></p>
+                    </div>
+
+
+                </div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div id="s-sceondLine">
+
+                </div>
+            </div>
+            <div id="s-jump">
+                <div class="go_page" id="pagination">
+                    <ul class="pagination">
+                     <li><span class="last-page"  aria-hidden="true">&lt;&nbsp;&nbsp;</span></li>
+                     <li id="currentPage">1</li>
+                     <li>/</li>
+                     <li id="totalPage">10</li>
+                     <li><span class="next-page" disabled="" aria-hidden="true">&nbsp;&nbsp;&gt;</span>/li>
+                    </ul>
+                    <ul class="jump_page">
+                     <li><span class="jump-to"><b style="font-size:6px;">跳转</b></span></li>  
+                     <li><input type="text" class="input-value" value="1" id="toPage"></li>
+                     <li><button class="btn btn-success go-btn jump-btn" type="button" 
+                          onClick='gotoPage()'>GO</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="comming">
+            <div id="c-title">
+                <div>即将上映</div>
+            </div>
+            <div id="comingList">
+                <div id="c-Firstline">
+                    <div id="c-firstcard">
+                        <img src="" alt="">
+                        <p></p>
+                        <p></p>
+                    </div>
+
+
+                </div>
+                <div id="c-sceondLine">
+
+                </div>
+            </div>
+            <div id="c-jump">
+                <div class="go_page" id="pagination">
+                    <ul class="pagination">
+                     <li><span class="last-page"  aria-hidden="true">&lt;&nbsp;&nbsp;</span></li>
+                     <li id="currentPage">1</li>
+                     <li>/</li>
+                     <li id="totalPage">10</li>
+                     <li><span class="next-page" disabled="" aria-hidden="true">&nbsp;&nbsp;&gt;</span>/li>
+                    </ul>
+                    <ul class="jump_page">
+                     <li><span class="jump-to"><b style="font-size:6px;">跳转</b></span></li>  
+                     <li><input type="text" class="input-value" value="1" id="toPage"></li>
+                     <li><button class="btn btn-success go-btn jump-btn" type="button" 
+                          onClick='gotoPage()'>GO</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer"></div>
+</body>
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script src="../js/jump.js"></script>
+</html>

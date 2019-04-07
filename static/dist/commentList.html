@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>commentList</title>
+    <link rel="stylesheet" href="../css/commentList.css">
+</head>
+<style>
+    *{
+        padding: 0px;
+        margin: 0px;
+        list-style: none;
+        outline: medium;
+        border: none;
+    }
+
+            .p1{
+            font-size: 14px;
+            color: #000;
+        }
+        .p2{
+            font-size: 12px;
+            color: #b0b0b0;
+        }
+        .p3{
+            font-size: 14px;
+            color: #ff5f19;
+        }
+        .product{
+            width:100%;
+            position: relative;
+            margin: 20px 0 5px 0;
+            height: 100px;
+            background: #fafafa;
+        }
+
+        .img{
+            width: 100px;
+            height: 100px;
+            float: left;
+            margin-right: 20px;
+        }
+        .p{
+            display:inline-block;
+            float:left;
+            width:50%;
+            margin-top:6px;
+            font-family: Microsoft YaHei;
+        }
+        .p1{
+            margin-top:16px;
+        }
+</style>
+<body>
+    <div id="header"></div>
+    <div id="hotComment">
+        <div id="contain">
+            <div id="title">
+                <div>热门影评</div>
+            </div>
+            <div id="cardList">
+                <div id="firstLine">
+                    <div class="card">
+                        <img src="../templates/100027.34140881_o.jpg" alt="">
+                        <div>
+                            <div>
+                                <div class="avatar">
+                                    <img src="../templates/132921.94508797_64X64.jpg" alt="">
+                                </div>
+                                <div class="commentInformation">
+                                    <span id="">卡斯蒂亚公爵</span>
+                                    <div>评</div>
+                                    <span>《奇妙的家族》</span>
+                                </div>
+                                <div class="time">2019.3.13</div>
+                            </div>
+                            <div class="someComment">
+                                <h3>是谁唤醒了那些老男人们的春...</h3>
+                                <p>被丧尸小哥哥咬过的人都会有潜伏期。在<br>潜伏期期间，男人能重振雄风一夜回春...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="../templates/100027.34140881_o.jpg" alt="">
+                        <div>
+                            <div>
+                                <div class="avatar">
+                                    <img src="../templates/132921.94508797_64X64.jpg" alt="">
+                                </div>
+                                <div class="commentInformation">
+                                    <span>卡斯蒂亚公爵</span>
+                                    <div>评</div>
+                                    <span>《奇妙的家族》</span>
+                                </div>
+                                <div class="time">2019.3.13</div>
+                            </div>
+                            <div class="someComment">
+                                <h3>是谁唤醒了那些老男人们的春...</h3>
+                                <p>被丧尸小哥哥咬过的人都会有潜伏期。在<br>潜伏期期间，男人能重振雄风一夜回春...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="../templates/100027.34140881_o.jpg" alt="">
+                        <div>
+                            <div>
+                                <div class="avatar">
+                                    <img src="../templates/132921.94508797_64X64.jpg" alt="">
+                                </div>
+                                <div class="commentInformation">
+                                    <span>卡斯蒂亚公爵</span>
+                                    <div>评</div>
+                                    <span>《奇妙的家族》</span>
+                                </div>
+                                <div class="time">2019.3.13</div>
+                            </div>
+                            <div class="someComment">
+                                <h3>是谁唤醒了那些老男人们的春...</h3>
+                                <p>被丧尸小哥哥咬过的人都会有潜伏期。在<br>潜伏期期间，男人能重振雄风一夜回春...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="../templates/100027.34140881_o.jpg" alt="">
+                        <div>
+                            <div>
+                                <div class="avatar">
+                                    <img src="../templates/132921.94508797_64X64.jpg" alt="">
+                                </div>
+                                <div class="commentInformation">
+                                    <span>卡斯蒂亚公爵</span>
+                                    <div>评</div>
+                                    <span>《奇妙的家族》</span>
+                                </div>
+                                <div class="time">2019.3.13</div>
+                            </div>
+                            <div class="someComment">
+                                <h3>是谁唤醒了那些老男人们的春...</h3>
+                                <p>被丧尸小哥哥咬过的人都会有潜伏期。在<br>潜伏期期间，男人能重振雄风一夜回春...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="secondLine">
+                    <div class="card"></div>
+                    <div class="card"></div>
+                    <div class="card"></div>
+                    <div class="card"></div>
+                </div>
+            </div>
+            <div id="jump">
+                <div class="go_page" id="pagination">
+                    <ul class="pagination">
+                     <li><span class="last-page"  aria-hidden="true">&lt;&nbsp;&nbsp;</span></li>
+                     <li id="currentPage">1</li>
+                     <li>/</li>
+                     <li id="totalPage">10</li>
+                     <li><span class="next-page" disabled="" aria-hidden="true">&nbsp;&nbsp;&gt;</span>/li>
+                    </ul>
+                    <ul class="jump_page">
+                     <li><span class="jump-to"><b style="font-size:6px;">跳转</b></span></li>  
+                     <li><input type="text" class="input-value" value="1" id="toPage"></li>
+                     <li><button class="btn btn-success go-btn jump-btn" type="button" 
+                          onClick='gotoPage()'>GO</button></li>
+                    </ul>
+                </div>
+            </div>            
+        </div>
+    </div>
+    <div id="footer">
+    </div>        
+    <div id="box"></div>
+</body>
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script src="../js/commentList.js"></script>
+</html>

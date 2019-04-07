@@ -1,0 +1,299 @@
+div#header{
+    height: 87px;
+    width: 100%;
+    background-color: #142735;
+    position: fixed;
+}
+div#banner{
+    height:300px ;
+    width: 100%;
+    background-color: #1C2D38;
+    //暂时颜色
+}
+div#article{
+    min-height: 500px;
+    width:100% ;
+    background-color: #EBE9E9;
+    position: relative;
+}
+div#comment{
+    height:664px ;
+    width:100% ;
+    background-color: #E3DFDF;
+}
+div#footer{
+    height:236px;
+    width:100%;
+    background-color: #1C2D38;
+}
+
+div#banner{
+    img{
+
+    }
+    div{
+        width: 384px;
+        height:60px;
+        position: relative;
+        top: 191px;left: 148px;
+        font-family:MicrosoftYaHei;
+        font-weight:400;
+        color:rgba(254,255,255,1);
+        opacity:0.9;
+    }
+}
+
+//第二部分
+div#contain{
+    float: left;
+        min-width: 500px;
+        width: 50%;
+        margin-left: 15%;
+        position: relative;
+        top: 21px;
+}
+div#floatDiv{
+    float: left;
+    height: 125px;
+    width: 111px;
+    position: relative;
+    top: 28px;
+    font-family:MicrosoftYaHei;
+    font-weight:400;
+    div#top{
+        font-size: 9px;
+        width:111px;
+        height:41px;
+        div{
+            height: 9px;
+            width: 110px;
+            line-height: 14px;
+            div{
+                float: left;
+                width: 40px;
+            }
+            span{
+                float: left;
+                width: 70px;
+            }
+        }
+    }
+    div#back{
+        height: 50px;
+        width: 40px;
+        position: relative;
+        top: 39px;
+        div{
+            width:40px;
+            height:7px;
+            font-size:7px;
+            color:rgba(67,117,184,1);
+
+        }
+    }
+}
+
+//第三部分
+div#commentBody{
+    height: 506px;
+    min-width: 500px;
+    width: 55%;
+    margin-left: 15%;
+    position: relative;
+    top: 30px;
+    div#yourComment{
+        width:100%;
+        height:164px;
+        background:rgba(234,232,232,1);
+        box-shadow:-1px 1px 1px 0px rgba(0, 0, 0, 0.1);
+        border-radius:1px;
+        position: relative;
+        div{
+            img{
+                margin-left: 17px;
+                margin-top: 21px;
+            }
+            input{
+                height: 91px;
+                width: 90%;
+                position: relative;
+                top: 14px;
+                background-color: #F1EFEF;
+            }
+        }
+        div#button{
+            width:99px;
+            height:25px;
+            background:rgba(91,188,231,1);
+            box-shadow:-1px 1px 1px 0px rgba(0, 0, 0, 0.1);
+            border-radius:1px;
+            position: absolute;
+            bottom: 13px;right: 5%;
+            font-size:12px;
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+            color:rgba(242,244,247,1);
+            text-align: center;
+            line-height: 25px;
+        }
+    }
+    div#hotComment{
+        height: 422px;
+        width: 100%;
+        position: relative;
+        top: 20px;
+        div#commentTitle{
+            width:89px;
+            height:32px;
+            background-color: #D4D2D2;
+            border-radius:1px;
+            line-height: 32px;
+            text-align: center;
+            font-size:15px;
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+            color:rgba(14,14,14,0.9);
+        }
+    }
+}
+
+div#otherComment{
+    height: 328px;
+    min-width: 800px;
+    width: 100%;
+    position: relative;
+    top: 28px;
+}
+div#firstComment{
+    //第一个评论
+    width:100%;
+    height:96px;
+    position: relative;
+    left: 18px;
+    background:rgba(243,241,241,1);
+    border-radius:3px;
+    div#personalComment{
+        width: 95%;
+        height: 37px;
+        position: relative;
+        left: -18px;top:14px;
+        div#avatar{
+            float: left;
+        }
+        div#information{
+            float: left;
+            width: 95%;
+            height: 37px;
+            span#name{
+                float: left;
+                width:132px;
+                height:22px;
+                position: relative;
+                left: 23px;
+                font-size:11px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(14,14,14,1);
+
+            }
+            div#time{
+            //发表时间
+                width:80px;
+                height:15px;
+                font-size:10px;
+                float: right;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(14,14,14,1);
+                opacity:0.6;
+            }
+        }
+        div#allComment{
+            position: relative;
+            top: -11px;left: 23px;
+            font-size:10px;
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+            color:rgba(14,14,14,1);
+            opacity:0.9;
+        }
+    }
+    div#reply{
+        //点赞回复
+        width: 200px;
+        height: 12px;
+        float: left;
+        position: absolute;
+        right: 47px;bottom: 31px;
+        div#nice{
+            height: 12px;
+            width: 72px;
+            float: left;
+            div#dianzan{
+                float: left;
+            }
+            div#dianznaNumber{
+                width:41px;
+                height:12px;
+                font-size:12px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+            }
+        }
+        div#return{
+            float: left;
+            height: 12px;
+            width: 90px;
+            position: relative;
+            left: 24px;
+            div#huifu{
+                float: left;
+                width:36px;
+                height:12px;
+                font-size:16px;  
+            }
+            div#huifuNumber{
+                float: left;
+                width:44px;
+                height:12px;
+                font-size:12px;
+                position: relative;
+                top: 3px;
+            }
+        }
+    }
+}
+div.top1{
+    position: relative;
+    top: 20px;
+}
+div.top2{
+    position: relative;
+    top: 40px;
+}
+
+
+//分页
+div#jump{
+    height:18px;
+    width: 219px;
+    position: absolute;
+    bottom: 0px;right: 0px;
+    div{
+        float: left;
+        ul{
+            float: left;
+            li{
+                float: left;
+                height: 24px;
+                width: 24px;
+                border: 1px solid white;
+                background:rgba(234,232,232,1);
+            }
+        }
+    }
+    input{
+        width: 18px;
+        height: 18px;
+    }
+}
